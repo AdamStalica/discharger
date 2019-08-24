@@ -3,6 +3,11 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_win_main.h"
 
+#include "WgtNewSpeedway.h"
+#include "WgtImport.h"
+
+#include "ApiHolder.h"
+
 class QWebSocket;
 
 class win_main : public QMainWindow
@@ -16,5 +21,7 @@ public:
 private:
 	Ui::win_mainClass ui;
 
-	QWebSocket * ws;
+	ApiHolder * api;
+	
+	WgtImport * imp;
 };

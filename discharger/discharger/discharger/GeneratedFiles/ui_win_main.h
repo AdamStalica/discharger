@@ -15,6 +15,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -22,9 +23,11 @@ QT_BEGIN_NAMESPACE
 class Ui_win_mainClass
 {
 public:
+    QWidget *centralWidget;
+    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *layout;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
-    QWidget *centralWidget;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *win_mainClass)
@@ -32,15 +35,27 @@ public:
         if (win_mainClass->objectName().isEmpty())
             win_mainClass->setObjectName(QString::fromUtf8("win_mainClass"));
         win_mainClass->resize(600, 400);
+        centralWidget = new QWidget(win_mainClass);
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        verticalLayout_2 = new QVBoxLayout(centralWidget);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        layout = new QVBoxLayout();
+        layout->setSpacing(6);
+        layout->setObjectName(QString::fromUtf8("layout"));
+        layout->setContentsMargins(0, -1, -1, -1);
+
+        verticalLayout_2->addLayout(layout);
+
+        win_mainClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(win_mainClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 600, 21));
         win_mainClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(win_mainClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        win_mainClass->addToolBar(mainToolBar);
-        centralWidget = new QWidget(win_mainClass);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        win_mainClass->setCentralWidget(centralWidget);
+        win_mainClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(win_mainClass);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         win_mainClass->setStatusBar(statusBar);

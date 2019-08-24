@@ -5,16 +5,62 @@
 #include <nlohmann/json.hpp>
 #include <sstream>
 
+#include <QMessageBox>
+
 using json = nlohmann::json;
 
 win_main::win_main(QWidget *parent)
-	: QMainWindow(parent)
+	:	QMainWindow(parent)
 {
 	ui.setupUi(this);
 
+	this->setStyleSheet("QLineEdit#");
+
+	api = new ApiHolder(this);
+
+
+
+
+
+
+	imp = new WgtImport(api);
+
+
+	connect(imp, &WgtImport::created, this, [this] {
+		qDebug() << "ok";
+		ui.layout->addWidget(imp);
+	});
+
+
+
+
+
+	/*
+
+	auto sp = new WgtNewSpeedway(api, this);
+
+
+	connect(sp, &WgtNewSpeedway::addedNewSpeedway, this, [this](int no, const QString & name) {
+		QMessageBox::information(this, "", "No" + QString::number(no) + ", " + name);
+	});
+
+	connect(sp, &WgtNewSpeedway::canceledNewSpeedway, this, [this] {
+		QMessageBox::information(this, "", "Canceled.");
+	});
+	*/
+}
+
+win_main::~win_main() {
+	delete api;
+}
+
+/*
+
+
+
 	ws = new QWebSocket;
 	ws->open(QUrl("ws://connect.websocket.in/dk_devices_2019?room_id=12345"));
-	
+
 	connect(ws, &QWebSocket::connected, this, [] {
 		qDebug() << "opened";
 	});
@@ -51,15 +97,14 @@ win_main::win_main(QWidget *parent)
 			qDebug() << os1.str().c_str();
 		}
 
-		std::ostringstream os2;
-		os2 << j3["from"];
-		qDebug() << os2.str().c_str();
+		std::string ok = j3["from"];
+
+		qDebug() << ok.c_str();
 
 
 
-	});	
-}
+	});
 
-win_main::~win_main() {
-	delete ws;
-}
+
+
+*/

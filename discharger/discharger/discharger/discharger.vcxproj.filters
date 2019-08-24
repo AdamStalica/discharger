@@ -36,14 +36,41 @@
     <ClCompile Include="win_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WgtNewSpeedway.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ApiHolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WgtImport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="win_main.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="WgtNewSpeedway.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ApiHolder.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WgtImport.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ThreadSynch.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="win_main.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WgtNewSpeedway.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WgtImport.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
