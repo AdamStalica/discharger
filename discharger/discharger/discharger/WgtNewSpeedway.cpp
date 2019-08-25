@@ -51,7 +51,7 @@ void WgtNewSpeedway::addNewSpeedway() {
 	json insert;
 	QString ans = "";
 
-	insert["id_usr"] = 1;
+	insert["id_usr"] = api->getApiUserId();
 	insert["into"] = "speedways";
 	bool isValid = true;
 
@@ -74,6 +74,7 @@ void WgtNewSpeedway::addNewSpeedway() {
 	}
 	if (!isValid) {
 		ui.sp_lbl->setText("Fill empty fields!");
+		return;
 	}
 
 	ui.sp_lbl->setText("Adding");

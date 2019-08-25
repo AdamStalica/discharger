@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
@@ -25,6 +26,9 @@ class Ui_win_mainClass
 public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_2;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -41,12 +45,26 @@ public:
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        scrollArea = new QScrollArea(centralWidget);
+        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 580, 327));
+        verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         layout = new QVBoxLayout();
         layout->setSpacing(6);
         layout->setObjectName(QString::fromUtf8("layout"));
         layout->setContentsMargins(0, -1, -1, -1);
 
-        verticalLayout_2->addLayout(layout);
+        verticalLayout->addLayout(layout);
+
+        scrollArea->setWidget(scrollAreaWidgetContents);
+
+        verticalLayout_2->addWidget(scrollArea);
 
         win_mainClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(win_mainClass);

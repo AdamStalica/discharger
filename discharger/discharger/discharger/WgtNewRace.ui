@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WgtNewSpeedway</class>
- <widget class="QWidget" name="WgtNewSpeedway">
+ <class>WgtNewRace</class>
+ <widget class="QWidget" name="WgtNewRace">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>259</height>
+    <height>210</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>WgtNewSpeedway</string>
+   <string>WgtNewRace</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="rightMargin">
@@ -25,8 +25,109 @@
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
+     <item row="4" column="0" colspan="2">
+      <widget class="QLabel" name="race_lbl">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Speedway name: </string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDateEdit" name="race_date">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
       <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Name: </string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="sp_name">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="name"/>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="label_6">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -39,128 +140,15 @@
          <height>50</height>
         </size>
        </property>
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
        <property name="text">
-        <string>New speedway</string>
+        <string>New race</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Longitude tolerance: </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0" colspan="2">
-      <widget class="QLabel" name="sp_lbl">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Latitude: </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Longitude: </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Latitude tolerance: </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -168,87 +156,31 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
        <property name="text">
-        <string>Name: </string>
+        <string>Race date: </string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="7" column="0" colspan="2">
+     <item row="5" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="sp_cnl_btn">
+        <widget class="QPushButton" name="race_cnl_btn">
          <property name="text">
           <string>Cancel</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="sp_add_btn">
+        <widget class="QPushButton" name="race_add_btn">
          <property name="text">
-          <string>Add speedway</string>
+          <string>Add race</string>
          </property>
         </widget>
        </item>
       </layout>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="name">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>300</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="longitude">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>300</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="longitude_toler"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="latitude"/>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="latitude_toler"/>
      </item>
     </layout>
    </item>

@@ -1,0 +1,21 @@
+/******************************************************************************************************/
+
+													TODO
+	Created:	2019-05-25 13:52
+	Author:		Dominik Kala (slavek1250)
+	Project:	Discharger
+		
+										Copyright Silesian Greenpower 2019
+
+/******************************************************************************************************/
+
+
+	id		|		Date			|					Description					|	Status		
+--------------------------------------------------------------------------------------------------------
+	1		|		2019-08-24		|					WgtNewSpeedway				|	Done.
+	2		|		2019-08-24		|					ApiHolder					|	In progress.
+	3		|		2019-08-24		|					WgtImport					|	Alpha.
+	4		|		2019-08-25		|					WgtNewRace					|	Done.
+	5		|		2019-08-25		|					WgtLogin					|	
+	7		|		2019-08-25		| Speedways, races, batteries, log_types class	|
+	

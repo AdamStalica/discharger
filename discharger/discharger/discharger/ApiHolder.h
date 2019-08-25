@@ -17,6 +17,9 @@ public:
 	void apiInsert(const std::string & param);
 	void apiSelect(const QString & param);
 	void apiSelect(const std::string & param);
+	void apiUpdate(const QString & param);
+	void apiUpdate(const std::string & param);
+	int getApiUserId() { return 1; }
 
 
 signals:

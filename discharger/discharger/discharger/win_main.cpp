@@ -31,6 +31,10 @@ win_main::win_main(QWidget *parent)
 		ui.layout->addWidget(imp);
 	});
 
+	connect(imp, &WgtImport::finished, this, [this] {
+		delete imp;
+	});
+
 
 
 

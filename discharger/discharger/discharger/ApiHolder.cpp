@@ -50,6 +50,14 @@ void ApiHolder::apiSelect(const std::string & param) {
 	post_request(param, "select.php");
 }
 
+void ApiHolder::apiUpdate(const QString & param) {
+	post_request(param.toStdString(), "update.php");
+}
+
+void ApiHolder::apiUpdate(const std::string & param) {
+	post_request(param, "update.php");
+}
+
 void ApiHolder::post_request(const std::string & param, const QString & file) {
 
 	QUrl url(this->api_url + file);

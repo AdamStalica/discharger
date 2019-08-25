@@ -16,11 +16,30 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="layout">
-      <property name="leftMargin">
-       <number>0</number>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
       </property>
-     </layout>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>580</width>
+         <height>327</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QVBoxLayout" name="layout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
