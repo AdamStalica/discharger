@@ -114,8 +114,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApiHolder.cpp" />
+    <ClCompile Include="BasicData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WgtImport.cpp" />
+    <ClCompile Include="WgtLogin.cpp" />
     <ClCompile Include="WgtNewRace.cpp" />
     <ClCompile Include="WgtNewSpeedway.cpp" />
     <ClCompile Include="win_main.cpp" />
@@ -125,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="WgtImport.ui" />
+    <QtUic Include="WgtLogin.ui" />
     <QtUic Include="WgtNewRace.ui" />
     <QtUic Include="WgtNewSpeedway.ui" />
     <QtUic Include="win_main.ui" />
@@ -136,6 +139,10 @@
     <ResourceCompile Include="discharger.rc" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="WgtLogin.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\domin\source\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;C:\Users\domin\source\json\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
     <QtMoc Include="WgtNewRace.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\domin\source\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;C:\Users\domin\source\json\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
@@ -149,6 +156,10 @@
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;C:\Users\domin\source\json\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>
     <QtMoc Include="ApiHolder.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\domin\source\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;C:\Users\domin\source\json\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
+    </QtMoc>
+    <QtMoc Include="BasicData.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\domin\source\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;C:\Users\domin\source\json\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets</IncludePath>
     </QtMoc>

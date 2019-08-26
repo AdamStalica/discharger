@@ -9,13 +9,19 @@
 
 /******************************************************************************************************/
 
+//	Alpha
 
 	id		|		Date			|					Description					|	Status		
 --------------------------------------------------------------------------------------------------------
 	1		|		2019-08-24		|					WgtNewSpeedway				|	Done.
 	2		|		2019-08-24		|					ApiHolder					|	In progress.
-	3		|		2019-08-24		|					WgtImport					|	Alpha.
+	3		|		2019-08-25		|					WgtImport					|	Done.
 	4		|		2019-08-25		|					WgtNewRace					|	Done.
-	5		|		2019-08-25		|					WgtLogin					|	
-	7		|		2019-08-25		| Speedways, races, batteries, log_types class	|
-	
+	5		|		2019-08-26		|					WgtLogin					|	Done.
+	7		|		2019-08-26		|					BasicData					|	Done.
+	8		|						|				Widgets managing				|	
+	9		|						|					WgtLoader					|	
+	10		|						|					WgtConfigSim				|	
+	11		|						|					UartHolder					|	
+	12		|						|				WebsocketHolder					|	
+	13		|						|					WgtSimulation				|	

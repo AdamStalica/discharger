@@ -17,7 +17,7 @@ win_main::win_main(QWidget *parent)
 	this->setStyleSheet("QLineEdit#");
 
 	api = new ApiHolder(this);
-
+	data = new BasicData(api, this);
 
 
 
@@ -25,6 +25,27 @@ win_main::win_main(QWidget *parent)
 
 	imp = new WgtImport(api);
 
+
+	login = new WgtLogin(api, this);
+
+	ui.layout->addWidget(login);
+
+
+
+	connect(login, &WgtLogin::loggedIn, this, [this] {
+		data->fetchData();
+	});
+
+	connect(data, &BasicData::error, this, [this] {
+		QMessageBox::critical(this, "Error", data->getLastError());
+	}); 
+
+	connect(data, &BasicData::fetched, this, [this] {
+		QMessageBox::information(this, "Success", "Logged in and fetched data!");
+	});
+
+
+	/*
 
 	connect(imp, &WgtImport::created, this, [this] {
 		qDebug() << "ok";
@@ -35,7 +56,7 @@ win_main::win_main(QWidget *parent)
 		delete imp;
 	});
 
-
+	*/
 
 
 
@@ -56,6 +77,9 @@ win_main::win_main(QWidget *parent)
 
 win_main::~win_main() {
 	delete api;
+	delete data;
+	delete imp;
+	delete login;
 }
 
 /*

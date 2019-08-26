@@ -5,8 +5,10 @@
 
 #include "WgtNewSpeedway.h"
 #include "WgtImport.h"
+#include "WgtLogin.h"
 
 #include "ApiHolder.h"
+#include "BasicData.h"
 
 class QWebSocket;
 
@@ -22,6 +24,8 @@ private:
 	Ui::win_mainClass ui;
 
 	ApiHolder * api;
+	BasicData * data;
 	
 	WgtImport * imp;
+	WgtLogin * login;
 };

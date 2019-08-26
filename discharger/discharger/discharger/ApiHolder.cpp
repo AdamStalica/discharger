@@ -1,4 +1,5 @@
 #include "ApiHolder.h"
+#include "json.h"
 
 #include <QUrl>
 #include <QNetworkRequest>
@@ -6,6 +7,8 @@
 
 #include <QDebug>
 #include <QTextStream>
+
+using json = nlohmann::json;
 
 ApiHolder::ApiHolder(QObject *parent)
 	: QObject(parent)
@@ -66,4 +69,42 @@ void ApiHolder::post_request(const std::string & param, const QString & file) {
 	req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
 	mgr->post(req, param.c_str());
+}
+
+void ApiHolder::apiLogin(const QString & email, const QString & pass) {
+
+	json login = {
+		{"email", email.toStdString()},
+		{"pass", pass.toStdString()}
+	};
+
+	std::string tmp = login.dump();
+	post_request(login.dump(), "auth/login.php");
+	
+	login_conn = connect(this, &ApiHolder::gotResponse, this, [this](const QString & resp) {
+	
+		this->disconnect(this->login_conn);
+		json resp_obj = json::parse(resp.toStdString());
+
+		int no = resp_obj["no"];
+		std::string comment = resp_obj["comment"];
+
+		if(resp_obj["status"] == "OK") {
+
+			std::string tmp = resp_obj["name"];
+			std::string tmp1 = resp_obj["surname"];
+			std::string tmp2 = resp_obj["email"];
+
+			this->name = tmp.c_str();
+			this->surname = tmp1.c_str();
+			this->email = tmp2.c_str();
+			this->id_usr = no;
+			emit loginResult(true);
+		}
+		else {
+			lastError = "No: " + QString::number(no) + ", " + comment.c_str();
+			emit loginResult(false);
+		}
+	});
+
 }

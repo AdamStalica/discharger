@@ -75,7 +75,7 @@ private:
 	nlohmann::json cars;
 
 	/*
-		[{"name":"","mask":{"col":"old"}}]
+		[ { "name" : std::string , "mask" : { "col" : "old", ...} }, ...]
 	*/
 	nlohmann::json col_mask;
 

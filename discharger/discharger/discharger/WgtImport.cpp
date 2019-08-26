@@ -14,7 +14,7 @@ WgtImport::WgtImport(ApiHolder * api, QWidget *parent)
 {
 	ui.setupUi(this);
 
-	int id_usr = 1;
+	int id_usr = api->getApiUserId();
 	selects[0] = {
 		{"id_usr", id_usr},
 		{ "select", "id_batt" },
