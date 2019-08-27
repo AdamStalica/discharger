@@ -11,6 +11,7 @@ class ApiHolder : public QObject
 
 public:
 	ApiHolder(QObject *parent);
+	void logout();
 	~ApiHolder();
 
 	void apiInsert(const QString & param);
@@ -46,6 +47,6 @@ private:
 
 	/*============================ API USER ==============================*/
 	QString name, surname, email;
-	int id_usr;
+	int id_usr = -1;
 
 };

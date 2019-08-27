@@ -6,6 +6,8 @@
 #include "WgtNewSpeedway.h"
 #include "WgtImport.h"
 #include "WgtLogin.h"
+#include "WgtMain.h"
+#include "WgtLoader.h"
 
 #include "ApiHolder.h"
 #include "BasicData.h"
@@ -28,4 +30,8 @@ private:
 	
 	WgtImport * imp;
 	WgtLogin * login;
+	WgtMain * main;
+	WgtLoader * loader;
+
+	QWidget * lastWgt;
 };

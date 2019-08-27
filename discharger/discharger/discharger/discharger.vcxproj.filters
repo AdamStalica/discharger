@@ -54,6 +54,12 @@
     <ClCompile Include="BasicData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WgtMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WgtLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="win_main.h">
@@ -80,6 +86,12 @@
     <QtMoc Include="BasicData.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="WgtMain.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WgtLoader.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="win_main.ui">
@@ -95,6 +107,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="WgtLogin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WgtMain.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WgtLoader.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

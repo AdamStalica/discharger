@@ -5,15 +5,17 @@
 #include "json.h"
 
 class ApiHolder;
+class WgtLoader;
 
 class BasicData : public QObject
 {
 	Q_OBJECT
 
 public:
-	BasicData(ApiHolder * api, QObject *parent);
+	BasicData(ApiHolder * api, WgtLoader * loader, QObject *parent);
 	void fetchData();
 	QString getLastError() { return lastError; }
+	void clear();
 	~BasicData();
 
 	/*
@@ -43,6 +45,7 @@ public:
 
 private:
 	ApiHolder * api;
+	WgtLoader * loader;
 	
 	QString lastError;
 

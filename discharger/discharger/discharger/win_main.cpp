@@ -14,23 +14,32 @@ win_main::win_main(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	centralWidget()->layout()->setContentsMargins(0, 0, 0, 0);
+	statusBar()->hide();
+	ui.mainToolBar->hide();
+
 	this->setStyleSheet("QLineEdit#");
 
+	loader = new WgtLoader();
+	connect(loader, &WgtLoader::showLoader, this, [this] {
+		lastWgt = ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(loader);
+	});
+	connect(loader, &WgtLoader::showLastWgt, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(lastWgt);
+	});
+
+
 	api = new ApiHolder(this);
-	data = new BasicData(api, this);
+	data = new BasicData(api, loader, this);
 
-
-
-
-
+	login = new WgtLogin(api, loader);
+	main = new WgtMain();
 	imp = new WgtImport(api);
 
 
-	login = new WgtLogin(api, this);
-
-	ui.layout->addWidget(login);
-
-
+	ui.mainArea->setWidget(login);
 
 	connect(login, &WgtLogin::loggedIn, this, [this] {
 		data->fetchData();
@@ -38,11 +47,31 @@ win_main::win_main(QWidget *parent)
 
 	connect(data, &BasicData::error, this, [this] {
 		QMessageBox::critical(this, "Error", data->getLastError());
-	}); 
-
-	connect(data, &BasicData::fetched, this, [this] {
-		QMessageBox::information(this, "Success", "Logged in and fetched data!");
 	});
+	connect(data, &BasicData::fetched, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(main);
+	});
+
+	connect(main, &WgtMain::logout, this, [this] {
+		ui.mainArea->takeWidget();
+		api->logout();
+		data->clear();
+		ui.mainArea->setWidget(login);
+	});
+	connect(main, &WgtMain::importLogs, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(imp);
+	});
+	connect(main, &WgtMain::exportSims, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(imp);
+	});
+	connect(main, &WgtMain::newSim, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(imp);
+	});
+
 
 
 	/*
@@ -80,6 +109,7 @@ win_main::~win_main() {
 	delete data;
 	delete imp;
 	delete login;
+	delete main;
 }
 
 /*

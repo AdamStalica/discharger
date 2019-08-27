@@ -32,6 +32,14 @@ ApiHolder::ApiHolder(QObject *parent)
 	});
 }
 
+void ApiHolder::logout()
+{
+	name = "";
+	surname = "";
+	email = "";
+	id_usr = -1;
+}
+
 ApiHolder::~ApiHolder()
 {
 	delete this->mgr;

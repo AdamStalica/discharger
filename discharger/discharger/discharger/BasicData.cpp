@@ -1,12 +1,23 @@
 #include "BasicData.h"
 #include "ApiHolder.h"
+#include "WgtLoader.h"
 
 using json = nlohmann::json;
 
-BasicData::BasicData(ApiHolder * api, QObject *parent)
+BasicData::BasicData(ApiHolder * api, WgtLoader * loader, QObject *parent)
 	:	QObject(parent),
+		loader(loader),
 		api(api)
 {}
+
+void BasicData::clear()
+{
+	batteries.clear();
+	log_types.clear();
+	races.clear();
+	speedways.clear();
+	cars.clear();
+}
 
 BasicData::~BasicData()
 {}
@@ -39,6 +50,7 @@ void BasicData::fetchData() {
 		{"from", "cars"}
 	};
 
+	loader->setState("Fetching batteries table.");
 	fetchSingleTable(selects[fetchingId].dump());
 }
 
@@ -56,28 +68,28 @@ void BasicData::fetchSingleTable(std::string apiSelect) {
 			switch (this->fetchingId) {
 
 			case 0:
-
+				loader->setState("Fetching speedways table.");
 				batteries = obj["output"];
 				fetchSingleTable(selects[++fetchingId].dump().c_str());
 				break;
 			case 1:
-
+				loader->setState("Fetching races table.");
 				speedways = obj["output"];
 				fetchSingleTable(selects[++fetchingId].dump().c_str());
 				break;
 			case 2:
-
+				loader->setState("Fetching log types table.");
 				races = obj["output"];
 				fetchSingleTable(selects[++fetchingId].dump().c_str());
 				break;
 			case 3:
-
+				loader->setState("Fetching cars table.");
 				log_types = obj["output"];
 				fetchSingleTable(selects[++fetchingId].dump().c_str());
 				break;
 
 			case 4:
-
+				loader->setState("END");
 				cars = obj["output"];
 				emit fetched();
 				break;
@@ -87,6 +99,7 @@ void BasicData::fetchSingleTable(std::string apiSelect) {
 			int no = obj["no"];
 			std::string comment = obj["comment"];
 			lastError = "No: " + QString::number(no) + ", " + comment.c_str();
+			loader->setState("ERROR");
 			emit error();
 		}
 	});

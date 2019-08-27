@@ -124,7 +124,7 @@ public:
     {
         if (WgtImport->objectName().isEmpty())
             WgtImport->setObjectName(QString::fromUtf8("WgtImport"));
-        WgtImport->resize(510, 1573);
+        WgtImport->resize(510, 1441);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -775,7 +775,7 @@ public:
         verticalLayout_5->addLayout(horizontalLayout_5);
 
 
-        verticalLayout_4->addWidget(groupBox_3);
+        verticalLayout_4->addWidget(groupBox_3, 0, Qt::AlignHCenter|Qt::AlignVCenter);
 
 
         retranslateUi(WgtImport);

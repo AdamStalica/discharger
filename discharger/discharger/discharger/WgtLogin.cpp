@@ -1,5 +1,6 @@
 #include "WgtLogin.h"
 #include "ApiHolder.h"
+#include "WgtLoader.h"
 #include "json.h"
 
 #include <QRegExpValidator>
@@ -7,8 +8,9 @@
 
 using json = nlohmann::json;
 
-WgtLogin::WgtLogin(ApiHolder * api, QWidget *parent)
+WgtLogin::WgtLogin(ApiHolder * api, WgtLoader * loader, QWidget *parent)
 	:	QWidget(parent),
+		loader(loader),
 		api(api)
 {
 	ui.setupUi(this);
@@ -37,6 +39,7 @@ void WgtLogin::loginBtn() {
 		return;
 	}
 
+	loader->setState("Logging");
 	api->apiLogin(email, pass);
 
 	connect(api, &ApiHolder::loginResult, this, [this](bool result) {
@@ -46,8 +49,10 @@ void WgtLogin::loginBtn() {
 		if (result) {
 
 			emit loggedIn();
+			loader->setState("Logged in.");
 		}
 		else {
+			loader->setState("ERROR");
 			QMessageBox::critical(this, "Error", api->getLastError());
 		}
 

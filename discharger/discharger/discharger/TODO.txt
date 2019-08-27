@@ -19,8 +19,8 @@
 	4		|		2019-08-25		|					WgtNewRace					|	Done.
 	5		|		2019-08-26		|					WgtLogin					|	Done.
 	7		|		2019-08-26		|					BasicData					|	Done.
-	8		|						|				Widgets managing				|	
-	9		|						|					WgtLoader					|	
+	8		|						|				Widgets managing				|	In progress.
+	9		|		2019-08-27		|					WgtLoader					|	Done.
 	10		|						|					WgtConfigSim				|	
 	11		|						|					UartHolder					|	
 	12		|						|				WebsocketHolder					|	
