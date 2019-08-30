@@ -60,7 +60,7 @@ public:
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setContentsMargins(20, 20, -1, 20);
+        verticalLayout->setContentsMargins(20, 20, 20, 20);
         mainArea->setWidget(scrollAreaWidgetContents);
 
         gridLayout->addWidget(mainArea, 0, 0, 1, 1);

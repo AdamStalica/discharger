@@ -9,6 +9,8 @@
 
 class ThreadSynch;
 class ApiHolder;
+class BasicData;
+class WgtLoader;
 
 /*
 
@@ -22,7 +24,7 @@ class WgtImport : public QWidget
 	Q_OBJECT
 
 public:
-	WgtImport(ApiHolder * api, QWidget *parent = Q_NULLPTR);
+	WgtImport(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent = Q_NULLPTR);
 	~WgtImport();
 
 	QString getLastError() { return lastError; };
@@ -30,12 +32,37 @@ public:
 private:
 	Ui::WgtImport ui;
 	ApiHolder * api;
+	BasicData * data;
+	WgtLoader * loader;
+
 	WgtNewSpeedway * new_sp;
 	WgtNewRace * new_race;
 	QString lastError = "";
 	QString filepath;
 
 	QString mask_filepath = "data/masks.json";
+
+	enum recountable_enum {
+		CURR_RACE_TIME,
+		CURR_LAP_TIME,
+		LAPS_NUM,
+		MOTOR_CURR_LAP_AVG,
+		MAIN_CURR_LAP_AVG
+	};
+	/*
+		CURR_RACE_TIME
+		CURR_LAP_TIME
+		LAPS_NUM
+		MOTOR_CURR_LAP_AVG
+		MAIN_CURR_LAP_AVG
+	*/
+	std::vector<QString> recountable = {
+		"curr_race_time",
+		"curr_lap_time",
+		"laps_num",
+		"motor_curr_lap_avg",
+		"main_curr_lap_avg"
+	};
 
 	std::vector<QComboBox *> col_combo_boxes;
 	int id_log_info;
@@ -47,40 +74,13 @@ private:
 	std::pair<QString, QString> logTime;
 
 
-	nlohmann::json selects;
-
-	/*
-		batteries:	id_batt
-	*/
-	nlohmann::json batteries;
-	
-	/*
-		log_types:	id_log_type, name
-	*/
-	nlohmann::json log_types;
-	
-	/*
-		races:		id_race, id_speedway, name, race_date
-	*/
-	nlohmann::json races;
-	
-	/*
-		speedways:	id_speedway, name
-	*/
-	nlohmann::json speedways;
-	
-	/*
-		cars:		id_car, name
-	*/
-	nlohmann::json cars;
-
 	/*
 		[ { "name" : std::string , "mask" : { "col" : "old", ...} }, ...]
 	*/
 	nlohmann::json col_mask;
 
-	void loadData(const QString & sql);
-	int loadingId = 0;
+	//void loadData(const QString & sql);
+	//int loadingId = 0;
 	void setComboBoxes();
 	void setRaces(int id_speedway);
 	void preProcessFile();
@@ -100,7 +100,7 @@ private slots:
 
 
 signals:
-	void created();
+	//void created();
 	void finished();
 	void error();
 };

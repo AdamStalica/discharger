@@ -1,5 +1,7 @@
 #include "WgtImport.h"
 #include "ApiHolder.h"
+#include "BasicData.h"
+#include "WgtLoader.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -8,12 +10,15 @@
 
 using json = nlohmann::json;
 
-WgtImport::WgtImport(ApiHolder * api, QWidget *parent)
-	: QWidget(parent),
+WgtImport::WgtImport(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent)
+	:	QWidget(parent),
+		data(data),
+		loader(loader),
 		api(api)
 {
 	ui.setupUi(this);
 
+	/*
 	int id_usr = api->getApiUserId();
 	selects[0] = {
 		{"id_usr", id_usr},
@@ -40,8 +45,8 @@ WgtImport::WgtImport(ApiHolder * api, QWidget *parent)
 		{"select", "id_car, name"},
 		{"from", "cars"}
 	};
-
-	loadData(selects[loadingId].dump().c_str());
+	*/
+	//loadData(selects[loadingId].dump().c_str());
 	loadMasks();
 
 	connect(ui.sp_btn, SIGNAL(clicked()), this, SLOT(newSpBtn()));
@@ -64,11 +69,16 @@ WgtImport::WgtImport(ApiHolder * api, QWidget *parent)
 		setMasks(i);
 	});
 
+	connect(this->data, &BasicData::fetched, this, [this] {
+		setComboBoxes();
+	});
+
 }
 
 WgtImport::~WgtImport(){
 
 }
+/*
 
 void WgtImport::loadData(const QString & sql) {
 
@@ -85,28 +95,28 @@ void WgtImport::loadData(const QString & sql) {
 
 				case 0:
 
-					batteries = obj["output"];
+					this->data->batteries = obj["output"];
 					loadData(selects[++loadingId].dump().c_str());
 					break;
 				case 1:
 
-					speedways = obj["output"];
+					this->data->speedways = obj["output"];
 					loadData(selects[++loadingId].dump().c_str());
 					break;
 				case 2:
 					
-					races = obj["output"];
+					this->data->races = obj["output"];
 					loadData(selects[++loadingId].dump().c_str());
 					break;
 				case 3:
 
-					log_types = obj["output"];
+					this->data->log_types = obj["output"];
 					loadData(selects[++loadingId].dump().c_str());
 					break;
 
 				case 4:
 
-					cars = obj["output"];
+					this->data->cars = obj["output"];
 					setComboBoxes();
 					break;
 			}
@@ -120,28 +130,29 @@ void WgtImport::loadData(const QString & sql) {
 	});
 
 }
+*/
 
 void WgtImport::setComboBoxes() {
 
-	for (auto & sp : speedways) {
+	for (auto & sp : this->data->speedways) {
 		int id_sp = sp["id_speedway"];
 		std::string name = sp["name"];
 
 		ui.sp_list->addItem(name.c_str(), QVariant(id_sp));
 	}
-	for (auto & batt : batteries) {
+	for (auto & batt : this->data->batteries) {
 		int id_batt = batt["id_batt"];
 
 		ui.lg_batt_l_list->addItem(QString::number(id_batt), QVariant(id_batt)); 
 		ui.lg_batt_r_list->addItem(QString::number(id_batt), QVariant(id_batt));
 	}
-	for (auto & type : log_types) {
+	for (auto & type : this->data->log_types) {
 		int id_type = type["id_log_type"];
 		std::string name = type["name"];
 
 		ui.lg_types_list->addItem(name.c_str(), QVariant(id_type));
 	}
-	for (auto & car : cars) {
+	for (auto & car : this->data->cars) {
 		int id_car = car["id_car"];
 		std::string name = car["name"];
 
@@ -152,20 +163,22 @@ void WgtImport::setComboBoxes() {
 		if (chCB != nullptr) {
 			col_combo_boxes.push_back(chCB);
 			chCB->addItem("null");
+			if (std::find(recountable.begin(), recountable.end(), chCB->objectName()) != recountable.end())
+				chCB->addItem("recount");
 		}
 	}
 
 	ui.lg_batt_l_list->addItem("null", QVariant(-1));
 	ui.lg_batt_r_list->addItem("null", QVariant(-1));
 
-	emit created();
+	//emit created();
 }
 
 void WgtImport::setRaces(int id_speedway) {
 
 	ui.race_list->clear();
 	
-	for (auto & race : races) {
+	for (auto & race : this->data->races) {
 		int race_id_sp = race["id_speedway"];
 
 		if (race_id_sp == id_speedway) {
@@ -202,7 +215,7 @@ void WgtImport::newSpBtn() {
 			{"id_speedway", id},
 			{"name", name.toStdString()}
 		};
-		speedways.push_back(newSp);
+		this->data->speedways.push_back(newSp);
 		ui.sp_list->addItem(name, QVariant(id));
 		ui.sp_list->setCurrentIndex(ui.sp_list->count() - 1);
 
@@ -238,7 +251,7 @@ void WgtImport::newRaceBtn() {
 			{"name", name.toStdString()},
 			{"race_date", date.toStdString()}
 		};
-		races.push_back(newRace);
+		this->data->races.push_back(newRace);
 		ui.race_list->addItem(date + " " + name, QVariant(id_race));
 		ui.race_list->setCurrentIndex(ui.race_list->count() - 1);
 
@@ -292,11 +305,119 @@ void WgtImport::preProcessFile() {
 }
 
 bool WgtImport::processFile(std::string & out) {
+
+	bool recount_enabled = false;
+	/******************** RECOUNT ********************/
+
+	QString time_format = "hh:mm:ss.zzz";
+
+	json coords = {
+		{ "longitude", -0.6617425 },
+		{ "longitude_toler", 20 },
+		{ "latitude", 52.5137633 },
+		{ "latitude_toler", 9.4 }
+	};
+
+	bool was_inside = false;
+
+	int laps_num = 0;
+	int curr_lap_begin_ms = 0;
+	int curr_race_begin_ms = 0;
+
+	int curr_lap_logs_num = 0;
+	double motor_curr_lap_avg = 0.0;
+	double main_curr_lap_avg = 0.0;
+
+	std::vector<QString> to_recount;
+
+
+	// counting lambdas
+	auto timestampToMs = [time_format](const std::string & timestamp)->int {
+
+		return QTime::fromString(QString(timestamp.c_str()).split(" ")[1], time_format).msecsSinceStartOfDay();
+	};
+
+	auto currLapAvg = [&curr_lap_logs_num](double & avg, double val)->double {
+
+		avg = (((avg * (double)curr_lap_logs_num) + val) / double(++curr_lap_logs_num));
+		return avg;
+	};
+
+	auto currRaceTime = [curr_race_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
+
+		int ms = timestampToMs(timestamp) - curr_race_begin_ms;
+		return QTime::fromMSecsSinceStartOfDay(ms).toString(time_format).toStdString();
+	};
+
+	auto currLapTime = [curr_lap_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
+
+		int ms = timestampToMs(timestamp) - curr_lap_begin_ms;
+		return QTime::fromMSecsSinceStartOfDay(ms).toString(time_format).toStdString();
+	};
+
+	auto isInside = [&coords](double latitude, double longitude)->bool {
+		return true;
+	};
+
+
+	auto recount = [&](json & log) {
+
+		std::string curr_timestamp = log["curr_timestamp"];
+		double latitude = log["gps_latitude"];
+		double longitude = log["gps_longitude"];
+
+		bool is_inside = isInside(latitude, longitude);
+
+		/*
+			is inside and was not inside		-> new lap and mark as was inside
+			is inside and was inside			-> do not change
+			is not inside and was inside		-> mark as was not inside
+			is not inside and was not inside	-> do not change
+		*/
+		if (is_inside && !was_inside) {
+			was_inside = true;
+
+			++laps_num;
+			curr_lap_logs_num = 0;
+			motor_curr_lap_avg = 0;
+			main_curr_lap_avg = 0;
+			curr_lap_begin_ms = timestampToMs(curr_timestamp);
+
+		}
+		if (!is_inside && was_inside) {
+			was_inside = false;
+		}
+
+		for (auto & col : to_recount) {
+			if (col == recountable[CURR_RACE_TIME]) {
+				log[col.toStdString()] = currRaceTime(curr_timestamp);
+			}
+			else if (col == recountable[CURR_LAP_TIME]) {
+				log[col.toStdString()] = currLapTime(curr_timestamp);
+			}
+			else if (col == recountable[LAPS_NUM]) {
+				log[col.toStdString()] = laps_num;
+			}
+			else if (col == recountable[MOTOR_CURR_LAP_AVG]) {
+				log[col.toStdString()] = currLapAvg(motor_curr_lap_avg, log["motor_curr"].get<double>());
+			}
+			else if (col == recountable[MAIN_CURR_LAP_AVG]) {
+				log[col.toStdString()] = currLapAvg(main_curr_lap_avg, log["main_curr"].get<double>());
+			}
+		}
+	};
+
+
+	/*************************************************/
 	
 	std::vector<std::pair<std::string, std::string>> cols;
 	for (auto & cb : col_combo_boxes) {
 		if (cb->currentText() != "null")
 			cols.emplace_back(cb->objectName().toStdString(), cb->currentText().toStdString());
+		if (cb->currentText() == "recount") {
+			recount_enabled = true;
+			to_recount.push_back(cb->objectName());
+		}
 	}
 
 	QFile file(filepath);
@@ -322,22 +443,28 @@ bool WgtImport::processFile(std::string & out) {
 		json rec = json::parse(line.toStdString());
 
 		data["values_list"][i]["id_log_info"] = id_log_info;
+
 		for (auto & col : cols) {
-			data["values_list"][i][col.first] = rec[col.second];
+			if(col.second != "recount")
+				data["values_list"][i][col.first] = rec[col.second];
 
 			if (col.first == "curr_timestamp") {
 				if (i == 0) {
 					std::string begTime = rec[col.second];
 					logTime.first = begTime.c_str();
+
+					curr_lap_begin_ms = curr_race_begin_ms = timestampToMs(begTime);
 				}
 				else {
-					std::string tmp = rec[col.second];
-					endTime = tmp;
+					endTime = rec[col.second].get<std::string>();
 				}
 			}
 		}
-		++i;
 
+		if (recount_enabled)
+			recount(data["values_list"][i]);
+
+		++i;
 	}
 	file.close();
 
@@ -410,6 +537,8 @@ void WgtImport::setMasks(int id_mask) {
 
 void WgtImport::importBtn() {
 
+	loader->setState("Creating new log info");
+
 	int count = 0;
 	for (auto & cb : col_combo_boxes) {
 		if (cb->currentText() == "null") ++count;
@@ -441,10 +570,12 @@ void WgtImport::importBtn() {
 		std::string comment = obj["comment"];
 
 		if (obj["status"] == "OK") {
+			loader->setState("Importing data");
 			id_log_info = no;
 			importData();
 		}
 		else {
+			loader->setState("ERROR");
 			lastError = "No: " + QString::number(no) + ", " + comment.c_str();
 			QMessageBox::critical(this, "Error", lastError);
 		}
@@ -467,9 +598,11 @@ void WgtImport::importData() {
 
 		if (resp_obj["status"] == "OK") {
 
+			loader->setState("Updating timing");
 			updateLogTime();
 		}
 		else {
+			loader->setState("ERROR");
 			lastError = "No: " + QString::number(no) + ", " + comment.c_str();
 			QMessageBox::critical(this, "Error", lastError);
 		}
@@ -497,10 +630,13 @@ void WgtImport::updateLogTime() {
 		std::string comment = resp_obj["comment"];
 
 		if (resp_obj["status"] == "OK") {
+
+			loader->setState("END");
 			QMessageBox::information(this, "Success", "Successfully imported!");
 			emit finished();
 		}
 		else {
+			loader->setState("ERROR");
 			lastError = "No: " + QString::number(no) + ", " + comment.c_str();
 			QMessageBox::critical(this, "Error", lastError);
 		}
