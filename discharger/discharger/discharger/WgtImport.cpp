@@ -209,14 +209,10 @@ void WgtImport::newSpBtn() {
 		ui.lg_box->setEnabled(ui.race_list->count());
 	});
 
-	connect(new_sp, &WgtNewSpeedway::addedNewSpeedway, this, [this](int id, const QString & name) {
+	connect(new_sp, &WgtNewSpeedway::addedNewSpeedway, this, [this](const json & newSp) {
 
-		json newSp = {
-			{"id_speedway", id},
-			{"name", name.toStdString()}
-		};
 		this->data->speedways.push_back(newSp);
-		ui.sp_list->addItem(name, QVariant(id));
+		ui.sp_list->addItem(newSp["name"].get<std::string>().c_str(), QVariant(newSp["id_speedway"].get<int>()));
 		ui.sp_list->setCurrentIndex(ui.sp_list->count() - 1);
 
 		delete new_sp;
@@ -232,7 +228,7 @@ void WgtImport::newRaceBtn() {
 	ui.lg_box->setEnabled(false);
 	
 	new_race = new WgtNewRace(api, this);
-	new_race->setSpeedway(ui.sp_list->currentData().toInt() , ui.sp_list->currentText());
+	new_race->setSpeedway(ui.sp_list->currentData().toInt(), ui.sp_list->currentText());
 
 	ui.race_lay->addWidget(new_race);
 
@@ -311,13 +307,20 @@ bool WgtImport::processFile(std::string & out) {
 
 	QString time_format = "hh:mm:ss.zzz";
 
-	json coords = {
-		{ "longitude", -0.6617425 },
-		{ "longitude_toler", 20 },
-		{ "latitude", 52.5137633 },
-		{ "latitude_toler", 9.4 }
-	};
+	json coords = *std::find_if(data->speedways.begin(), data->speedways.end(), [&](const json & sp)->bool {
+		return (sp["id_speedway"].get<int>() == ui.sp_list->currentData().toInt());
+	});
 
+	/*{
+		{ "longitude", 16.808013 },
+		{ "longitude_toler", 15.0 },
+		{ "latitude", 52.420263 },
+		{ "latitude_toler", 5.0 }
+	};*/
+	double tolerance_ratio = 10000.0;
+	double longitude_tolerance_calculated = coords["longitude_toler"].get<double>() / tolerance_ratio;
+	double latitude_tolerance_calculated = coords["latitude_toler"].get<double>() / tolerance_ratio;
+	
 	bool was_inside = false;
 
 	int laps_num = 0;
@@ -337,34 +340,45 @@ bool WgtImport::processFile(std::string & out) {
 		return QTime::fromString(QString(timestamp.c_str()).split(" ")[1], time_format).msecsSinceStartOfDay();
 	};
 
-	auto currLapAvg = [&curr_lap_logs_num](double & avg, double val)->double {
+	auto currLapAvg = [&curr_lap_logs_num](double & avg, double val)->std::string {
 
-		avg = (((avg * (double)curr_lap_logs_num) + val) / double(++curr_lap_logs_num));
-		return avg;
+		avg = (((avg * (double)curr_lap_logs_num) + val) / double(curr_lap_logs_num + 1));
+		return std::to_string(avg);
 	};
 
-	auto currRaceTime = [curr_race_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
+	auto currRaceTime = [&curr_race_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
 
 		int ms = timestampToMs(timestamp) - curr_race_begin_ms;
 		return QTime::fromMSecsSinceStartOfDay(ms).toString(time_format).toStdString();
 	};
 
-	auto currLapTime = [curr_lap_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
+	auto currLapTime = [&curr_lap_begin_ms, &timestampToMs, time_format](const std::string & timestamp)->std::string {
 
 		int ms = timestampToMs(timestamp) - curr_lap_begin_ms;
 		return QTime::fromMSecsSinceStartOfDay(ms).toString(time_format).toStdString();
 	};
 
-	auto isInside = [&coords](double latitude, double longitude)->bool {
-		return true;
+	auto isInside = [
+		&coords, 
+		longitude_tolerance_calculated, 
+		latitude_tolerance_calculated]
+		(double latitude, double longitude)->bool {
+
+		return (
+			(latitude >= coords["latitude"].get<double>() - latitude_tolerance_calculated) &&
+			(latitude <= coords["latitude"].get<double>() + latitude_tolerance_calculated) &&
+			(longitude >= coords["longitude"].get<double>() - longitude_tolerance_calculated) &&
+			(longitude <= coords["longitude"].get<double>() + longitude_tolerance_calculated)
+		);
 	};
 
 
 	auto recount = [&](json & log) {
 
 		std::string curr_timestamp = log["curr_timestamp"];
-		double latitude = log["gps_latitude"];
-		double longitude = log["gps_longitude"];
+		
+		double latitude = (log["gps_latitude"].type() == json::value_t::string) ? std::stod(log["gps_latitude"].get<std::string>()) : log["gps_latitude"].get<double>();
+		double longitude = (log["gps_longitude"].type() == json::value_t::string) ? std::stod(log["gps_longitude"].get<std::string>()) : log["gps_longitude"].get<double>();
 
 		bool is_inside = isInside(latitude, longitude);
 
@@ -399,12 +413,21 @@ bool WgtImport::processFile(std::string & out) {
 				log[col.toStdString()] = laps_num;
 			}
 			else if (col == recountable[MOTOR_CURR_LAP_AVG]) {
-				log[col.toStdString()] = currLapAvg(motor_curr_lap_avg, log["motor_curr"].get<double>());
+				if (!log["motor_curr"].empty()) {
+					double motor_current = (log["motor_curr"].type() == json::value_t::string) ? std::stod(log["motor_curr"].get<std::string>()) : log["motor_curr"].get<double>();
+
+					log[col.toStdString()] = currLapAvg(motor_curr_lap_avg, motor_current);
+				}
 			}
 			else if (col == recountable[MAIN_CURR_LAP_AVG]) {
-				log[col.toStdString()] = currLapAvg(main_curr_lap_avg, log["main_curr"].get<double>());
+				if (!log["main_curr"].empty()) {
+					double motor_current = (log["main_curr"].type() == json::value_t::string) ? std::stod(log["main_curr"].get<std::string>()) : log["main_curr"].get<double>();
+
+					log[col.toStdString()] = currLapAvg(main_curr_lap_avg, motor_current);
+				}
 			}
 		}
+		++curr_lap_logs_num;
 	};
 
 
@@ -450,7 +473,7 @@ bool WgtImport::processFile(std::string & out) {
 
 			if (col.first == "curr_timestamp") {
 				if (i == 0) {
-					std::string begTime = rec[col.second];
+					std::string begTime = rec[col.second].get<std::string>();
 					logTime.first = begTime.c_str();
 
 					curr_lap_begin_ms = curr_race_begin_ms = timestampToMs(begTime);

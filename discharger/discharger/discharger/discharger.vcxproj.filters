@@ -60,6 +60,12 @@
     <ClCompile Include="WgtLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WgtSimConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UartHolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="win_main.h">
@@ -92,6 +98,12 @@
     <QtMoc Include="WgtLoader.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="WgtSimConfig.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UartHolder.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="win_main.ui">
@@ -113,6 +125,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="WgtLoader.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="WgtSimConfig.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

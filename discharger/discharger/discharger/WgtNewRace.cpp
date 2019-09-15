@@ -24,7 +24,7 @@ WgtNewRace::WgtNewRace(ApiHolder * api, QWidget *parent)
 		emit canceledNewRace();
 	});
 
-	ui.name->setValidator(new QRegExpValidator(QRegExp("\\w{5,50}"), this));
+	ui.name->setValidator(new QRegExpValidator(QRegExp(".{5,50}"), this));
 }
 
 WgtNewRace::~WgtNewRace() {

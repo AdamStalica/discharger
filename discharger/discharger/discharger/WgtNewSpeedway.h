@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "ui_WgtNewSpeedway.h"
+#include "json.h"
 
 class ApiHolder;
 class QTimer;
@@ -25,6 +26,6 @@ private slots:
 	void addNewSpeedway();
 
 signals:
-	void addedNewSpeedway(int id_speedway, const QString & name);
+	void addedNewSpeedway(const nlohmann::json & newSp);
 	void canceledNewSpeedway();
 };

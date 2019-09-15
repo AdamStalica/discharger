@@ -31,7 +31,7 @@ void BasicData::fetchData() {
 	};
 	selects[1] = {
 		{"id_usr", id_usr},
-		{ "select", "id_speedway, name" },
+		{ "select", "id_speedway, name, longitude, longitude_toler, latitude, latitude_toler" },
 		{ "from", "speedways" }
 	};
 	selects[2] = {
@@ -48,6 +48,11 @@ void BasicData::fetchData() {
 		{"id_usr", id_usr},
 		{"select", "id_car, name"},
 		{"from", "cars"}
+	};
+	selects[5] = {
+		{"id_usr", id_usr},
+		{"select", "id_log_info, id_log_type, id_race, id_batt_left, id_batt_right, id_car, begin_time, end_time"},
+		{"from", "log_info"}
 	};
 
 	loader->setState("Fetching batteries table.");
@@ -89,8 +94,13 @@ void BasicData::fetchSingleTable(std::string apiSelect) {
 				break;
 
 			case 4:
-				loader->setState("END");
+				loader->setState("Fetching log_info table.");
 				cars = obj["output"];
+				fetchSingleTable(selects[++fetchingId].dump().c_str());
+				break;
+			case 5:
+				loader->setState("END");
+				log_info = obj["output"];
 				emit fetched();
 				break;
 			}

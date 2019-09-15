@@ -93,7 +93,17 @@ void WgtNewSpeedway::addNewSpeedway() {
 
 		if (resp_json["status"] == "OK") {
 			ui.sp_lbl->setText("Added and got id = " + QString::number(no));
-			emit addedNewSpeedway(no, ui.name->text());
+
+			json newSp = {
+				{"id_speedway", no},
+				{"longitude", ui.longitude->text().toDouble()},
+				{"longitude_toler", ui.longitude_toler->text().toDouble()},
+				{"latitude", ui.latitude->text().toDouble()},
+				{"latitude_toler", ui.latitude_toler->text().toDouble()},
+				{"name", ui.name->text().toStdString()}
+			};
+
+			emit addedNewSpeedway(newSp);
 		}
 		else {
 			

@@ -8,6 +8,7 @@
 #include "WgtLogin.h"
 #include "WgtMain.h"
 #include "WgtLoader.h"
+#include "WgtSimConfig.h"
 
 #include "ApiHolder.h"
 #include "BasicData.h"
@@ -32,6 +33,7 @@ private:
 	WgtLogin * login;
 	WgtMain * main;
 	WgtLoader * loader;
+	WgtSimConfig * simConfig;
 
 	QWidget * lastWgt;
 };

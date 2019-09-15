@@ -37,6 +37,7 @@ win_main::win_main(QWidget *parent)
 	login = new WgtLogin(api, loader);
 	main = new WgtMain();
 	imp = new WgtImport(api, data, loader);
+	simConfig = new WgtSimConfig(api, data, loader);
 
 
 	ui.mainArea->setWidget(login);
@@ -69,14 +70,17 @@ win_main::win_main(QWidget *parent)
 	});
 	connect(main, &WgtMain::newSim, this, [this] {
 		ui.mainArea->takeWidget();
-		ui.mainArea->setWidget(imp);
+		ui.mainArea->setWidget(simConfig);
 	});
 
 	connect(imp, &WgtImport::finished, this, [this] {
 		ui.mainArea->takeWidget();
 		ui.mainArea->setWidget(main);
 	});
-
+	connect(simConfig, &WgtSimConfig::finished, this, [this] {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(main);
+	});
 
 
 	/*

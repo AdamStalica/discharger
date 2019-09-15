@@ -7,7 +7,7 @@
 
 #include "json.h"
 
-class ThreadSynch;
+//class ThreadSynch;
 class ApiHolder;
 class BasicData;
 class WgtLoader;

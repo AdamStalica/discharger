@@ -34,7 +34,7 @@ public:
 	nlohmann::json races;
 
 	/*
-		[ { "id_speedway" : int, "name" : std::string }, ...]
+		[ { "id_speedway" : int, "name" : std::string, "longitude":double, "longitude_toler":double, "latitude":double, "latitude_toler":double }, ...]
 	*/
 	nlohmann::json speedways;
 
@@ -42,6 +42,11 @@ public:
 		[ { "id_car" : int, "name" : std::string }, ...]
 	*/
 	nlohmann::json cars;
+
+	/*
+		[ { "id_log_info" : int, "id_log_type" : int, "id_race" : int, "id_batt_left" : int, "id_batt_right" : int, "id_car" : int, "begin_time" : std::string, "end_time" : std::string }, ...]
+	*/
+	nlohmann::json log_info;
 
 private:
 	ApiHolder * api;
