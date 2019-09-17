@@ -20,10 +20,15 @@ WgtSimConfig::WgtSimConfig(ApiHolder * api, BasicData * data, WgtLoader * loader
 {
 	ui.setupUi(this);
 
-	auto ports = QSerialPortInfo::availablePorts();
-	for (auto & ite : ports) {
-		ui.ports_list->addItem(ite.portName());
-	}
+	loadComs();
+
+	uart = new UartHolder(this);
+
+	connect(ui.open_com_btn, SIGNAL(clicked()), this, SLOT(openAndTestCom()));
+	connect(uart, SIGNAL(gotHandshake(int)), this, SLOT(handshakeHolder(int)));
+	connect(ui.expand_btn, SIGNAL(clicked()), this, SLOT(expandCollapseTree()));
+	connect(ui.refresh_btn, SIGNAL(clicked()), this, SLOT(loadComs()));
+	connect(ui.prep_sim_btn, SIGNAL(clicked()), this, SLOT(prepareSimulation()));
 
 	connect(ui.go_back_btn, &QPushButton::clicked, this, [this] {
 		emit finished();
@@ -31,36 +36,10 @@ WgtSimConfig::WgtSimConfig(ApiHolder * api, BasicData * data, WgtLoader * loader
 	connect(this->data, &BasicData::fetched, this, [this] {
 		init();
 	});
-	connect(ui.expand_btn, &QPushButton::clicked, this, [this] {
-		if (ui.expand_btn->text() == "Expand all") {
-			ui.races_tree->expandToDepth(2);
-			ui.expand_btn->setText("Collapse all");
-		}
-		else {
-			ui.races_tree->collapseAll();
-			ui.expand_btn->setText("Expand all");
-		}
-	});
-	connect(ui.open_com_btn, SIGNAL(clicked()), this, SLOT(openAndTestCom()));
-
-
-	connect(ui.pushButton, &QPushButton::clicked, this, [this] {
-		uart->sendData(json::parse("{\"hehe\":\"okok\"}"));
-	});
-
-	t = new QTimer(this);
-	
-	connect(t, &QTimer::timeout, this, [this] {
-		uart->sendData(json::parse("{\"hehe\":\"okok\"}"));
-	});
-	
-	
-
 }
 
 WgtSimConfig::~WgtSimConfig()
 {
-
 }
 
 // TODO remove 1 at the beginning of the tree
@@ -178,18 +157,49 @@ int WgtSimConfig::getCheckedLogsInfoId()
 
 void WgtSimConfig::openAndTestCom() {
 
-	uart = new UartHolder(this);
+	if (!uart->isOpen()) {
 
-	connect(uart, &UartHolder::gotData, this, [this](const json & data) {
-		qDebug() << data.dump().c_str();
-	});
+		if (!ui.ports_list->count()) {
+			QMessageBox::critical(this, "Error", "There is no available com ports.");
+			return;
+		}
 
-	if (uart->open(ui.ports_list->currentText())) {
-		//uart->sendData(json::parse("{\"hehe\":\"okok\"}"));
-		t->start(1000);
+		if (uart->open(ui.ports_list->currentText())) {
+
+			QTimer::singleShot(500, this, [this] {
+				uart->handshake();
+			});
+		}
+		else {
+			QMessageBox::critical(this, "Error", uart->getLastError());
+		}
 	}
 	else {
+		uart->close();
+		ui.open_com_btn->setText("Open");
+	}
+}
+
+void WgtSimConfig::handshakeHolder(int ms)
+{
+	if (ms == -1) {
 		QMessageBox::critical(this, "Error", uart->getLastError());
+	}
+	else {
+		QMessageBox::information(this, "Opened", "Com opened and got handshake within " + QString::number(ms) + "ms.");
+		ui.open_com_btn->setText("Close");
+	}
+}
+
+void WgtSimConfig::expandCollapseTree()
+{
+	if (ui.expand_btn->text() == "Expand all") {
+		ui.races_tree->expandToDepth(2);
+		ui.expand_btn->setText("Collapse all");
+	}
+	else {
+		ui.races_tree->collapseAll();
+		ui.expand_btn->setText("Expand all");
 	}
 }
 
@@ -204,4 +214,16 @@ void WgtSimConfig::raceCheckedChanged(QStandardItem * item) {
 			connect(model, SIGNAL(itemChanged(QStandardItem *)), this, SLOT(raceCheckedChanged(QStandardItem *)));
 		}
 	}
+}
+
+void WgtSimConfig::loadComs() {
+	ui.ports_list->clear();
+	auto ports = QSerialPortInfo::availablePorts();
+	for (auto & ite : ports) {
+		ui.ports_list->addItem(ite.portName());
+	}
+}
+
+void WgtSimConfig::prepareSimulation() {
+	qDebug() << "ok";
 }

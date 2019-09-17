@@ -37,6 +37,10 @@ private:
 private slots:
 	void raceCheckedChanged(QStandardItem *);
 	void openAndTestCom();
+	void handshakeHolder(int ms);
+	void expandCollapseTree();
+	void loadComs();
+	void prepareSimulation();
 
 signals:
 	void finished();

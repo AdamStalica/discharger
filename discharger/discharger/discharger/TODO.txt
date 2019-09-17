@@ -22,5 +22,5 @@
 	8		|		2019-09-15		|				Widgets managing				|	Done.
 	9		|		2019-08-27		|					WgtLoader					|	Done.
 	10		|		2019-09-15		|					WgtConfigSim				|	In progress.
-	11		|		2019-08-15		|					UartHolder					|	In progress.
+	11		|		2019-08-15		|					UartHolder					|	Done.
 	13		|						|					WgtSimulation				|	

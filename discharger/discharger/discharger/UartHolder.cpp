@@ -3,6 +3,8 @@
 #include <QSerialPort>
 #include <QMessageBox>
 #include <QDebug>
+#include <QTimer>
+
 
 using json = nlohmann::json;
 
@@ -17,6 +19,7 @@ UartHolder::UartHolder(QObject *parent)
 	serial->setFlowControl(QSerialPort::NoFlowControl);
 
 	connect(serial, SIGNAL(readyRead()), this, SLOT(read()));
+	qTimer = new QTimer(this);
 }
 
 UartHolder::~UartHolder()
@@ -25,9 +28,9 @@ UartHolder::~UartHolder()
 	delete serial;
 }
 
-void UartHolder::sendData(const nlohmann::json & data) {
+void UartHolder::sendData(const std::string & data) {
 	
-	QByteArray toSend(data.dump().c_str());
+	QByteArray toSend(data.c_str());
 	serial->write(toSend);
 	serial->waitForBytesWritten();
 }
@@ -44,6 +47,54 @@ bool UartHolder::open(const QString & com)
 	lastError = serial->errorString();
 	
 	return false;
+}
+
+void UartHolder::close() {
+	serial->close();
+}
+
+bool UartHolder::isOpen()
+{
+	return serial->isOpen();
+}
+
+void UartHolder::handshake()
+{
+
+	qTimer->disconnect();
+	connect(qTimer, &QTimer::timeout, this, [this] {
+		lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
+		emit gotHandshake(-1);
+		qTimer->stop();
+	}); 
+	qTimer->start(HANDSHAKE_TIMEOUT);
+	start = timer.now();
+
+	sendData("{\"handshake\":\"PC\"}");
+}
+
+void UartHolder::handshakeHolder()
+{
+	qTimer->stop();
+	auto end = timer.now();
+	int ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	emit gotHandshake(ms);
+}
+
+void UartHolder::sendData(int id, float current, float temperature)
+{
+	json data = {
+		{"id", id},
+		{"curr", current}
+	};
+	if (temperature != FLT_MAX)
+		data["temp"] = temperature;
+	sendData(data.dump());
+}
+
+void UartHolder::sendStop()
+{
+	sendData("{\"stop\":\"now\"}");
 }
 
 void UartHolder::read() {
@@ -65,10 +116,8 @@ void UartHolder::read() {
 			buffer = regExpTheBeginning.capturedTexts().at(0);
 			return;
 		}
-		else if (tmp.contains(regExpTheEnd)) {
-
-			regExpTheEnd.indexIn(tmp);
-			buffer += regExpTheEnd.capturedTexts().at(0);
+		else {
+			buffer += tmp;
 
 			if (buffer.contains(regExpTheWhole)) {
 				regExpTheWhole.indexIn(buffer);
@@ -76,16 +125,28 @@ void UartHolder::read() {
 			}
 			else return;
 		}
-
+		
 		json received;
 		try {
 			received = json::parse(buffer.toStdString());
 		}
 		catch (const std::exception & ex) {
-			//QMessageBox::critical(nullptr, "Error", "Can not parse received string.\n" + QString(ex.what()));
-			qDebug() << "error : " << buffer;
+			lastError = "Can not parse received string.\n" + QString(ex.what());
+			QMessageBox::critical(nullptr, "Error", lastError);
+			//qDebug() << "error UartHolder.cpp : " << buffer;
 			return;
 		}
-		//emit gotData(received);
+
+		if (!received["id"].is_null())
+			emit gotData(received);
+		else if (!received["handshake"].is_null())
+			handshakeHolder();
+		else if (!received["stop"].is_null())
+			emit gotStop(received);
+		else if (!received["error"].is_null()) {
+
+			lastError = received["error"].get<std::string>().c_str();
+			QMessageBox::critical(nullptr, "Error", lastError);
+		}
 	}
 }
