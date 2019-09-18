@@ -162,6 +162,7 @@ public:
 
         prep_sim_btn = new QPushButton(groupBox_3);
         prep_sim_btn->setObjectName(QString::fromUtf8("prep_sim_btn"));
+        prep_sim_btn->setEnabled(false);
         sizePolicy2.setHeightForWidth(prep_sim_btn->sizePolicy().hasHeightForWidth());
         prep_sim_btn->setSizePolicy(sizePolicy2);
         prep_sim_btn->setMinimumSize(QSize(150, 0));

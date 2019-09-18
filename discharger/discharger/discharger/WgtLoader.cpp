@@ -34,7 +34,8 @@ void WgtLoader::setState(const QString & stat)
 			mv->stop();
 			ui.comment_lbl->setText("");
 			this->hide();
-			emit showLastWgt();
+			if(stat == "ERROR")
+				emit showLastWgt();
 		}
 	}
 }

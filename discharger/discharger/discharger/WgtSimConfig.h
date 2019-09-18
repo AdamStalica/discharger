@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include "ui_WgtSimConfig.h"
+#include "json.h"
 
 class UartHolder;
 
@@ -33,6 +34,7 @@ private:
 
 	void init();
 	int getCheckedLogsInfoId();
+	void prepareTimeLine(const nlohmann::json & data);
 
 private slots:
 	void raceCheckedChanged(QStandardItem *);

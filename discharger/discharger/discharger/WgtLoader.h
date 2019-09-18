@@ -12,8 +12,10 @@ class WgtLoader : public QWidget
 public:
 	WgtLoader(QWidget *parent = Q_NULLPTR);
 	~WgtLoader();
-	/*
-	@param stat - send stat = "END" to stop, send another text to start and show text.
+	/**
+	*	@param stat - send stat = "END" to stop, 
+	*	send stat = "ERROR" to stop and show last widget, 
+	*	send another text to start and show text.
 	*/
 	void setState(const QString & stat);
 

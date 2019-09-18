@@ -46,6 +46,7 @@ win_main::win_main(QWidget *parent)
 		data->fetchData();
 	});
 
+
 	connect(data, &BasicData::error, this, [this] {
 		QMessageBox::critical(this, "Error", data->getLastError());
 	});

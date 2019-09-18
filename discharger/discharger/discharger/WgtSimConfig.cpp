@@ -151,7 +151,6 @@ int WgtSimConfig::getCheckedLogsInfoId()
 			return lg->data().toInt();
 		}
 	}
-	QMessageBox::warning(this, "Warning", "Nothing has been chosen!");
 	return -1;
 }
 
@@ -177,6 +176,7 @@ void WgtSimConfig::openAndTestCom() {
 	else {
 		uart->close();
 		ui.open_com_btn->setText("Open");
+		ui.prep_sim_btn->setEnabled(false);
 	}
 }
 
@@ -188,6 +188,7 @@ void WgtSimConfig::handshakeHolder(int ms)
 	else {
 		QMessageBox::information(this, "Opened", "Com opened and got handshake within " + QString::number(ms) + "ms.");
 		ui.open_com_btn->setText("Close");
+		ui.prep_sim_btn->setEnabled(true);
 	}
 }
 
@@ -225,5 +226,65 @@ void WgtSimConfig::loadComs() {
 }
 
 void WgtSimConfig::prepareSimulation() {
-	qDebug() << "ok";
+	
+	int id_log_info = getCheckedLogsInfoId();
+	if (id_log_info == -1) {
+		QMessageBox::warning(this, "Warning", "Select a race to be simulated.");
+		return;
+	}
+	if (!uart->isOpen()) {
+		QMessageBox::critical(this, "Error", "Unfortunately got lost communication with the device. Check it and try again.\n\n" + uart->getLastError());
+		return;
+	}
+
+	loader->setState("Fetching race data.");
+
+	json select = {
+		{"id_usr", api->getApiUserId()},
+		{"select", "curr_race_time, id_log_data, motor_curr"},
+		{"from", "log_data"},
+		{"where", "id_log_info=" + std::to_string(id_log_info)}
+	};
+
+	api->apiSelect(select.dump());
+	connect(api, &ApiHolder::gotResponse, this, [this](const QString & data) {
+		
+		api->disconnect();
+		json resp = json::parse(data.toStdString());
+
+		if (resp["status"].get<std::string>() == "OK") {
+			loader->setState("Preparing time line.");
+			prepareTimeLine(resp["output"]);
+
+		}
+		else {
+			loader->setState("ERROR");
+			QMessageBox::critical(this, "Error", ("No. " + std::to_string(resp["no"].get<int>()) + ", " + resp["comment"].get<std::string>()).c_str());
+		}
+	});
+
+}
+
+void WgtSimConfig::prepareTimeLine(const json & data) {
+
+	std::vector<int> durationBetweenLogs(data.size() + 1);
+
+	auto timeStrToMs = [](const std::string & time)->int {
+		return QTime::fromString(time.c_str()).msecsSinceStartOfDay();
+	};
+
+	//int lastLogTime = 0;// timeStrToMs(data[0]["curr_race_time"].get<std::string>());
+
+	int lastLogTime = 0;
+
+	durationBetweenLogs[0] = 0;
+	durationBetweenLogs[1] = timeStrToMs(data[1]["curr_race_time"].get<std::string>());
+
+	for (int i = 2; i < durationBetweenLogs.size(); ++i) {
+
+		int currentLogTime = timeStrToMs(data[i - 1]["curr_race_time"].get<std::string>());
+		durationBetweenLogs[i] = currentLogTime - lastLogTime;
+		lastLogTime = currentLogTime;
+	}
+
 }
