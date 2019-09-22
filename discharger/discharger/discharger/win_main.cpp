@@ -7,6 +7,17 @@
 
 #include <QMessageBox>
 
+//#define TESTING
+
+#ifdef TESTING
+/*************** Testing Class *********************/
+
+#include "TestingClass.h"
+
+/***************************************************/
+#endif // TESTING
+
+
 using json = nlohmann::json;
 
 win_main::win_main(QWidget *parent)
@@ -38,6 +49,11 @@ win_main::win_main(QWidget *parent)
 	main = new WgtMain();
 	imp = new WgtImport(api, data, loader);
 	simConfig = new WgtSimConfig(api, data, loader);
+	sim = new WgtSim(api, data, loader);
+
+	uart = new UartHolder(this);
+	simConfig->setUartHolder(uart);
+	sim->setUartHolder(uart);
 
 
 	ui.mainArea->setWidget(login);
@@ -71,7 +87,10 @@ win_main::win_main(QWidget *parent)
 	});
 	connect(main, &WgtMain::newSim, this, [this] {
 		ui.mainArea->takeWidget();
-		ui.mainArea->setWidget(simConfig);
+		//ui.mainArea->setWidget(simConfig);
+		json fakeData = json::parse("{\"id_batt_left\":58,\"id_batt_right\":57,\"id_log_info\":4,\"id_sim_info\":15,\"name\":\"First test sim in program\"}");
+		sim->setBasicSimData(fakeData);
+		ui.mainArea->setWidget(sim);
 	});
 
 	connect(imp, &WgtImport::finished, this, [this] {
@@ -82,6 +101,21 @@ win_main::win_main(QWidget *parent)
 		ui.mainArea->takeWidget();
 		ui.mainArea->setWidget(main);
 	});
+	connect(simConfig, &WgtSimConfig::preparedNewSimCanStart, this, [this](const json & data) {
+		ui.mainArea->takeWidget();
+		sim->setBasicSimData(data);
+		ui.mainArea->setWidget(sim);
+	});
+
+	#ifdef TESTING
+	/*************** Testing Class *********************/
+	
+	TestingClass * testingClass = new TestingClass(this);
+	
+	/***************************************************/
+	#endif // TESTING
+
+
 
 
 	/*
@@ -117,6 +151,7 @@ win_main::win_main(QWidget *parent)
 win_main::~win_main() {
 	delete api;
 	delete data;
+	delete uart;
 	delete imp;
 	delete login;
 	delete main;

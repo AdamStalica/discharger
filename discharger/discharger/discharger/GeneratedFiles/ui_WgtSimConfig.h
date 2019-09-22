@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'WgtSimConfig.ui'
 **
-** Created by: Qt User Interface Compiler version 5.13.0
+** Created by: Qt User Interface Compiler version 5.13.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -16,6 +16,7 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
@@ -40,13 +41,22 @@ public:
     QVBoxLayout *verticalLayout_3;
     QPushButton *expand_btn;
     QTreeView *races_tree;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_2;
+    QComboBox *id_batt_left;
+    QLabel *label_2;
+    QComboBox *id_batt_right;
+    QLabel *label_3;
+    QGroupBox *groupBox_4;
+    QVBoxLayout *verticalLayout_4;
+    QLineEdit *sim_name;
     QPushButton *prep_sim_btn;
 
     void setupUi(QWidget *WgtSimConfig)
     {
         if (WgtSimConfig->objectName().isEmpty())
             WgtSimConfig->setObjectName(QString::fromUtf8("WgtSimConfig"));
-        WgtSimConfig->resize(510, 577);
+        WgtSimConfig->resize(510, 714);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -81,11 +91,8 @@ public:
 
         dev_box = new QGroupBox(groupBox_3);
         dev_box->setObjectName(QString::fromUtf8("dev_box"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(dev_box->sizePolicy().hasHeightForWidth());
-        dev_box->setSizePolicy(sizePolicy3);
+        sizePolicy.setHeightForWidth(dev_box->sizePolicy().hasHeightForWidth());
+        dev_box->setSizePolicy(sizePolicy);
         dev_box->setMaximumSize(QSize(16777215, 100));
         gridLayout = new QGridLayout(dev_box);
         gridLayout->setSpacing(6);
@@ -93,37 +100,38 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         label = new QLabel(dev_box);
         label->setObjectName(QString::fromUtf8("label"));
-        QSizePolicy sizePolicy4(QSizePolicy::Maximum, QSizePolicy::Preferred);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy3(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy3);
 
         gridLayout->addWidget(label, 1, 0, 1, 1);
 
         open_com_btn = new QPushButton(dev_box);
         open_com_btn->setObjectName(QString::fromUtf8("open_com_btn"));
-        sizePolicy2.setHeightForWidth(open_com_btn->sizePolicy().hasHeightForWidth());
-        open_com_btn->setSizePolicy(sizePolicy2);
-        open_com_btn->setMinimumSize(QSize(100, 0));
+        sizePolicy1.setHeightForWidth(open_com_btn->sizePolicy().hasHeightForWidth());
+        open_com_btn->setSizePolicy(sizePolicy1);
+        open_com_btn->setMinimumSize(QSize(100, 23));
 
         gridLayout->addWidget(open_com_btn, 2, 1, 1, 1, Qt::AlignRight);
 
         ports_list = new QComboBox(dev_box);
         ports_list->setObjectName(QString::fromUtf8("ports_list"));
-        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(ports_list->sizePolicy().hasHeightForWidth());
-        ports_list->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(ports_list->sizePolicy().hasHeightForWidth());
+        ports_list->setSizePolicy(sizePolicy4);
+        ports_list->setMinimumSize(QSize(0, 20));
 
         gridLayout->addWidget(ports_list, 1, 1, 1, 1);
 
         refresh_btn = new QPushButton(dev_box);
         refresh_btn->setObjectName(QString::fromUtf8("refresh_btn"));
-        sizePolicy2.setHeightForWidth(refresh_btn->sizePolicy().hasHeightForWidth());
-        refresh_btn->setSizePolicy(sizePolicy2);
-        refresh_btn->setMinimumSize(QSize(100, 0));
+        sizePolicy1.setHeightForWidth(refresh_btn->sizePolicy().hasHeightForWidth());
+        refresh_btn->setSizePolicy(sizePolicy1);
+        refresh_btn->setMinimumSize(QSize(100, 23));
 
         gridLayout->addWidget(refresh_btn, 0, 1, 1, 1, Qt::AlignRight);
 
@@ -148,17 +156,66 @@ public:
 
         races_tree = new QTreeView(groupBox_2);
         races_tree->setObjectName(QString::fromUtf8("races_tree"));
-        QSizePolicy sizePolicy6(QSizePolicy::Expanding, QSizePolicy::Maximum);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(races_tree->sizePolicy().hasHeightForWidth());
-        races_tree->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Maximum);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(races_tree->sizePolicy().hasHeightForWidth());
+        races_tree->setSizePolicy(sizePolicy5);
         races_tree->setMinimumSize(QSize(0, 300));
 
         verticalLayout_3->addWidget(races_tree);
 
 
         verticalLayout->addWidget(groupBox_2);
+
+        groupBox = new QGroupBox(groupBox_3);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        gridLayout_2 = new QGridLayout(groupBox);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        id_batt_left = new QComboBox(groupBox);
+        id_batt_left->setObjectName(QString::fromUtf8("id_batt_left"));
+        sizePolicy2.setHeightForWidth(id_batt_left->sizePolicy().hasHeightForWidth());
+        id_batt_left->setSizePolicy(sizePolicy2);
+        id_batt_left->setMinimumSize(QSize(100, 0));
+
+        gridLayout_2->addWidget(id_batt_left, 1, 0, 1, 1, Qt::AlignRight);
+
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_2->addWidget(label_2, 0, 0, 1, 1, Qt::AlignRight);
+
+        id_batt_right = new QComboBox(groupBox);
+        id_batt_right->setObjectName(QString::fromUtf8("id_batt_right"));
+        sizePolicy2.setHeightForWidth(id_batt_right->sizePolicy().hasHeightForWidth());
+        id_batt_right->setSizePolicy(sizePolicy2);
+        id_batt_right->setMinimumSize(QSize(100, 0));
+
+        gridLayout_2->addWidget(id_batt_right, 1, 1, 1, 1, Qt::AlignLeft);
+
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_2->addWidget(label_3, 0, 1, 1, 1, Qt::AlignLeft);
+
+
+        verticalLayout->addWidget(groupBox);
+
+        groupBox_4 = new QGroupBox(groupBox_3);
+        groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
+        verticalLayout_4 = new QVBoxLayout(groupBox_4);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        sim_name = new QLineEdit(groupBox_4);
+        sim_name->setObjectName(QString::fromUtf8("sim_name"));
+
+        verticalLayout_4->addWidget(sim_name);
+
+
+        verticalLayout->addWidget(groupBox_4);
 
         prep_sim_btn = new QPushButton(groupBox_3);
         prep_sim_btn->setObjectName(QString::fromUtf8("prep_sim_btn"));
@@ -189,6 +246,10 @@ public:
         refresh_btn->setText(QCoreApplication::translate("WgtSimConfig", "Refresh", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("WgtSimConfig", "Choose race to be simulated", nullptr));
         expand_btn->setText(QCoreApplication::translate("WgtSimConfig", "Expand all", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("WgtSimConfig", "Batteries", nullptr));
+        label_2->setText(QCoreApplication::translate("WgtSimConfig", "Id left battery", nullptr));
+        label_3->setText(QCoreApplication::translate("WgtSimConfig", "Id right battery", nullptr));
+        groupBox_4->setTitle(QCoreApplication::translate("WgtSimConfig", "Simulation name", nullptr));
         prep_sim_btn->setText(QCoreApplication::translate("WgtSimConfig", "Prepare simulation", nullptr));
     } // retranslateUi
 

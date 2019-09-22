@@ -19,6 +19,9 @@ UartHolder::UartHolder(QObject *parent)
 	serial->setFlowControl(QSerialPort::NoFlowControl);
 
 	connect(serial, SIGNAL(readyRead()), this, SLOT(read()));
+	connect(serial, &QSerialPort::errorOccurred, this, [this](const QSerialPort::SerialPortError & error) {
+		qDebug() << error;
+	});
 	qTimer = new QTimer(this);
 }
 
@@ -60,12 +63,21 @@ bool UartHolder::isOpen()
 
 void UartHolder::handshake()
 {
-
 	qTimer->disconnect();
 	connect(qTimer, &QTimer::timeout, this, [this] {
-		lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
-		emit gotHandshake(-1);
-		qTimer->stop();
+
+		const int tryingLimit = 5;
+		static int counter = 0;
+
+		if (tryingLimit == counter++) {
+			lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
+			emit gotHandshake(-1);
+			qTimer->stop();
+		}
+		else {
+			start = timer.now();
+			sendData("{\"handshake\":\"PC\"}");
+		}
 	}); 
 	qTimer->start(HANDSHAKE_TIMEOUT);
 	start = timer.now();

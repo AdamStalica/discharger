@@ -9,9 +9,11 @@
 #include "WgtMain.h"
 #include "WgtLoader.h"
 #include "WgtSimConfig.h"
+#include "WgtSim.h"
 
 #include "ApiHolder.h"
 #include "BasicData.h"
+#include "UartHolder.h"
 
 class QWebSocket;
 
@@ -28,12 +30,14 @@ private:
 
 	ApiHolder * api;
 	BasicData * data;
-	
+	UartHolder * uart;
+
 	WgtImport * imp;
 	WgtLogin * login;
 	WgtMain * main;
 	WgtLoader * loader;
 	WgtSimConfig * simConfig;
+	WgtSim * sim;
 
 	QWidget * lastWgt;
 };

@@ -4,6 +4,8 @@
 #include "ui_WgtSimConfig.h"
 #include "json.h"
 
+constexpr auto SIM_IN_PROGRESS = 0;
+
 class UartHolder;
 
 class ApiHolder;
@@ -18,6 +20,7 @@ class WgtSimConfig : public QWidget
 
 public:
 	WgtSimConfig(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent = Q_NULLPTR);
+	void setUartHolder(UartHolder * uart);
 	~WgtSimConfig();
 
 private:
@@ -32,9 +35,12 @@ private:
 	std::vector<QStandardItem *> log_info_items;
 	QStandardItemModel * model;
 
+	QString noValueCSS = "border: 10px red solid; background-color: red;";
+
 	void init();
 	int getCheckedLogsInfoId();
-	void prepareTimeLine(const nlohmann::json & data);
+	void createTree();
+	void loadBetteriesList();
 
 private slots:
 	void raceCheckedChanged(QStandardItem *);
@@ -46,4 +52,14 @@ private slots:
 
 signals:
 	void finished();
+	/**
+	*	@param json: {
+	*		id_sim_info: int,
+	*		id_log_info: int,
+	*		id_batt_left: int,
+	*		id_batt_right: int,
+	*		name: std::string
+	*	}
+	*/
+	void preparedNewSimCanStart(const nlohmann::json & data);
 };
