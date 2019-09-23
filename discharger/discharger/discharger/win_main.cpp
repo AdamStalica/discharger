@@ -106,6 +106,10 @@ win_main::win_main(QWidget *parent)
 		sim->setBasicSimData(data);
 		ui.mainArea->setWidget(sim);
 	});
+	connect(sim, &WgtSim::finished, this, [this]() {
+		ui.mainArea->takeWidget();
+		ui.mainArea->setWidget(main);
+	});
 
 	#ifdef TESTING
 	/*************** Testing Class *********************/

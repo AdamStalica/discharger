@@ -1,4 +1,5 @@
 #include "WgtSim.h"
+#include <QRegExpValidator>
 
 using json = nlohmann::json;
 
@@ -12,6 +13,11 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 
 
 
+	connect(ui.back_btn, &QPushButton::clicked, this, [this]() {
+		emit finished();
+	});
+
+	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
 }
 
 void WgtSim::setUartHolder(UartHolder * uart)

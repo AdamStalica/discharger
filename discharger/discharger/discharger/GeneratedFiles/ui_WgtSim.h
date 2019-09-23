@@ -43,7 +43,7 @@ public:
     QGroupBox *groupBox_3;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_18;
-    QLineEdit *lineEdit;
+    QLineEdit *set_temp_ln;
     QLabel *label_19;
     QGroupBox *groupBox;
     QGridLayout *gridLayout;
@@ -197,10 +197,10 @@ public:
 
         horizontalLayout_9->addWidget(label_18);
 
-        lineEdit = new QLineEdit(groupBox_3);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        set_temp_ln = new QLineEdit(groupBox_3);
+        set_temp_ln->setObjectName(QString::fromUtf8("set_temp_ln"));
 
-        horizontalLayout_9->addWidget(lineEdit);
+        horizontalLayout_9->addWidget(set_temp_ln);
 
         label_19 = new QLabel(groupBox_3);
         label_19->setObjectName(QString::fromUtf8("label_19"));
@@ -474,8 +474,8 @@ public:
 
         label = new QLabel(groupBox);
         label->setObjectName(QString::fromUtf8("label"));
-        sizePolicy4.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy4);
+        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy);
         label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
@@ -502,7 +502,7 @@ public:
     {
         WgtSim->setWindowTitle(QCoreApplication::translate("WgtSim", "WgtSim", nullptr));
         vol_chart_box->setTitle(QCoreApplication::translate("WgtSim", "Voltage chart", nullptr));
-        groupBox_5->setTitle(QCoreApplication::translate("WgtSim", "Data & Control", nullptr));
+        groupBox_5->setTitle(QCoreApplication::translate("WgtSim", "Data and Control", nullptr));
         back_btn->setText(QCoreApplication::translate("WgtSim", "Go back", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("WgtSim", "Control", nullptr));
         start_stop_btn->setText(QCoreApplication::translate("WgtSim", "Start", nullptr));
@@ -511,8 +511,8 @@ public:
         label_17->setText(QCoreApplication::translate("WgtSim", "Progress bar", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("WgtSim", "Set temperature", nullptr));
         label_18->setText(QCoreApplication::translate("WgtSim", "T = ", nullptr));
-        lineEdit->setInputMask(QString());
-        lineEdit->setText(QString());
+        set_temp_ln->setInputMask(QString());
+        set_temp_ln->setText(QString());
         label_19->setText(QCoreApplication::translate("WgtSim", "[\302\260C]", nullptr));
         groupBox->setTitle(QCoreApplication::translate("WgtSim", "Current data", nullptr));
         label_2->setText(QCoreApplication::translate("WgtSim", "Estimated time: ", nullptr));

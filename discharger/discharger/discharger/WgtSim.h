@@ -25,4 +25,7 @@ private:
 	BasicData * data;
 	WgtLoader * loader;
 	UartHolder * uart;
+
+signals:
+	void finished();
 };

@@ -51,7 +51,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Data &amp; Control</string>
+      <string>Data and Control</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
@@ -177,7 +177,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="set_temp_ln">
            <property name="inputMask">
             <string/>
            </property>
@@ -648,7 +648,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
