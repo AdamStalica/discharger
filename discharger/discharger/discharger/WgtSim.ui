@@ -11,10 +11,16 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>450</width>
+    <height>700</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>WgtSim</string>
@@ -22,6 +28,12 @@
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="1">
     <widget class="QGroupBox" name="vol_chart_box">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-color: yellow;</string>
      </property>
@@ -438,7 +450,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>media/schem.png</pixmap>
+               <pixmap>media/schem_transparent.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -669,6 +681,12 @@
    </item>
    <item row="0" column="1">
     <widget class="QGroupBox" name="curr_chart_box">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-color: blue;</string>
      </property>

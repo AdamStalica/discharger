@@ -92,28 +92,34 @@ public:
         if (WgtSim->objectName().isEmpty())
             WgtSim->setObjectName(QString::fromUtf8("WgtSim"));
         WgtSim->resize(819, 914);
-        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtSim->sizePolicy().hasHeightForWidth());
         WgtSim->setSizePolicy(sizePolicy);
+        WgtSim->setMinimumSize(QSize(450, 700));
         gridLayout_2 = new QGridLayout(WgtSim);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         vol_chart_box = new QGroupBox(WgtSim);
         vol_chart_box->setObjectName(QString::fromUtf8("vol_chart_box"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(vol_chart_box->sizePolicy().hasHeightForWidth());
+        vol_chart_box->setSizePolicy(sizePolicy1);
         vol_chart_box->setStyleSheet(QString::fromUtf8("background-color: yellow;"));
 
         gridLayout_2->addWidget(vol_chart_box, 1, 1, 1, 1);
 
         groupBox_5 = new QGroupBox(WgtSim);
         groupBox_5->setObjectName(QString::fromUtf8("groupBox_5"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(groupBox_5->sizePolicy().hasHeightForWidth());
-        groupBox_5->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(groupBox_5->sizePolicy().hasHeightForWidth());
+        groupBox_5->setSizePolicy(sizePolicy2);
         groupBox_5->setMinimumSize(QSize(315, 660));
         groupBox_5->setMaximumSize(QSize(315, 660));
         verticalLayout_5 = new QVBoxLayout(groupBox_5);
@@ -122,11 +128,11 @@ public:
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
         back_btn = new QPushButton(groupBox_5);
         back_btn->setObjectName(QString::fromUtf8("back_btn"));
-        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(back_btn->sizePolicy().hasHeightForWidth());
-        back_btn->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(back_btn->sizePolicy().hasHeightForWidth());
+        back_btn->setSizePolicy(sizePolicy3);
         back_btn->setMinimumSize(QSize(100, 0));
 
         verticalLayout_5->addWidget(back_btn);
@@ -139,8 +145,8 @@ public:
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         start_stop_btn = new QPushButton(groupBox_2);
         start_stop_btn->setObjectName(QString::fromUtf8("start_stop_btn"));
-        sizePolicy2.setHeightForWidth(start_stop_btn->sizePolicy().hasHeightForWidth());
-        start_stop_btn->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(start_stop_btn->sizePolicy().hasHeightForWidth());
+        start_stop_btn->setSizePolicy(sizePolicy3);
         start_stop_btn->setMinimumSize(QSize(100, 0));
 
         verticalLayout_4->addWidget(start_stop_btn, 0, Qt::AlignHCenter);
@@ -150,15 +156,18 @@ public:
         horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
         label_13 = new QLabel(groupBox_2);
         label_13->setObjectName(QString::fromUtf8("label_13"));
-        sizePolicy.setHeightForWidth(label_13->sizePolicy().hasHeightForWidth());
-        label_13->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy4(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(label_13->sizePolicy().hasHeightForWidth());
+        label_13->setSizePolicy(sizePolicy4);
 
         horizontalLayout_8->addWidget(label_13);
 
         sim_stat_lbl = new QLabel(groupBox_2);
         sim_stat_lbl->setObjectName(QString::fromUtf8("sim_stat_lbl"));
-        sizePolicy.setHeightForWidth(sim_stat_lbl->sizePolicy().hasHeightForWidth());
-        sim_stat_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(sim_stat_lbl->sizePolicy().hasHeightForWidth());
+        sim_stat_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_8->addWidget(sim_stat_lbl);
 
@@ -181,11 +190,11 @@ public:
 
         groupBox_3 = new QGroupBox(groupBox_5);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Maximum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
-        groupBox_3->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
+        groupBox_3->setSizePolicy(sizePolicy5);
         groupBox_3->setMinimumSize(QSize(0, 51));
         groupBox_3->setMaximumSize(QSize(16777215, 51));
         horizontalLayout_9 = new QHBoxLayout(groupBox_3);
@@ -212,24 +221,24 @@ public:
 
         groupBox = new QGroupBox(groupBox_5);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        sizePolicy.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
-        groupBox->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
+        groupBox->setSizePolicy(sizePolicy4);
         gridLayout = new QGridLayout(groupBox);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         label_2 = new QLabel(groupBox);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        sizePolicy.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
-        label_2->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+        label_2->setSizePolicy(sizePolicy4);
         label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(label_2, 2, 0, 1, 1, Qt::AlignLeft);
 
         est_time_lbl = new QLabel(groupBox);
         est_time_lbl->setObjectName(QString::fromUtf8("est_time_lbl"));
-        sizePolicy.setHeightForWidth(est_time_lbl->sizePolicy().hasHeightForWidth());
-        est_time_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(est_time_lbl->sizePolicy().hasHeightForWidth());
+        est_time_lbl->setSizePolicy(sizePolicy4);
 
         gridLayout->addWidget(est_time_lbl, 2, 1, 1, 1);
 
@@ -243,8 +252,8 @@ public:
 
         sim_time_lbl = new QLabel(groupBox);
         sim_time_lbl->setObjectName(QString::fromUtf8("sim_time_lbl"));
-        sizePolicy.setHeightForWidth(sim_time_lbl->sizePolicy().hasHeightForWidth());
-        sim_time_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(sim_time_lbl->sizePolicy().hasHeightForWidth());
+        sim_time_lbl->setSizePolicy(sizePolicy4);
 
         gridLayout->addWidget(sim_time_lbl, 0, 1, 1, 1, Qt::AlignLeft);
 
@@ -253,15 +262,15 @@ public:
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         set_curr_lbl = new QLabel(groupBox);
         set_curr_lbl->setObjectName(QString::fromUtf8("set_curr_lbl"));
-        sizePolicy.setHeightForWidth(set_curr_lbl->sizePolicy().hasHeightForWidth());
-        set_curr_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(set_curr_lbl->sizePolicy().hasHeightForWidth());
+        set_curr_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_7->addWidget(set_curr_lbl, 0, Qt::AlignLeft);
 
         label_16 = new QLabel(groupBox);
         label_16->setObjectName(QString::fromUtf8("label_16"));
-        sizePolicy.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
-        label_16->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
+        label_16->setSizePolicy(sizePolicy4);
 
         horizontalLayout_7->addWidget(label_16);
 
@@ -274,22 +283,22 @@ public:
 
         label_7 = new QLabel(groupBox);
         label_7->setObjectName(QString::fromUtf8("label_7"));
-        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
-        label_7->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy6(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy6.setHorizontalStretch(0);
+        sizePolicy6.setVerticalStretch(0);
+        sizePolicy6.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
+        label_7->setSizePolicy(sizePolicy6);
         label_7->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(label_7, 4, 0, 1, 1, Qt::AlignLeft);
 
         groupBox_4 = new QGroupBox(groupBox);
         groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
-        QSizePolicy sizePolicy5(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(groupBox_4->sizePolicy().hasHeightForWidth());
-        groupBox_4->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy7(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy7.setHorizontalStretch(0);
+        sizePolicy7.setVerticalStretch(0);
+        sizePolicy7.setHeightForWidth(groupBox_4->sizePolicy().hasHeightForWidth());
+        groupBox_4->setSizePolicy(sizePolicy7);
         groupBox_4->setMinimumSize(QSize(270, 230));
         groupBox_4->setMaximumSize(QSize(270, 230));
         verticalLayout = new QVBoxLayout(groupBox_4);
@@ -301,22 +310,22 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         label_4 = new QLabel(groupBox_4);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        sizePolicy.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
-        label_4->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
+        label_4->setSizePolicy(sizePolicy4);
 
         horizontalLayout->addWidget(label_4, 0, Qt::AlignRight);
 
         current_lbl = new QLabel(groupBox_4);
         current_lbl->setObjectName(QString::fromUtf8("current_lbl"));
-        sizePolicy.setHeightForWidth(current_lbl->sizePolicy().hasHeightForWidth());
-        current_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(current_lbl->sizePolicy().hasHeightForWidth());
+        current_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout->addWidget(current_lbl, 0, Qt::AlignLeft);
 
         label_6 = new QLabel(groupBox_4);
         label_6->setObjectName(QString::fromUtf8("label_6"));
-        sizePolicy.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
+        label_6->setSizePolicy(sizePolicy4);
 
         horizontalLayout->addWidget(label_6, 0, Qt::AlignLeft);
 
@@ -325,16 +334,16 @@ public:
 
         label_3 = new QLabel(groupBox_4);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        QSizePolicy sizePolicy6(QSizePolicy::Maximum, QSizePolicy::Maximum);
-        sizePolicy6.setHorizontalStretch(50);
-        sizePolicy6.setVerticalStretch(15);
-        sizePolicy6.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
-        label_3->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy8(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        sizePolicy8.setHorizontalStretch(50);
+        sizePolicy8.setVerticalStretch(15);
+        sizePolicy8.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
+        label_3->setSizePolicy(sizePolicy8);
         label_3->setMinimumSize(QSize(250, 120));
         label_3->setMaximumSize(QSize(250, 120));
         label_3->setSizeIncrement(QSize(50, 100));
         label_3->setBaseSize(QSize(50, 100));
-        label_3->setPixmap(QPixmap(QString::fromUtf8("media/schem.png")));
+        label_3->setPixmap(QPixmap(QString::fromUtf8("media/schem_transparent.png")));
         label_3->setScaledContents(true);
 
         verticalLayout->addWidget(label_3);
@@ -350,22 +359,22 @@ public:
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         label_5 = new QLabel(groupBox_4);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        sizePolicy.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
-        label_5->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
+        label_5->setSizePolicy(sizePolicy4);
 
         horizontalLayout_2->addWidget(label_5);
 
         vol_left_lbl = new QLabel(groupBox_4);
         vol_left_lbl->setObjectName(QString::fromUtf8("vol_left_lbl"));
-        sizePolicy.setHeightForWidth(vol_left_lbl->sizePolicy().hasHeightForWidth());
-        vol_left_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(vol_left_lbl->sizePolicy().hasHeightForWidth());
+        vol_left_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_2->addWidget(vol_left_lbl);
 
         label_8 = new QLabel(groupBox_4);
         label_8->setObjectName(QString::fromUtf8("label_8"));
-        sizePolicy.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
-        label_8->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
+        label_8->setSizePolicy(sizePolicy4);
 
         horizontalLayout_2->addWidget(label_8);
 
@@ -377,22 +386,22 @@ public:
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
         label_14 = new QLabel(groupBox_4);
         label_14->setObjectName(QString::fromUtf8("label_14"));
-        sizePolicy.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
-        label_14->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
+        label_14->setSizePolicy(sizePolicy4);
 
         horizontalLayout_6->addWidget(label_14);
 
         temp_left_lbl = new QLabel(groupBox_4);
         temp_left_lbl->setObjectName(QString::fromUtf8("temp_left_lbl"));
-        sizePolicy.setHeightForWidth(temp_left_lbl->sizePolicy().hasHeightForWidth());
-        temp_left_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(temp_left_lbl->sizePolicy().hasHeightForWidth());
+        temp_left_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_6->addWidget(temp_left_lbl);
 
         label_15 = new QLabel(groupBox_4);
         label_15->setObjectName(QString::fromUtf8("label_15"));
-        sizePolicy.setHeightForWidth(label_15->sizePolicy().hasHeightForWidth());
-        label_15->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_15->sizePolicy().hasHeightForWidth());
+        label_15->setSizePolicy(sizePolicy4);
 
         horizontalLayout_6->addWidget(label_15);
 
@@ -414,22 +423,22 @@ public:
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         label_9 = new QLabel(groupBox_4);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        sizePolicy.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
-        label_9->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
+        label_9->setSizePolicy(sizePolicy4);
 
         horizontalLayout_3->addWidget(label_9);
 
         vol_right_lbl = new QLabel(groupBox_4);
         vol_right_lbl->setObjectName(QString::fromUtf8("vol_right_lbl"));
-        sizePolicy.setHeightForWidth(vol_right_lbl->sizePolicy().hasHeightForWidth());
-        vol_right_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(vol_right_lbl->sizePolicy().hasHeightForWidth());
+        vol_right_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_3->addWidget(vol_right_lbl);
 
         label_11 = new QLabel(groupBox_4);
         label_11->setObjectName(QString::fromUtf8("label_11"));
-        sizePolicy.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
-        label_11->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
+        label_11->setSizePolicy(sizePolicy4);
 
         horizontalLayout_3->addWidget(label_11);
 
@@ -441,22 +450,22 @@ public:
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
         label_10 = new QLabel(groupBox_4);
         label_10->setObjectName(QString::fromUtf8("label_10"));
-        sizePolicy.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
-        label_10->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
+        label_10->setSizePolicy(sizePolicy4);
 
         horizontalLayout_5->addWidget(label_10);
 
         temp_right_lbl = new QLabel(groupBox_4);
         temp_right_lbl->setObjectName(QString::fromUtf8("temp_right_lbl"));
-        sizePolicy.setHeightForWidth(temp_right_lbl->sizePolicy().hasHeightForWidth());
-        temp_right_lbl->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(temp_right_lbl->sizePolicy().hasHeightForWidth());
+        temp_right_lbl->setSizePolicy(sizePolicy4);
 
         horizontalLayout_5->addWidget(temp_right_lbl);
 
         label_12 = new QLabel(groupBox_4);
         label_12->setObjectName(QString::fromUtf8("label_12"));
-        sizePolicy.setHeightForWidth(label_12->sizePolicy().hasHeightForWidth());
-        label_12->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_12->sizePolicy().hasHeightForWidth());
+        label_12->setSizePolicy(sizePolicy4);
 
         horizontalLayout_5->addWidget(label_12);
 
@@ -474,8 +483,8 @@ public:
 
         label = new QLabel(groupBox);
         label->setObjectName(QString::fromUtf8("label"));
-        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy4);
         label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
@@ -488,6 +497,8 @@ public:
 
         curr_chart_box = new QGroupBox(WgtSim);
         curr_chart_box->setObjectName(QString::fromUtf8("curr_chart_box"));
+        sizePolicy1.setHeightForWidth(curr_chart_box->sizePolicy().hasHeightForWidth());
+        curr_chart_box->setSizePolicy(sizePolicy1);
         curr_chart_box->setStyleSheet(QString::fromUtf8("background-color: blue;"));
 
         gridLayout_2->addWidget(curr_chart_box, 0, 1, 1, 1);
