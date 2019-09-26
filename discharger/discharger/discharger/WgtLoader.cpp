@@ -17,6 +17,17 @@ WgtLoader::~WgtLoader()
 	delete mv;
 }
 
+void WgtLoader::hideLoader(bool showLastWgt) {
+	if (active) {
+		active = false;
+		mv->stop();
+		ui.comment_lbl->setText("");
+		this->hide();
+		if (showLastWgt)
+			emit this->showLastWgt();
+	}
+}
+
 void WgtLoader::setState(const QString & stat)
 {
 	if (stat != "END" && stat != "ERROR") {
@@ -29,13 +40,6 @@ void WgtLoader::setState(const QString & stat)
 		ui.comment_lbl->setText(stat);
 	}
 	else {
-		if (active) {
-			active = false;
-			mv->stop();
-			ui.comment_lbl->setText("");
-			this->hide();
-			if(stat == "ERROR")
-				emit showLastWgt();
-		}
+		hideLoader(stat == "ERROR");
 	}
 }

@@ -174,4 +174,9 @@
   <ItemGroup>
     <Text Include="TODO.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DeviceError.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

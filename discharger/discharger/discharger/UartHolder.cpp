@@ -156,9 +156,7 @@ void UartHolder::read() {
 		else if (!received["stop"].is_null())
 			emit gotStop(received);
 		else if (!received["error"].is_null()) {
-
-			lastError = received["error"].get<std::string>().c_str();
-			QMessageBox::critical(nullptr, "Error", lastError);
+			emit gotError(DeviceError(received["error"].get<int>()));
 		}
 	}
 }

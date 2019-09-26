@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <chrono>
+#include "DeviceError.h"
 #include "json.h"
 
 constexpr auto HANDSHAKE_TIMEOUT = 1000;
@@ -60,7 +61,23 @@ private slots:
 	void read();
 
 signals:
+	/**
+	*	Signal emitted when got data.
+	*	@param received data {"id":int,"curr":double,"bLV":double,"bRV":double,"bLT":double,"bRT":double}
+	*/
 	void gotData(const nlohmann::json & data);
-	void gotHandshake(int);
+
 	void gotStop(const nlohmann::json & data);
+
+	/**
+	*	Signal emitted when got hand shake
+	*	@param duration since handshake was sent until got response [ms].
+	*/
+	void gotHandshake(int);
+
+	/**
+	*	Signal emitted when device send error.
+	*	@param error - An device error object.
+	*/
+	void gotError(const DeviceError & error);
 };

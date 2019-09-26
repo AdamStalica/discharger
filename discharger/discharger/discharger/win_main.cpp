@@ -90,6 +90,7 @@ win_main::win_main(QWidget *parent)
 		//ui.mainArea->setWidget(simConfig);
 		json fakeData = json::parse("{\"id_batt_left\":58,\"id_batt_right\":57,\"id_log_info\":4,\"id_sim_info\":15,\"name\":\"First test sim in program\"}");
 		sim->setBasicSimData(fakeData);
+		sim->prepareSimulation();
 		ui.mainArea->setWidget(sim);
 	});
 
