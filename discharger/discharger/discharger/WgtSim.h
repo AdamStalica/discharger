@@ -3,13 +3,14 @@
 #include <QWidget>
 #include "ui_WgtSim.h"
 #include "json.h"
+#include "SimData.h"
 
 class ApiHolder;
 class BasicData;
 class WgtLoader;
 class UartHolder;
 
-class WgtSim : public QWidget
+class WgtSim : public QWidget, SimData
 {
 	Q_OBJECT
 
@@ -35,6 +36,8 @@ private:
 
 	int id_batt_left, id_batt_right, id_log_info, id_sim_info;
 	std::string sim_name = "null";
+
+	void fetchedCallback(const std::string & status, int no, const std::string & comment) override;
 
 signals:
 	void finished();

@@ -4,11 +4,17 @@
 class ReceivedData
 {
 	nlohmann::json jsonDataObject;
-	int id;
+	int id = -1;
 	double current, battLeftVolt, battRightVolt, battLeftTemp, battRightTemp;
 public:
+	ReceivedData() {};
 	ReceivedData(const nlohmann::json & data);
+
 	nlohmann::json getJson() const;
+	int getId() const { return id; }
+
+	bool isValid() const { return id == -1; };
+
 	~ReceivedData();
 };
 

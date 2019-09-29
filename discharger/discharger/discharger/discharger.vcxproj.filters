@@ -86,6 +86,9 @@
     <ClCompile Include="WgtSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimData.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ApiHolder.h">
@@ -180,6 +183,9 @@
     </ClInclude>
     <ClInclude Include="ReceivedData.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimData.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

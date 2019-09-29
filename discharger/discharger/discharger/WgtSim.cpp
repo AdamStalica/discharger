@@ -12,6 +12,7 @@ using json = nlohmann::json;
 
 WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent)
 	:	QWidget(parent),	
+		SimData(api),
 		api(api),
 		data(data),
 		loader(loader)
@@ -57,24 +58,15 @@ void WgtSim::prepareSimulation()
 
 	loader->setState("Fetching logs data to be simulated during the simulation.");
 
-	json select = {
-		{"id_usr", api->getApiUserId()},
-		{"select", "id_log_data, curr_race_time, motor_curr"},
-		{"from", "log_data"},
-		{"where", "id_log_info=" + std::to_string(this->id_log_info)}
-	};
-	api->apiSelect(select.dump());
-	connect(api, &ApiHolder::gotResponse, this, [this](const QString & data) {
-	
-		api->disconnect();
-		json resp = json::parse(data.toStdString());
+	SimData::fetchData(id_sim_info, id_log_info);
 
-		loader->hideLoader(true);	
-	});
-
-	
 }
 
 WgtSim::~WgtSim()
 {
+}
+
+void WgtSim::fetchedCallback(const std::string & status, int no, const std::string & comment)
+{
+	loader->hideLoader(true);
 }
