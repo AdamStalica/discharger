@@ -19,7 +19,7 @@ public:
 
 	/**
 	*	Setter to set simulation basic data.
-	*	@param ...
+	*	@param {"id_sim_info":int,"id_log_info":int,"id_batt_left":int,"id_batt_right":int,"name":std::string}
 	*/
 	void setBasicSimData(const nlohmann::json & data);
 	void prepareSimulation();

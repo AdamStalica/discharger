@@ -36,7 +36,7 @@ signals:
 
 private:
 
-	QString api_url = "http://api.sgp.dominikkala.pl/";
+	QString api_url = "http://api.sgp.slavek.webd.pro/";
 	QString lastError;
 
 	QNetworkAccessManager * mgr;

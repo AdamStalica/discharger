@@ -176,7 +176,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceError.h">
-      <Filter>Generated Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceivedData.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

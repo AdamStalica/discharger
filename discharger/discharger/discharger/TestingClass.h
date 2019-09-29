@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include <UartHolder.h>
+#include "UartHolder.h"
 #include <QTimer>
 #include <QDebug>
 
@@ -30,9 +30,9 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 		qDebug() << "Got handshake after " << duration << " us.";
 	});
 
-	connect(uart, &UartHolder::gotData, this, [this](const nlohmann::json & data) {
+	connect(uart, &UartHolder::gotData, this, [this](const ReceivedData & data) {
 		
-		qDebug() << data.dump().c_str();
+		//qDebug() << data.getJson().dump().c_str();
 		
 	});
 

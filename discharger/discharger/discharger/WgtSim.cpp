@@ -5,6 +5,9 @@
 
 #include <QRegExpValidator>
 
+#include <chrono>
+#include <thread>
+
 using json = nlohmann::json;
 
 WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent)
@@ -20,9 +23,6 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 	connect(ui.back_btn, &QPushButton::clicked, this, [this]() {
 		emit finished();
 	});
-	connect(uart, &UartHolder::gotError, this, [this](const DeviceError & error) {
-		qDebug() << error.what().c_str();
-	});
 
 	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
 }
@@ -30,20 +30,25 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 void WgtSim::setUartHolder(UartHolder * uart)
 {
 	this->uart = uart;
+
+	connect(uart, &UartHolder::gotError, this, [this](const DeviceError & error) {
+		qDebug() << error.what().c_str();
+	});
 }
 
 void WgtSim::setBasicSimData(const json & data)
 {
-	try {
-		id_batt_left = data["id_batt_left"].get<int>();
-		id_batt_right = data["id_batt_right"].get<int>();
-		id_log_info = data["id_log_info"].get<int>();
-		id_sim_info = data["id_sim_info"].get<int>();
-		sim_name = data["name"].get<std::string>();
-	}
-	catch (const std::exception & ex) {
-		throw std::exception("Id_batt_left, id_batt_right, id_log_info, id_sim_info and simulation name are required.");
-	}
+	if (data["id_batt_left"].is_null()) throw std::exception("Id_batt_left is required.");
+	if (data["id_batt_right"].is_null()) throw std::exception("Id_batt_right is required.");
+	if (data["id_log_info"].is_null()) throw std::exception("Id_log_info is required.");
+	if (data["id_sim_info"].is_null()) throw std::exception("Id_sim_info is required.");
+	if (data["name"].is_null()) throw std::exception("Name is required.");
+
+	id_batt_left = data["id_batt_left"].get<int>();
+	id_batt_right = data["id_batt_right"].get<int>();
+	id_log_info = data["id_log_info"].get<int>();
+	id_sim_info = data["id_sim_info"].get<int>();
+	sim_name = data["name"].get<std::string>();
 }
 
 void WgtSim::prepareSimulation()
@@ -64,9 +69,10 @@ void WgtSim::prepareSimulation()
 		api->disconnect();
 		json resp = json::parse(data.toStdString());
 
+		loader->hideLoader(true);	
+	});
 
 	
-	});
 }
 
 WgtSim::~WgtSim()

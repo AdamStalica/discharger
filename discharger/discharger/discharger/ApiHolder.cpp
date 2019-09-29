@@ -94,7 +94,7 @@ void ApiHolder::apiLogin(const QString & email, const QString & pass) {
 		this->disconnect(this->login_conn);
 		json resp_obj = json::parse(resp.toStdString());
 
-		int no = resp_obj["no"];
+		int no = resp_obj["no"].type() == json::value_t::string ? std::stoi(resp_obj["no"].get<std::string>()) : resp_obj["no"].get<int>();
 		std::string comment = resp_obj["comment"];
 
 		if(resp_obj["status"] == "OK") {

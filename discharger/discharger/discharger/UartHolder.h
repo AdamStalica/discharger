@@ -3,6 +3,7 @@
 #include <QObject>
 #include <chrono>
 #include "DeviceError.h"
+#include "ReceivedData.h"
 #include "json.h"
 
 constexpr auto HANDSHAKE_TIMEOUT = 1000;
@@ -65,9 +66,9 @@ signals:
 	*	Signal emitted when got data.
 	*	@param received data {"id":int,"curr":double,"bLV":double,"bRV":double,"bLT":double,"bRT":double}
 	*/
-	void gotData(const nlohmann::json & data);
+	void gotData(const ReceivedData & data);
 
-	void gotStop(const nlohmann::json & data);
+	void gotStop();
 
 	/**
 	*	Signal emitted when got hand shake

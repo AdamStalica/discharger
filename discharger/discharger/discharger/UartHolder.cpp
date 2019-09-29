@@ -150,11 +150,11 @@ void UartHolder::read() {
 		}
 
 		if (!received["id"].is_null())
-			emit gotData(received);
+			emit gotData(ReceivedData(received));
 		else if (!received["handshake"].is_null())
 			handshakeHolder();
 		else if (!received["stop"].is_null())
-			emit gotStop(received);
+			emit gotStop();
 		else if (!received["error"].is_null()) {
 			emit gotError(DeviceError(received["error"].get<int>()));
 		}
