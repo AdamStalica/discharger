@@ -12,11 +12,6 @@ UartHolder::UartHolder(QObject *parent)
 	: QObject(parent)
 {
 	serial = new QSerialPort(this);
-	serial->setBaudRate(QSerialPort::Baud115200);
-	serial->setDataBits(QSerialPort::Data8);
-	serial->setParity(QSerialPort::NoParity);
-	serial->setStopBits(QSerialPort::OneStop);
-	serial->setFlowControl(QSerialPort::NoFlowControl);
 
 	connect(serial, SIGNAL(readyRead()), this, SLOT(read()));
 	connect(serial, &QSerialPort::errorOccurred, this, [this](const QSerialPort::SerialPortError & error) {
@@ -33,7 +28,7 @@ UartHolder::~UartHolder()
 
 void UartHolder::sendData(const std::string & data) {
 	
-	QByteArray toSend(data.c_str());
+	QByteArray toSend((data).c_str());
 	serial->write(toSend);
 	serial->waitForBytesWritten();
 }
@@ -43,13 +38,19 @@ bool UartHolder::open(const QString & com)
 	if (serial->isOpen()) 
 		return true;
 
-	serial->setPortName(com);
-	if (serial->open(QIODevice::ReadWrite)) {
-		return true;
-	}
-	lastError = serial->errorString();
+	serial->setBaudRate(230400);
+	serial->setDataBits(QSerialPort::Data8);
+	serial->setParity(QSerialPort::NoParity);
+	serial->setStopBits(QSerialPort::OneStop);
+	serial->setFlowControl(QSerialPort::NoFlowControl);
 	
-	return false;
+	serial->setPortName(com);
+	if (!serial->open(QIODevice::ReadWrite)) {
+		lastError = serial->errorString();
+		return false;
+	}
+
+	return true;
 }
 
 void UartHolder::close() {
@@ -111,52 +112,61 @@ void UartHolder::sendStop()
 
 void UartHolder::read() {
 
-	QString tmp(serial->readAll());
 
-	if (tmp.size() > 1) {
-		
-		tmp.replace(QRegExp("[\n\r]"), "");
+	if (serial->canReadLine()) {
 
-		if (tmp.contains(regExpTheWhole)) {
 
-			regExpTheWhole.indexIn(tmp);
-			buffer = regExpTheWhole.capturedTexts().at(0);
-		}
-		else if (tmp.contains(regExpTheBeginning)) {
+		QString tmp(serial->readLine());
 
-			regExpTheBeginning.indexIn(tmp);
-			buffer = regExpTheBeginning.capturedTexts().at(0);
-			return;
-		}
-		else {
-			buffer += tmp;
+		qDebug() << tmp;
 
-			if (buffer.contains(regExpTheWhole)) {
-				regExpTheWhole.indexIn(buffer);
+		if (tmp.size() > 1) {
+
+			tmp.replace(QRegExp("[\n\r]"), "");
+			/*
+
+			if (tmp.contains(regExpTheWhole)) {
+
+				regExpTheWhole.indexIn(tmp);
 				buffer = regExpTheWhole.capturedTexts().at(0);
 			}
-			else return;
-		}
-		
-		json received;
-		try {
-			received = json::parse(buffer.toStdString());
-		}
-		catch (const std::exception & ex) {
-			lastError = "Can not parse received string.\n" + QString(ex.what());
-			QMessageBox::critical(nullptr, "Error", lastError);
-			//qDebug() << "error UartHolder.cpp : " << buffer;
-			return;
-		}
+			else if (tmp.contains(regExpTheBeginning)) {
 
-		if (!received["id"].is_null())
-			emit gotData(ReceivedData(received));
-		else if (!received["handshake"].is_null())
-			handshakeHolder();
-		else if (!received["stop"].is_null())
-			emit gotStop();
-		else if (!received["error"].is_null()) {
-			emit gotError(DeviceError(received["error"].get<int>()));
+				regExpTheBeginning.indexIn(tmp);
+				buffer = regExpTheBeginning.capturedTexts().at(0);
+				return;
+			}
+			else {
+				buffer += tmp;
+
+				if (buffer.contains(regExpTheWhole)) {
+					regExpTheWhole.indexIn(buffer);
+					buffer = regExpTheWhole.capturedTexts().at(0);
+				}
+				else return;
+			}
+			*/
+
+			json received;
+			try {
+				received = json::parse(tmp.toStdString());
+			}
+			catch (const std::exception & ex) {
+				lastError = "Can not parse received string.\n" + QString(ex.what());
+				QMessageBox::critical(nullptr, "Error", lastError);
+				//qDebug() << "error UartHolder.cpp : " << buffer;
+				return;
+			}
+
+			if (!received["id"].is_null())
+				emit gotData(ReceivedData(received));
+			else if (!received["handshake"].is_null())
+				handshakeHolder();
+			else if (!received["stop"].is_null())
+				emit gotStop();
+			else if (!received["error"].is_null()) {
+				emit gotError(DeviceError(received["error"].get<int>()));
+			}
 		}
 	}
 }

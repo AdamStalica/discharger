@@ -86,6 +86,8 @@ public:
     QLabel *label_12;
     QLabel *label;
     QGroupBox *curr_chart_box;
+    QVBoxLayout *verticalLayout_6;
+    QVBoxLayout *curr_chart_lay;
 
     void setupUi(QWidget *WgtSim)
     {
@@ -102,6 +104,7 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(-1, 0, -1, -1);
         vol_chart_box = new QGroupBox(WgtSim);
         vol_chart_box->setObjectName(QString::fromUtf8("vol_chart_box"));
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -181,7 +184,7 @@ public:
 
         sim_progress_bar = new QProgressBar(groupBox_2);
         sim_progress_bar->setObjectName(QString::fromUtf8("sim_progress_bar"));
-        sim_progress_bar->setValue(24);
+        sim_progress_bar->setValue(0);
 
         verticalLayout_4->addWidget(sim_progress_bar);
 
@@ -499,7 +502,18 @@ public:
         curr_chart_box->setObjectName(QString::fromUtf8("curr_chart_box"));
         sizePolicy1.setHeightForWidth(curr_chart_box->sizePolicy().hasHeightForWidth());
         curr_chart_box->setSizePolicy(sizePolicy1);
-        curr_chart_box->setStyleSheet(QString::fromUtf8("background-color: blue;"));
+        curr_chart_box->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout_6 = new QVBoxLayout(curr_chart_box);
+        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
+        curr_chart_lay = new QVBoxLayout();
+        curr_chart_lay->setSpacing(0);
+        curr_chart_lay->setObjectName(QString::fromUtf8("curr_chart_lay"));
+
+        verticalLayout_6->addLayout(curr_chart_lay);
+
 
         gridLayout_2->addWidget(curr_chart_box, 0, 1, 1, 1);
 
@@ -518,12 +532,12 @@ public:
         groupBox_2->setTitle(QCoreApplication::translate("WgtSim", "Control", nullptr));
         start_stop_btn->setText(QCoreApplication::translate("WgtSim", "Start", nullptr));
         label_13->setText(QCoreApplication::translate("WgtSim", "Simulation status: ", nullptr));
-        sim_stat_lbl->setText(QString());
+        sim_stat_lbl->setText(QCoreApplication::translate("WgtSim", "Not started yet", nullptr));
         label_17->setText(QCoreApplication::translate("WgtSim", "Progress bar", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("WgtSim", "Set temperature", nullptr));
         label_18->setText(QCoreApplication::translate("WgtSim", "T = ", nullptr));
         set_temp_ln->setInputMask(QString());
-        set_temp_ln->setText(QString());
+        set_temp_ln->setText(QCoreApplication::translate("WgtSim", "20.0", nullptr));
         label_19->setText(QCoreApplication::translate("WgtSim", "[\302\260C]", nullptr));
         groupBox->setTitle(QCoreApplication::translate("WgtSim", "Current data", nullptr));
         label_2->setText(QCoreApplication::translate("WgtSim", "Estimated time: ", nullptr));

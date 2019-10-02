@@ -5,6 +5,10 @@
 
 class QNetworkAccessManager;
 
+constexpr auto QTIME_FORMAT = "HH:mm:ss.zzz";
+constexpr auto QDATE_FORMAT = "yyyy-MM-dd";
+constexpr auto QDATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.zzz";
+
 class ApiHolder : public QObject
 {
 	Q_OBJECT

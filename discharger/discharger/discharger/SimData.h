@@ -8,6 +8,8 @@ constexpr auto DB_LOG_ID = 0;
 constexpr auto SIM_TIME = 1;
 constexpr auto CURRENT = 2;
 
+constexpr auto SIM_DATA_TABLE = "sim_data";
+
 class ApiHolder;
 class ReceivedData;
 
@@ -20,7 +22,8 @@ class SimData
 	
 	int idSimInfo;
 	int idLogInfo;
-	int lastSentPointId = 0;
+	int lastSentPointId = -1;
+	int lastReceivedPointId = 0;
 	int currentSimulationId = 0;
 	std::string nameOfAnAttributeOfCurrent = "motor_curr";
 
@@ -38,6 +41,7 @@ class SimData
 protected:
 
 	virtual void fetchedCallback(const std::string & status, int no, const std::string & comment) = 0;
+	virtual void simulationFinished() = 0;
 
 	/**
 	*	Constructor.
@@ -66,9 +70,15 @@ protected:
 
 	/**
 	*	Getter.
-	*	@returns Time line.
+	*	@return Time line.
 	*/
 	std::vector<QTime> getTimeLine();
+
+	/**
+	*	Getter.
+	*	@return Race current vector.
+	*/
+	std::vector<double> getRaceCurrent();
 
 	/**
 	*	Getter.
@@ -81,10 +91,29 @@ protected:
 	*	@return Current to be simulated in next time point.
 	*/
 	double getCurrentCurrent();
+
+	/**
+	*	Getter.
+	*	@return Mean logs period.
+	*/
+	int getMeanPeriod();
+
+	/**
+	*	Getter.
+	*	@return Simulation estimated time.
+	*/
+	QTime getSimulationEstimatedTime();
+
+	/**
+	*	Getter.
+	*	@return Current simulation time.
+	*/
+	QTime getCurrentSimulationTime();
 	
 	/**
 	*	Setter.
 	*	@param Received data from simulation device to be set.
+	*	@throws If argument is marked as invalid.
 	*/
 	void setNextSimulatedDataPoint(const ReceivedData & data);
 
@@ -103,7 +132,24 @@ protected:
 	void fetchData(int idSimInfo, int idLogInfo);
 
 	/**
+	*	Size.
+	*	@return Size of simulation data array.
+	*/
+	int size() const;
+
+	/**
+	*	Method to clear all data.
+	*/
+	void clearData();
+
+	/**
 	*	Destructor.
 	*/
 	~SimData() {};
+
+	int notGetAnswer() {
+		return std::accumulate(simData.begin(), simData.end(), 0, [](int suma, const simDataType & data)->int {
+			return suma + (data.second.isValid() ? 0 : 1);
+		});
+	}
 };

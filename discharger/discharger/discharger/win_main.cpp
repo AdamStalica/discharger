@@ -52,6 +52,7 @@ win_main::win_main(QWidget *parent)
 	sim = new WgtSim(api, data, loader);
 
 	uart = new UartHolder(this);
+	uart->open("COM3");
 	simConfig->setUartHolder(uart);
 	sim->setUartHolder(uart);
 

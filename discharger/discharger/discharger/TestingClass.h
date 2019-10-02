@@ -40,12 +40,12 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 	QTimer * timer = new QTimer(this);
 
 	connect(timer, &QTimer::timeout, this, [this, timer]() {
-		qDebug() << "Sending handshake";
+		//qDebug() << "Sending handshake";
 		//uart->handshake();
 		uart->sendData(this->i++, 20.0 + ((rand() % 21) - 10) / 10);
 
 	});
-	timer->start(1000);
+	timer->start(500);
 
 }
 

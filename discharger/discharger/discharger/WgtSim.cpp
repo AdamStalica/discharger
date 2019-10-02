@@ -4,6 +4,7 @@
 #include "UartHolder.h"
 
 #include <QRegExpValidator>
+#include <QMessageBox>
 
 #include <chrono>
 #include <thread>
@@ -19,10 +20,13 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 {
 	ui.setupUi(this);
 
-
+	connect(ui.start_stop_btn, SIGNAL(clicked()), this, SLOT(startStopSimulation()));
 
 	connect(ui.back_btn, &QPushButton::clicked, this, [this]() {
 		emit finished();
+	});
+	connect(ui.set_temp_ln, &QLineEdit::editingFinished, this, [this]() {
+		this->temperatureChanged = true;
 	});
 
 	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
@@ -62,11 +66,138 @@ void WgtSim::prepareSimulation()
 
 }
 
-WgtSim::~WgtSim()
+void WgtSim::uartErrorsHolder(const DeviceError & error)
 {
+
+}
+
+void WgtSim::startStopSimulation() {
+
+	auto ans = QMessageBox::question(
+		this, 
+		"Confirm",
+		("Please, confirm simulation " + QString(simulationInProgress ? "stop" : "start") + ".\nDo you?"),
+		QMessageBox::StandardButton::No,
+		QMessageBox::StandardButton::Yes
+	);
+
+	if (ans == QMessageBox::StandardButton::Yes) {
+		if (simulationInProgress) {
+			simulationInProgress = false;
+			ui.start_stop_btn->setText("Start");
+			stopSimulation();
+		}
+		else {
+			qDebug() << "Start";
+			simulationInProgress = true;
+			ui.back_btn->setEnabled(false);
+			ui.start_stop_btn->setText("Stop");
+			startSimulation();
+		}
+	}
 }
 
 void WgtSim::fetchedCallback(const std::string & status, int no, const std::string & comment)
 {
 	loader->hideLoader(true);
+	ui.est_time_lbl->setText(getSimulationEstimatedTime().toString(QTIME_FORMAT));
+
+	currChart = new WgtChart(this);
+	ui.curr_chart_lay->addWidget(currChart);
+
+	currChart->setXseries(getTimeLine());
+	currChart->addYseries("Race current", getRaceCurrent());
+}
+
+void WgtSim::simulationFinished()
+{
+
+	// checking
+	qDebug() << "Not got answer: " << notGetAnswer() << " times.";
+}
+
+void WgtSim::startSimulation()
+{
+	qDebug() << "Not got answer: " << notGetAnswer() << " times.";
+
+	connect(uart, SIGNAL(gotError(const DeviceError & error)), this, SLOT(uartErrorsHolder(const DeviceError & error)));
+	connect(&sendingToDeviceTimer, SIGNAL(timeout()), this, SLOT(sendNextDataToDevice()));
+
+	connect(uart, &UartHolder::gotData, this, [this](const ReceivedData & data) {
+		this->setNextSimulatedDataPoint(data);
+		this->setNewSimulationData(data);
+	});
+
+	connect(&sendingToDbTimer, &QTimer::timeout, this, [this]() {
+		this->sendData();
+	});
+
+	ui.sim_stat_lbl->setText("In progress");
+	sendNextDataToDevice();
+	sendingToDeviceTimer.start(getMeanPeriod());
+
+#ifndef DoNotSend
+	sendingToDbTimer.start(SENDING_TO_DB_PERIOD);
+#endif // !DoNotSend
+}
+
+void WgtSim::stopSimulation()
+{
+	if (simulationInProgress) {
+		uart->sendStop();
+		ui.sim_stat_lbl->setText("Stopped");
+	}
+	simulationInProgress = false;
+	temperatureChanged = false;
+	sendingToDeviceTimer.disconnect();
+	sendingToDeviceTimer.stop();
+	sendingToDeviceTimer.disconnect();
+	sendingToDbTimer.stop();
+	clearData();
+	clearLables();
+
+	emit finished();
+}
+
+void WgtSim::sendNextDataToDevice()
+{
+	if (!isLastPoint()) {
+		int id = getCurrentId();
+		if (temperatureChanged) {
+			temperatureChanged = false;
+
+			float temp = ui.set_temp_ln->text().toFloat();
+			uart->sendData(id, getCurrentCurrent(), temp);
+		}
+		else
+			uart->sendData(id, getCurrentCurrent());
+
+		goToTheNextPoint();
+	}
+}
+
+void WgtSim::setNewSimulationData(const ReceivedData & data)
+{
+	currChart->appendYSeries("Simulation", data.getId(), data.getCurrent());
+	ui.sim_progress_bar->setValue(int((data.getId() + 1.0) / SimData::size() * 100.0 + 0.5));
+	ui.sim_time_lbl->setText(getCurrentSimulationTime().toString(QTIME_FORMAT));
+	ui.set_curr_lbl->setText(QString::number(getCurrentCurrent()));
+	ui.current_lbl->setText(QString::number(data.getCurrent()));
+	ui.vol_left_lbl->setText(QString::number(data.getBattLeftVolt()));
+	ui.temp_left_lbl->setText(QString::number(data.getBattLeftTemp()));
+	ui.vol_right_lbl->setText(QString::number(data.getBattRightVolt()));
+	ui.temp_right_lbl->setText(QString::number(data.getBattRightTemp()));
+}
+
+void WgtSim::clearLables()
+{
+	ui.sim_progress_bar->setValue(0);
+	ui.est_time_lbl->setText("");
+	ui.sim_time_lbl->setText("");
+	ui.set_curr_lbl->setText("");
+	ui.current_lbl->setText("");
+	ui.vol_left_lbl->setText("");
+	ui.temp_left_lbl->setText("");
+	ui.vol_right_lbl->setText("");
+	ui.temp_right_lbl->setText("");
 }
