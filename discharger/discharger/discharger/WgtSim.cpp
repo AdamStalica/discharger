@@ -30,6 +30,7 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 	});
 
 	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
+
 }
 
 void WgtSim::setUartHolder(UartHolder * uart)
@@ -99,14 +100,17 @@ void WgtSim::startStopSimulation() {
 
 void WgtSim::fetchedCallback(const std::string & status, int no, const std::string & comment)
 {
+
 	loader->hideLoader(true);
 	ui.est_time_lbl->setText(getSimulationEstimatedTime().toString(QTIME_FORMAT));
 
 	currChart = new WgtChart(this, "Race", "Simulation");
+	currChart->setUnit("A");
 	ui.curr_chart_lay->addWidget(currChart);
 
-	//currChart->setXseries(getTimeLine());
-	//currChart->addYseries("Race current", getRaceCurrent());
+	voltChart = new WgtChart(this, "Left", "Right");
+	voltChart->setUnit("V");
+	ui.volt_chart_lay->addWidget(voltChart);
 }
 
 void WgtSim::simulationFinished()
@@ -122,6 +126,11 @@ void WgtSim::setNewChartPoint(const simDataType & point)
 		std::get<SIM_TIME>(point.first), 
 		std::get<CURRENT>(point.first), 
 		point.second.getCurrent()
+	);
+	voltChart->append(
+		std::get<SIM_TIME>(point.first),
+		point.second.getBattLeftVolt(),
+		point.second.getBattRightVolt()
 	);
 }
 
@@ -165,6 +174,9 @@ void WgtSim::stopSimulation()
 	clearData();
 	clearLables();
 
+	delete currChart;
+	delete voltChart;
+
 	emit finished();
 }
 
@@ -172,14 +184,17 @@ void WgtSim::sendNextDataToDevice()
 {
 	if (!isLastPoint()) {
 		int id = getCurrentId();
+		double current = getCurrentCurrent();
+		current = (current > MaxCurrent ? MaxCurrent : current);
+
 		if (temperatureChanged) {
 			temperatureChanged = false;
 
 			float temp = ui.set_temp_ln->text().toFloat();
-			uart->sendData(id, getCurrentCurrent(), temp);
+			uart->sendData(id, current, temp);
 		}
 		else
-			uart->sendData(id, getCurrentCurrent());
+			uart->sendData(id, current);
 
 		goToTheNextPoint();
 	}

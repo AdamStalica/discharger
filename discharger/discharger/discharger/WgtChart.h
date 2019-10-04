@@ -9,6 +9,9 @@
 #include <QvalueAxis>
 #include <QVBoxLayout>
 
+#include <QDebug>
+
+#include <algorithm>
 
 #include "ui_WgtChart.h"
 
@@ -19,21 +22,34 @@ class WgtChart : public QWidget
 
 private:
 
+	Ui::WgtChart ui;
+
 	const int seriesCount;
-	const std::vector<QString> names;
-
-	const int pointsCount = 50;
-
-	std::vector<qint64> X;
-
+	const int pointsCount = 60;
+	int pointsCounter = 0;
+	
 	QtCharts::QChart * chart;
 	QtCharts::QChartView * chartView;
 	QtCharts::QDateTimeAxis *axisX;
 	QtCharts::QValueAxis *axisY;
 
-		
+	const std::vector<QString> names;
+	std::pair<qreal, qreal> minMax = { DBL_MAX, DBL_MIN};
 	std::map<QString, QtCharts::QLineSeries *> series;
 
+	qreal getDivider() {
+		return std::pow(10, std::floor(std::log10(minMax.second - minMax.first)));
+	}
+
+	qreal getMinValueToSet() {
+		qreal div = getDivider();
+		return std::floor(minMax.first / div - 1) * div;
+	}
+
+	qreal getMaxValueToSet() {
+		qreal div = getDivider();
+		return std::ceil(minMax.second / div + 1) * div;
+	}
 
 public:
 
@@ -46,33 +62,39 @@ public:
 		ui.setupUi(this);
 
 		chart = new QtCharts::QChart();
+		
 
-		//chart->legend()->hide();
-		chart->legend()->attachToChart();
-		chart->legend()->setBackgroundVisible(false);
-
-		axisX = new QtCharts::QDateTimeAxis;
+		axisX = new QtCharts::QDateTimeAxis(this);
 		axisX->setTickCount(10);
-		//axisX->setRange(QDateTime(QDate::currentDate(), QTime::fromString("00:00:00")), QDateTime(QDate::currentDate(), QTime::fromString("00:01:00")));
+		axisX->setRange(QDateTime(QDate::currentDate(), QTime::fromString("00:00:00")), QDateTime(QDate::currentDate(), QTime::fromString("00:00:01")));
 		axisX->setFormat("HH:mm:ss");
 		chart->addAxis(axisX, Qt::AlignBottom);
 
-		axisY = new QtCharts::QValueAxis;
-		axisY->setLabelFormat("%i [A]");
-		axisY->setRange(0, 100);
+		axisY = new QtCharts::QValueAxis(this);
+		axisY->setLabelFormat("%.2f");
+		axisY->setRange(0, 1);
 		chart->addAxis(axisY, Qt::AlignLeft);
 
 		chartView = new QtCharts::QChartView(chart);
+		chartView->setContentsMargins(0, 0, 0, 0);
+		chart->setContentsMargins(0, 0, 0, 0);
 		chartView->setRenderHint(QPainter::Antialiasing);
 
 		for (auto name : names) {
 			series[name] = new QtCharts::QLineSeries(this);
 
+			chart->addSeries(series[name]);
+
+			series[name]->attachAxis(axisY);
+			series[name]->attachAxis(axisX);
+			series[name]->setName(name);
 		}
+
+		chart->legend()->setAlignment(Qt::AlignBottom);
 
 		ui.layout->addWidget(chartView);
 	}
-	~WgtChart() {}
+	
 
 	template<typename ...V>
 	void append(const QTime & time, V ...data) {
@@ -81,40 +103,46 @@ public:
 
 		QDateTime x = QDateTime::currentDateTime();
 		x.setTime(time);
-
-		static int count = 0;
-
+		
 		std::vector<qreal> y = { static_cast<qreal>(data)... };
 
+		QVector<QPointF> pointsVector;
+
 		for (int i = 0; i < seriesCount; ++i) {
-
-			int isNewSeries = series[names[i]]->pointsVector().size() == 0;
-			auto v = series[names[i]]->pointsVector();
-
-			if (count > pointsCount)
-				series[names[i]]->remove(0);
+			
+			if (pointsCounter == pointsCount) series[names[i]]->remove(0);
 
 			series[names[i]]->append(x.toMSecsSinceEpoch(), y[i]);
-			//axisX->setRange(QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(v.front().x())), QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(v.back().x())));
 
-			if (isNewSeries) {
-
-				chart->addSeries(series[names[i]]);
-
-				series[names[i]]->attachAxis(axisY);
-				series[names[i]]->setName(names[i]);
-			}
-			else {
-				axisX->setRange(QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(v.front().x())), QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(v.back().x())));
-				series[names[i]]->attachAxis(axisX);
-			}
+			pointsVector.append(series[names[i]]->pointsVector());
 		}
-		++count;
 
+		auto minMaxPoint = std::minmax_element(
+			pointsVector.begin(),
+			pointsVector.end(),
+			[](const QPointF & l, const QPointF & r)->bool {
+			return l.y() < r.y();
+		});
+		minMax = { minMaxPoint.first->y(), minMaxPoint.second->y() };
+
+		axisY->setRange(
+			getMinValueToSet(), 
+			getMaxValueToSet()
+		);
+		axisX->setRange(
+			QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(pointsVector.front().x())), 
+			QDateTime::fromMSecsSinceEpoch(static_cast<qint64>(pointsVector.back().x()))
+		);
+
+		if(pointsCounter < pointsCount) ++pointsCounter;
+	}
+
+	void setUnit(const QString & unit) {
+		axisY->setLabelFormat("%.2f [" + unit + "]");
 	}
 
 
-private:
-	Ui::WgtChart ui;
-
+	~WgtChart() {
+		delete chart;
+	}
 };

@@ -10,6 +10,8 @@
 
 #define DoNotSend
 
+constexpr auto MaxCurrent = 30.0;
+
 constexpr auto SENDING_TO_DB_PERIOD = 10000;
 constexpr auto DEVICE_TIMEOUT = 5000;
 

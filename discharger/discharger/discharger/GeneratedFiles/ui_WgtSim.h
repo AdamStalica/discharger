@@ -27,8 +27,13 @@ QT_BEGIN_NAMESPACE
 class Ui_WgtSim
 {
 public:
-    QGridLayout *gridLayout_2;
+    QGridLayout *volt_chart_lay_2;
+    QGroupBox *curr_chart_box;
+    QVBoxLayout *verticalLayout_6;
+    QVBoxLayout *curr_chart_lay;
     QGroupBox *vol_chart_box;
+    QVBoxLayout *verticalLayout_7;
+    QVBoxLayout *volt_chart_lay;
     QGroupBox *groupBox_5;
     QVBoxLayout *verticalLayout_5;
     QPushButton *back_btn;
@@ -49,13 +54,10 @@ public:
     QGridLayout *gridLayout;
     QLabel *label_2;
     QLabel *est_time_lbl;
-    QSpacerItem *horizontalSpacer;
-    QSpacerItem *horizontalSpacer_3;
     QLabel *sim_time_lbl;
     QHBoxLayout *horizontalLayout_7;
     QLabel *set_curr_lbl;
     QLabel *label_16;
-    QSpacerItem *horizontalSpacer_2;
     QLabel *label_7;
     QGroupBox *groupBox_4;
     QVBoxLayout *verticalLayout;
@@ -85,36 +87,66 @@ public:
     QLabel *temp_right_lbl;
     QLabel *label_12;
     QLabel *label;
-    QGroupBox *curr_chart_box;
-    QVBoxLayout *verticalLayout_6;
-    QVBoxLayout *curr_chart_lay;
+    QSpacerItem *horizontalSpacer_2;
+    QSpacerItem *horizontalSpacer_3;
+    QSpacerItem *horizontalSpacer;
 
     void setupUi(QWidget *WgtSim)
     {
         if (WgtSim->objectName().isEmpty())
             WgtSim->setObjectName(QString::fromUtf8("WgtSim"));
-        WgtSim->resize(819, 914);
+        WgtSim->resize(918, 914);
         QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtSim->sizePolicy().hasHeightForWidth());
         WgtSim->setSizePolicy(sizePolicy);
         WgtSim->setMinimumSize(QSize(450, 700));
-        gridLayout_2 = new QGridLayout(WgtSim);
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setContentsMargins(11, 11, 11, 11);
-        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        gridLayout_2->setContentsMargins(-1, 0, -1, -1);
-        vol_chart_box = new QGroupBox(WgtSim);
-        vol_chart_box->setObjectName(QString::fromUtf8("vol_chart_box"));
+        volt_chart_lay_2 = new QGridLayout(WgtSim);
+        volt_chart_lay_2->setSpacing(5);
+        volt_chart_lay_2->setContentsMargins(11, 11, 11, 11);
+        volt_chart_lay_2->setObjectName(QString::fromUtf8("volt_chart_lay_2"));
+        volt_chart_lay_2->setContentsMargins(5, 5, 5, 5);
+        curr_chart_box = new QGroupBox(WgtSim);
+        curr_chart_box->setObjectName(QString::fromUtf8("curr_chart_box"));
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(curr_chart_box->sizePolicy().hasHeightForWidth());
+        curr_chart_box->setSizePolicy(sizePolicy1);
+        curr_chart_box->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout_6 = new QVBoxLayout(curr_chart_box);
+        verticalLayout_6->setSpacing(6);
+        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
+        curr_chart_lay = new QVBoxLayout();
+        curr_chart_lay->setSpacing(0);
+        curr_chart_lay->setObjectName(QString::fromUtf8("curr_chart_lay"));
+
+        verticalLayout_6->addLayout(curr_chart_lay);
+
+
+        volt_chart_lay_2->addWidget(curr_chart_box, 0, 1, 1, 1);
+
+        vol_chart_box = new QGroupBox(WgtSim);
+        vol_chart_box->setObjectName(QString::fromUtf8("vol_chart_box"));
         sizePolicy1.setHeightForWidth(vol_chart_box->sizePolicy().hasHeightForWidth());
         vol_chart_box->setSizePolicy(sizePolicy1);
-        vol_chart_box->setStyleSheet(QString::fromUtf8("background-color: yellow;"));
+        vol_chart_box->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout_7 = new QVBoxLayout(vol_chart_box);
+        verticalLayout_7->setSpacing(0);
+        verticalLayout_7->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        verticalLayout_7->setContentsMargins(0, 0, 0, 0);
+        volt_chart_lay = new QVBoxLayout();
+        volt_chart_lay->setSpacing(6);
+        volt_chart_lay->setObjectName(QString::fromUtf8("volt_chart_lay"));
 
-        gridLayout_2->addWidget(vol_chart_box, 1, 1, 1, 1);
+        verticalLayout_7->addLayout(volt_chart_lay);
+
+
+        volt_chart_lay_2->addWidget(vol_chart_box, 1, 1, 1, 1);
 
         groupBox_5 = new QGroupBox(WgtSim);
         groupBox_5->setObjectName(QString::fromUtf8("groupBox_5"));
@@ -245,14 +277,6 @@ public:
 
         gridLayout->addWidget(est_time_lbl, 2, 1, 1, 1);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer, 1, 0, 1, 1);
-
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer_3, 5, 0, 1, 1);
-
         sim_time_lbl = new QLabel(groupBox);
         sim_time_lbl->setObjectName(QString::fromUtf8("sim_time_lbl"));
         sizePolicy4.setHeightForWidth(sim_time_lbl->sizePolicy().hasHeightForWidth());
@@ -279,10 +303,6 @@ public:
 
 
         gridLayout->addLayout(horizontalLayout_7, 4, 1, 1, 1);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer_2, 3, 0, 1, 1);
 
         label_7 = new QLabel(groupBox);
         label_7->setObjectName(QString::fromUtf8("label_7"));
@@ -323,7 +343,7 @@ public:
         sizePolicy4.setHeightForWidth(current_lbl->sizePolicy().hasHeightForWidth());
         current_lbl->setSizePolicy(sizePolicy4);
 
-        horizontalLayout->addWidget(current_lbl, 0, Qt::AlignLeft);
+        horizontalLayout->addWidget(current_lbl, 0, Qt::AlignHCenter);
 
         label_6 = new QLabel(groupBox_4);
         label_6->setObjectName(QString::fromUtf8("label_6"));
@@ -492,30 +512,23 @@ public:
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout->addItem(horizontalSpacer_2, 3, 0, 1, 2);
+
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout->addItem(horizontalSpacer_3, 5, 0, 1, 2);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout->addItem(horizontalSpacer, 1, 0, 1, 2);
+
 
         verticalLayout_5->addWidget(groupBox);
 
 
-        gridLayout_2->addWidget(groupBox_5, 0, 0, 2, 1);
-
-        curr_chart_box = new QGroupBox(WgtSim);
-        curr_chart_box->setObjectName(QString::fromUtf8("curr_chart_box"));
-        sizePolicy1.setHeightForWidth(curr_chart_box->sizePolicy().hasHeightForWidth());
-        curr_chart_box->setSizePolicy(sizePolicy1);
-        curr_chart_box->setStyleSheet(QString::fromUtf8(""));
-        verticalLayout_6 = new QVBoxLayout(curr_chart_box);
-        verticalLayout_6->setSpacing(6);
-        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
-        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
-        curr_chart_lay = new QVBoxLayout();
-        curr_chart_lay->setSpacing(0);
-        curr_chart_lay->setObjectName(QString::fromUtf8("curr_chart_lay"));
-
-        verticalLayout_6->addLayout(curr_chart_lay);
-
-
-        gridLayout_2->addWidget(curr_chart_box, 0, 1, 1, 1);
+        volt_chart_lay_2->addWidget(groupBox_5, 0, 0, 2, 1, Qt::AlignTop);
 
 
         retranslateUi(WgtSim);
@@ -526,6 +539,7 @@ public:
     void retranslateUi(QWidget *WgtSim)
     {
         WgtSim->setWindowTitle(QCoreApplication::translate("WgtSim", "WgtSim", nullptr));
+        curr_chart_box->setTitle(QCoreApplication::translate("WgtSim", "Current chart", nullptr));
         vol_chart_box->setTitle(QCoreApplication::translate("WgtSim", "Voltage chart", nullptr));
         groupBox_5->setTitle(QCoreApplication::translate("WgtSim", "Data and Control", nullptr));
         back_btn->setText(QCoreApplication::translate("WgtSim", "Go back", nullptr));
@@ -564,7 +578,6 @@ public:
         temp_right_lbl->setText(QString());
         label_12->setText(QCoreApplication::translate("WgtSim", " [\302\260C]", nullptr));
         label->setText(QCoreApplication::translate("WgtSim", "Simulation time: ", nullptr));
-        curr_chart_box->setTitle(QCoreApplication::translate("WgtSim", "Current chart", nullptr));
     } // retranslateUi
 
 };
