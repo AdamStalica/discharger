@@ -102,11 +102,11 @@ void WgtSim::fetchedCallback(const std::string & status, int no, const std::stri
 	loader->hideLoader(true);
 	ui.est_time_lbl->setText(getSimulationEstimatedTime().toString(QTIME_FORMAT));
 
-	currChart = new WgtChart(this);
+	currChart = new WgtChart(this, "Race", "Simulation");
 	ui.curr_chart_lay->addWidget(currChart);
 
-	currChart->setXseries(getTimeLine());
-	currChart->addYseries("Race current", getRaceCurrent());
+	//currChart->setXseries(getTimeLine());
+	//currChart->addYseries("Race current", getRaceCurrent());
 }
 
 void WgtSim::simulationFinished()
@@ -114,6 +114,15 @@ void WgtSim::simulationFinished()
 
 	// checking
 	qDebug() << "Not got answer: " << notGetAnswer() << " times.";
+}
+
+void WgtSim::setNewChartPoint(const simDataType & point)
+{
+	currChart->append(
+		std::get<SIM_TIME>(point.first), 
+		std::get<CURRENT>(point.first), 
+		point.second.getCurrent()
+	);
 }
 
 void WgtSim::startSimulation()
@@ -178,7 +187,7 @@ void WgtSim::sendNextDataToDevice()
 
 void WgtSim::setNewSimulationData(const ReceivedData & data)
 {
-	currChart->appendYSeries("Simulation", data.getId(), data.getCurrent());
+	//currChart->appendYSeries("Simulation", data.getId(), data.getCurrent());
 	ui.sim_progress_bar->setValue(int((data.getId() + 1.0) / SimData::size() * 100.0 + 0.5));
 	ui.sim_time_lbl->setText(getCurrentSimulationTime().toString(QTIME_FORMAT));
 	ui.set_curr_lbl->setText(QString::number(getCurrentCurrent()));

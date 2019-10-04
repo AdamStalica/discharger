@@ -42,6 +42,7 @@ protected:
 
 	virtual void fetchedCallback(const std::string & status, int no, const std::string & comment) = 0;
 	virtual void simulationFinished() = 0;
+	virtual void setNewChartPoint(const simDataType & point) = 0;
 
 	/**
 	*	Constructor.

@@ -22,6 +22,7 @@ UartHolder::UartHolder(QObject *parent)
 
 UartHolder::~UartHolder()
 {
+	sendStop();
 	serial->close();
 	delete serial;
 }
@@ -30,6 +31,7 @@ void UartHolder::sendData(const std::string & data) {
 	
 	QByteArray toSend((data).c_str());
 	serial->write(toSend);
+	//qDebug() << toSend;
 	serial->waitForBytesWritten();
 }
 
@@ -118,7 +120,7 @@ void UartHolder::read() {
 
 		QString tmp(serial->readLine());
 
-		qDebug() << tmp;
+		//qDebug() << tmp;
 
 		if (tmp.size() > 1) {
 

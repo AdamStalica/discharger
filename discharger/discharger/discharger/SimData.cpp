@@ -119,6 +119,7 @@ void SimData::setNextSimulatedDataPoint(const ReceivedData & data)
 	if (data.isValid()) {
 		lastReceivedPointId = data.getId();
 		simData[lastReceivedPointId].second = data;
+		setNewChartPoint(simData[lastReceivedPointId]);
 	}
 	else throw std::invalid_argument("Argument is marked as invalid.");
 }

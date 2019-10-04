@@ -60,6 +60,7 @@ private:
 
 	void fetchedCallback(const std::string & status, int no, const std::string & comment) override;
 	void simulationFinished() override;
+	void setNewChartPoint(const simDataType & point) override;
 
 	void startSimulation();
 	void stopSimulation();

@@ -1,32 +1,10 @@
+/*
+
 #include "WgtChart.h"
 
 QT_CHARTS_USE_NAMESPACE
 
-WgtChart::WgtChart(QWidget *parent)
-	: QWidget(parent)
-{
-	ui.setupUi(this);
 
-	chart = new QChart();
-
-	//chart->legend()->hide();
-	chart->legend()->attachToChart();
-	chart->legend()->setBackgroundVisible(false);
-
-	axisX = new QDateTimeAxis;
-	axisX->setTickCount(10);
-	axisX->setFormat("HH:mm:ss");
-	chart->addAxis(axisX, Qt::AlignBottom);
-
-	axisY = new QValueAxis;
-	axisY->setLabelFormat("%i [A]");
-	chart->addAxis(axisY, Qt::AlignLeft);
-
-	chartView = new QChartView(chart);
-	chartView->setRenderHint(QPainter::Antialiasing);
-
-	ui.layout->addWidget(chartView);
-}
 
 WgtChart::~WgtChart()
 {
@@ -55,15 +33,26 @@ void WgtChart::addYseries(QString name, std::vector<double> y)
 	//chart->legend()->update();
 }
 
+*/
+
+/*
+
 void WgtChart::appendYSeries(QString name, int id, double value)
 {
-	bool isNewSeries = series.count(name);
+	static int count = 0;
+
+	bool isNewSeries = series.count(name) != 0 ? false : true;
 
 	series[name].append(X.at(id), value);
+	
 
 	if (isNewSeries) {
 		chart->addSeries(&series[name]);
 		series[name].attachAxis(axisX);
 		series[name].attachAxis(axisY);
 	}
+	if(count++ > pointsCount)
+		series[name].remove(0);
 }
+
+*/
