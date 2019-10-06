@@ -18,6 +18,24 @@ typedef std::tuple<int, QTime, double> dbDataType;
 
 class SimData
 {
+	struct  SendingStatistics
+	{
+		int total = 0;
+		int inserts = 0;
+		int errors = 0;
+
+		void add(const QString & data) {
+			nlohmann::json resp = nlohmann::json::parse(data.toStdString());
+			total += resp["comment"]["total"].get<int>();
+			inserts += resp["comment"]["inserts"].get<int>();
+			errors += resp["comment"]["errors"].get<int>();
+		}
+
+		QString toString() {
+			return "Total: " + QString::number(total) + ", inserts: " + QString::number(inserts) + ", errors: " + QString::number(errors) + ".";
+		}
+	} sendingStatistics;
+
 	ApiHolder * api;
 	
 	int idSimInfo;
@@ -27,6 +45,8 @@ class SimData
 	int currentSimulationId = 0;
 	std::string nameOfAnAttributeOfCurrent = "motor_curr";
 
+	bool canSendData = false;
+
 	std::vector<int> durations;
 	std::vector<simDataType> simData;
 
@@ -35,14 +55,40 @@ class SimData
 	double getCurrent(int id);
 	ReceivedData getSimulatedData(int id);
 
+	void updateBeginTimeAndStatus();
+	void updateEndTime();
+	void compareDataLocalAndDb();
+
 	void prepareDurationPoints();
 
+
+public:
+	enum SIM_STATE {
+		/**
+		*	Simulation is in progress.
+		*/
+		IN_PROGRESS,
+		/**
+		*	Simulation is complied but not confirmed.
+		*/
+		COMPLETED,
+		/**
+		*	Simulation is confirmed.
+		*/
+		CONFIRMED,
+		/**
+		*	Simulation has been removed.
+		*/
+		REMOVED,
+	};
 
 protected:
 
 	virtual void fetchedCallback(const std::string & status, int no, const std::string & comment) = 0;
-	virtual void simulationFinished() = 0;
 	virtual void setNewChartPoint(const simDataType & point) = 0;
+	virtual void setBeginTime(const QDateTime & time) = 0;
+	virtual void setEstimatedEndTime(const QDateTime & time) = 0;
+	virtual void setEndTime(const QDateTime & time) = 0;
 
 	/**
 	*	Constructor.
@@ -53,9 +99,9 @@ protected:
 
 	/**
 	*	Method to check if current point is the last one.
-	*	@return True if is the last one, otherwise false.
+	*	@return True if there in no more data, otherwise false.
 	*/
-	bool isLastPoint();
+	bool reachedEnd();
 
 	/**
 	*	Increments current point to the next one.
@@ -110,6 +156,12 @@ protected:
 	*	@return Current simulation time.
 	*/
 	QTime getCurrentSimulationTime();
+
+	/**
+	*	Gette.
+	*	@return Estimated end time.
+	*/
+	QDateTime getEstimatedEndTime();
 	
 	/**
 	*	Setter.
@@ -117,6 +169,12 @@ protected:
 	*	@throws If argument is marked as invalid.
 	*/
 	void setNextSimulatedDataPoint(const ReceivedData & data);
+
+	/**
+	*	Setter.
+	*	@param enable If set to true will send data into Db. Default false;
+	*/
+	void setSendingIntoDbEnabled(bool enable);
 
 	/**
 	*	Method to send simulated data to the Db.
@@ -127,7 +185,7 @@ protected:
 	/**
 	*	Method to fetch data from Db.
 	*	Prepare also sending data durations.
-	*	@param simulationInfoId - Simulation info id.
+	*	@param idSimInfo - Simulation info id.
 	*	@param idLogInfo - id of log info.
 	*/
 	void fetchData(int idSimInfo, int idLogInfo);
@@ -144,6 +202,12 @@ protected:
 	void clearData();
 
 	/**
+	*	Call this method when simulation is finished.
+	*	@param status - Status of simulation after end.
+	*/
+	void simulationFinished(SIM_STATE status);
+
+	/**
 	*	Destructor.
 	*/
 	~SimData() {};
@@ -154,3 +218,8 @@ protected:
 		});
 	}
 };
+
+//	TODO
+//	send status
+//	send begin / end time
+//	check if all data is correctly inserted into db;

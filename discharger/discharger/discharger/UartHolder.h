@@ -68,7 +68,7 @@ signals:
 	*/
 	void gotData(const ReceivedData & data);
 
-	void gotStop();
+	void gotStop(bool);
 
 	/**
 	*	Signal emitted when got hand shake

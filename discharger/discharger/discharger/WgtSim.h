@@ -8,7 +8,10 @@
 #include "SimData.h"
 #include "WgtChart.h"
 
-#define DoNotSend
+//#define DoNotSend
+#define Arduino
+
+// TODO close event => if simulation in progress then send new state before close.
 
 constexpr auto MaxCurrent = 30.0;
 
@@ -35,12 +38,15 @@ public:
 	*/
 	void setBasicSimData(const nlohmann::json & data);
 	void prepareSimulation();
-	~WgtSim() {}
+	~WgtSim() {
+		//if (simulationInProgress) simulationFinished(SIM_STATE::REMOVED);
+	}
 
 private slots:
-	void startStopSimulation();
+	void startStopSimulationBtn();
 	void uartErrorsHolder(const DeviceError & error);
 	void sendNextDataToDevice();
+	void deviceStopped(bool gotResponse);
 
 private:
 	Ui::WgtSim ui;
@@ -59,15 +65,19 @@ private:
 
 	bool simulationInProgress = false;
 	bool temperatureChanged = false;
+	bool stopRequestSent = false;
 
 	void fetchedCallback(const std::string & status, int no, const std::string & comment) override;
-	void simulationFinished() override;
 	void setNewChartPoint(const simDataType & point) override;
+	void setBeginTime(const QDateTime & time) override;
+	void setEstimatedEndTime(const QDateTime & time) override;
+	void setEndTime(const QDateTime & time) override;
 
 	void startSimulation();
 	void stopSimulation();
 	void setNewSimulationData(const ReceivedData & data);
 	void clearLables();
+	void closeWidget();
 
 signals:
 	void finished();

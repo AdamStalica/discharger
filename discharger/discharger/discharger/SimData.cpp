@@ -36,6 +36,60 @@ ReceivedData SimData::getSimulatedData(int id)
 	throw std::invalid_argument("id");
 }
 
+void SimData::updateBeginTimeAndStatus()
+{
+	if (canSendData) {
+		json update = {
+			{"id_usr", api->getApiUserId()},
+			{"update", "sim_info"},
+			{"set", {
+					{"begin_time", simData.front().second.getTimestamp().toString(QDATE_TIME_FORMAT).toStdString() },
+					{"id_sim_stat", SIM_STATE::IN_PROGRESS }
+				}
+			},
+			{"where", "id_sim_info=" + std::to_string(idSimInfo)}
+		};
+		api->apiUpdate(update.dump());
+		api->connect(api, &ApiHolder::gotResponse, api, [this](const QString & data) {
+
+			api->disconnect();
+			json resp = json::parse(data.toStdString());
+			if (resp["status"] != "OK") {
+				qDebug() << data;
+			}
+		});
+	}
+}
+
+void SimData::updateEndTime()
+{
+	if (canSendData) {
+		json update = {
+			{"id_usr", api->getApiUserId()},
+			{"update", "sim_info"},
+			{"set", {
+					{"end_time", simData.back().second.getTimestamp().toString(QDATE_TIME_FORMAT).toStdString() }
+				}
+			},
+			{"where", "id_sim_info=" + std::to_string(idSimInfo)}
+		};
+		api->apiUpdate(update.dump());
+		api->connect(api, &ApiHolder::gotResponse, api, [this](const QString & data) {
+
+			api->disconnect();
+			json resp = json::parse(data.toStdString());
+			if (resp["status"] != "OK") {
+				qDebug() << data;
+			}
+		});
+	}
+}
+
+void SimData::compareDataLocalAndDb()
+{
+	qDebug() << sendingStatistics.toString() << "\n" << "Total data size: " << simData.size() << ".";
+}
+
 void SimData::prepareDurationPoints()
 {
 	durations.resize(simData.size());
@@ -52,15 +106,15 @@ void SimData::prepareDurationPoints()
 	});
 }
 
-bool SimData::isLastPoint()
+bool SimData::reachedEnd()
 {
-	return currentSimulationId == (simData.size() - 1);
+	return simData.back().second.isValid();
 }
 
 void SimData::goToTheNextPoint()
 {
-	++currentSimulationId;
-	if (isLastPoint()) simulationFinished();
+	if(currentSimulationId < (simData.size() - 1))
+		++currentSimulationId;
 }
 
 int SimData::getCurrentDuration()
@@ -114,59 +168,90 @@ QTime SimData::getCurrentSimulationTime()
 	return std::get<SIM_TIME>(simData.at(currentSimulationId).first);
 }
 
+QDateTime SimData::getEstimatedEndTime()
+{
+	return QDateTime::fromMSecsSinceEpoch(
+		simData.front().second.getTimestamp().toMSecsSinceEpoch() + getSimulationEstimatedTime().msecsSinceStartOfDay()
+	);
+}
+
 void SimData::setNextSimulatedDataPoint(const ReceivedData & data)
 {
 	if (data.isValid()) {
+		
+
 		lastReceivedPointId = data.getId();
 		simData[lastReceivedPointId].second = data;
 		setNewChartPoint(simData[lastReceivedPointId]);
+
+		if (lastReceivedPointId == 0) {
+			updateBeginTimeAndStatus();
+			setBeginTime(data.getTimestamp());
+			setEstimatedEndTime(getEstimatedEndTime());
+		}
+		else if (data.getId() == (simData.size() - 1)) {
+			updateEndTime();
+			compareDataLocalAndDb();
+			setEndTime(data.getTimestamp());
+		}
 	}
 	else throw std::invalid_argument("Argument is marked as invalid.");
 }
 
+void SimData::setSendingIntoDbEnabled(bool enable)
+{
+	canSendData = enable;
+}
+
 void SimData::sendData() {
 
-	json insert = {
-		{"id_usr", api->getApiUserId()},
-		{"into", SIM_DATA_TABLE}
-	};
-	
-	for (int i = lastSentPointId + 1;
-		i <= lastReceivedPointId && i < simData.size();
-		++i)
-	{
-		if (simData[i].second.isValid()) {
+	if (canSendData) {
+		json insert = {
+			{"id_usr", api->getApiUserId()},
+			{"into", SIM_DATA_TABLE}
+		};
 
-			json single_row = {
-				{"id_sim_info", this->idSimInfo },
-				{"id_log_data", std::get<DB_LOG_ID>(simData[i].first) },
-				{"id_curr_sim", i},
-				{"curr_timestamp", simData[i].second.getTimestamp().toString(QDATE_TIME_FORMAT).toStdString() },
-				{"time_since_beg", std::get<SIM_TIME>(simData[i].first).toString(QTIME_FORMAT).toStdString() }
-			};
+		for (int i = lastSentPointId + 1;
+			i <= lastReceivedPointId && i < simData.size();
+			++i)
+		{
+			if (simData[i].second.isValid()) {
 
-			auto & received = simData[i].second;
+				json single_row = {
+					{"id_sim_info", this->idSimInfo },
+					{"id_log_data", std::get<DB_LOG_ID>(simData[i].first) },
+					{"id_curr_sim", i},
+					{"curr_timestamp", simData[i].second.getTimestamp().toString(QDATE_TIME_FORMAT).toStdString() },
+					{"time_since_beg", std::get<SIM_TIME>(simData[i].first).toString(QTIME_FORMAT).toStdString() }
+				};
 
-			if (!received.isCurrentNull()) single_row["current"] = received.getCurrent();
-			if (!received.isBattLeftVoltNull()) single_row["batt_left_volt"] = received.getBattLeftVolt();
-			if (!received.isBattRightVoltNull()) single_row["batt_right_volt"] = received.getBattRightVolt();
-			if (!received.isBattLeftTempNull()) single_row["batt_left_temp"] = received.getBattLeftTemp();
-			if (!received.isBattRightTempNull()) single_row["batt_right_temp"] = received.getBattRightTemp();
+				auto & received = simData[i].second;
 
-			insert["values_list"].push_back(single_row);
+				if (!received.isCurrentNull()) single_row["current"] = received.getCurrent();
+				if (!received.isBattLeftVoltNull()) single_row["batt_left_volt"] = received.getBattLeftVolt();
+				if (!received.isBattRightVoltNull()) single_row["batt_right_volt"] = received.getBattRightVolt();
+				if (!received.isBattLeftTempNull()) single_row["batt_left_temp"] = received.getBattLeftTemp();
+				if (!received.isBattRightTempNull()) single_row["batt_right_temp"] = received.getBattRightTemp();
+
+				insert["values_list"].push_back(single_row);
+			}
+			//else throw 
 		}
-		//else throw 
+
+		if (insert["values_list"].size() > 0) {
+			lastSentPointId = lastReceivedPointId;
+
+			api->apiInsert(insert.dump());
+			api->connect(api, &ApiHolder::gotResponse, api, [this](const QString & data) {
+
+				api->disconnect();
+				qDebug() << data;
+				sendingStatistics.add(data);
+			});
+		}
 	}
-
-	if (insert["values_list"].size() > 0) {
-		lastSentPointId = lastReceivedPointId;
-
-		api->apiInsert(insert.dump());
-		api->connect(api, &ApiHolder::gotResponse, api, [this](const QString & data) {
-
-			api->disconnect();
-			qDebug() << data;
-		});
+	else {
+		qDebug() << "Sending data is not allowed.";
 	}
 }
 
@@ -206,7 +291,7 @@ void SimData::fetchData(int idSimInfo, int idLogInfo)
 		}
 		fetchedCallback(resp["status"].get<std::string>(), resp["no"].get<int>(), resp["comment"].get<std::string>());
 
-		sendData();
+		// sendData(); ???
 	});
 
 	
@@ -224,4 +309,30 @@ void SimData::clearData()
 	lastSentPointId = -1;
 	lastReceivedPointId = 0;
 	currentSimulationId = 0;
+}
+
+void SimData::simulationFinished(SIM_STATE status)
+{
+	if (canSendData) {
+		json update = {
+			{"id_usr", api->getApiUserId()},
+			{"update", "sim_info"},
+			{"set", {
+					{"id_sim_stat", status }
+				}
+			},
+			{"where", "id_sim_info=" + std::to_string(idSimInfo)}
+		};
+		api->apiUpdate(update.dump());
+		api->connect(api, &ApiHolder::gotResponse, api, [this](const QString & data) {
+
+			api->disconnect();
+			json resp = json::parse(data.toStdString());
+			if (resp["status"] != "OK") {
+				qDebug() << data;
+			}
+		});
+	}
+
+	qDebug() << sendingStatistics.toString() << "\n" << "Total data size: " << simData.size() << ".";
 }

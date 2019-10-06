@@ -88,11 +88,11 @@ win_main::win_main(QWidget *parent)
 	});
 	connect(main, &WgtMain::newSim, this, [this] {
 		ui.mainArea->takeWidget();
-		//ui.mainArea->setWidget(simConfig);
-		json fakeData = json::parse("{\"id_batt_left\":58,\"id_batt_right\":57,\"id_log_info\":4,\"id_sim_info\":15, \"name\":\"First test sim in program\"}");
-		sim->setBasicSimData(fakeData);
-		ui.mainArea->setWidget(sim);
-		sim->prepareSimulation();
+		ui.mainArea->setWidget(simConfig);
+		//json fakeData = json::parse("{\"id_batt_left\":58,\"id_batt_right\":57,\"id_log_info\":4,\"id_sim_info\":15, \"name\":\"First test sim in program\"}");
+		//sim->setBasicSimData(fakeData);
+		//ui.mainArea->setWidget(sim);
+		//sim->prepareSimulation();
 	});
 
 	connect(imp, &WgtImport::finished, this, [this] {
@@ -107,6 +107,7 @@ win_main::win_main(QWidget *parent)
 		ui.mainArea->takeWidget();
 		sim->setBasicSimData(data);
 		ui.mainArea->setWidget(sim);
+		sim->prepareSimulation();
 	});
 	connect(sim, &WgtSim::finished, this, [this]() {
 		ui.mainArea->takeWidget();

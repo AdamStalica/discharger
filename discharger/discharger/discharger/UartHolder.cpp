@@ -29,10 +29,8 @@ UartHolder::~UartHolder()
 
 void UartHolder::sendData(const std::string & data) {
 	
-	QByteArray toSend((data).c_str());
-	serial->write(toSend);
-	//qDebug() << toSend;
-	serial->waitForBytesWritten();
+	serial->write(data.c_str());
+	serial->waitForBytesWritten(-1);
 }
 
 bool UartHolder::open(const QString & com)
@@ -40,18 +38,18 @@ bool UartHolder::open(const QString & com)
 	if (serial->isOpen()) 
 		return true;
 
-	serial->setBaudRate(230400);
+	serial->setBaudRate(9600);
 	serial->setDataBits(QSerialPort::Data8);
 	serial->setParity(QSerialPort::NoParity);
 	serial->setStopBits(QSerialPort::OneStop);
-	serial->setFlowControl(QSerialPort::NoFlowControl);
+	serial->setFlowControl(QSerialPort::FlowControl::SoftwareControl);
 	
 	serial->setPortName(com);
 	if (!serial->open(QIODevice::ReadWrite)) {
 		lastError = serial->errorString();
 		return false;
 	}
-
+	
 	return true;
 }
 
@@ -120,7 +118,7 @@ void UartHolder::read() {
 
 		QString tmp(serial->readLine());
 
-		//qDebug() << tmp;
+		qDebug() << tmp;
 
 		if (tmp.size() > 1) {
 
@@ -165,7 +163,7 @@ void UartHolder::read() {
 			else if (!received["handshake"].is_null())
 				handshakeHolder();
 			else if (!received["stop"].is_null())
-				emit gotStop();
+				emit gotStop(true);
 			else if (!received["error"].is_null()) {
 				emit gotError(DeviceError(received["error"].get<int>()));
 			}
