@@ -125,7 +125,7 @@ public:
         if (WgtImport->objectName().isEmpty())
             WgtImport->setObjectName(QString::fromUtf8("WgtImport"));
         WgtImport->resize(510, 1441);
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtImport->sizePolicy().hasHeightForWidth());
@@ -136,11 +136,8 @@ public:
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         groupBox_3 = new QGroupBox(WgtImport);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
-        groupBox_3->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
+        groupBox_3->setSizePolicy(sizePolicy);
         groupBox_3->setMinimumSize(QSize(492, 0));
         verticalLayout_5 = new QVBoxLayout(groupBox_3);
         verticalLayout_5->setSpacing(6);
@@ -148,22 +145,22 @@ public:
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
         go_back_btn = new QPushButton(groupBox_3);
         go_back_btn->setObjectName(QString::fromUtf8("go_back_btn"));
-        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(go_back_btn->sizePolicy().hasHeightForWidth());
-        go_back_btn->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(go_back_btn->sizePolicy().hasHeightForWidth());
+        go_back_btn->setSizePolicy(sizePolicy1);
         go_back_btn->setMinimumSize(QSize(100, 0));
 
         verticalLayout_5->addWidget(go_back_btn);
 
         sp_box = new QGroupBox(groupBox_3);
         sp_box->setObjectName(QString::fromUtf8("sp_box"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Maximum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(sp_box->sizePolicy().hasHeightForWidth());
-        sp_box->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Maximum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(sp_box->sizePolicy().hasHeightForWidth());
+        sp_box->setSizePolicy(sizePolicy2);
         sp_box->setMinimumSize(QSize(0, 0));
         sp_box->setMaximumSize(QSize(16777215, 16777215));
         verticalLayout = new QVBoxLayout(sp_box);
@@ -184,8 +181,8 @@ public:
 
         sp_list = new QComboBox(sp_box);
         sp_list->setObjectName(QString::fromUtf8("sp_list"));
-        sizePolicy2.setHeightForWidth(sp_list->sizePolicy().hasHeightForWidth());
-        sp_list->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(sp_list->sizePolicy().hasHeightForWidth());
+        sp_list->setSizePolicy(sizePolicy1);
         sp_list->setMinimumSize(QSize(300, 0));
 
         horizontalLayout->addWidget(sp_list);
@@ -195,8 +192,8 @@ public:
 
         sp_btn = new QPushButton(sp_box);
         sp_btn->setObjectName(QString::fromUtf8("sp_btn"));
-        sizePolicy2.setHeightForWidth(sp_btn->sizePolicy().hasHeightForWidth());
-        sp_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(sp_btn->sizePolicy().hasHeightForWidth());
+        sp_btn->setSizePolicy(sizePolicy1);
         sp_btn->setMinimumSize(QSize(150, 0));
         sp_btn->setMaximumSize(QSize(150, 16777215));
         sp_btn->setLayoutDirection(Qt::LeftToRight);
@@ -212,8 +209,8 @@ public:
         race_box = new QGroupBox(groupBox_3);
         race_box->setObjectName(QString::fromUtf8("race_box"));
         race_box->setEnabled(false);
-        sizePolicy3.setHeightForWidth(race_box->sizePolicy().hasHeightForWidth());
-        race_box->setSizePolicy(sizePolicy3);
+        sizePolicy2.setHeightForWidth(race_box->sizePolicy().hasHeightForWidth());
+        race_box->setSizePolicy(sizePolicy2);
         race_box->setMinimumSize(QSize(460, 0));
         verticalLayout_3 = new QVBoxLayout(race_box);
         verticalLayout_3->setSpacing(6);
@@ -233,8 +230,8 @@ public:
 
         race_list = new QComboBox(race_box);
         race_list->setObjectName(QString::fromUtf8("race_list"));
-        sizePolicy2.setHeightForWidth(race_list->sizePolicy().hasHeightForWidth());
-        race_list->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(race_list->sizePolicy().hasHeightForWidth());
+        race_list->setSizePolicy(sizePolicy1);
         race_list->setMinimumSize(QSize(300, 0));
 
         horizontalLayout_2->addWidget(race_list);
@@ -244,8 +241,8 @@ public:
 
         race_btn = new QPushButton(race_box);
         race_btn->setObjectName(QString::fromUtf8("race_btn"));
-        sizePolicy2.setHeightForWidth(race_btn->sizePolicy().hasHeightForWidth());
-        race_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(race_btn->sizePolicy().hasHeightForWidth());
+        race_btn->setSizePolicy(sizePolicy1);
         race_btn->setMinimumSize(QSize(150, 0));
 
         race_lay->addWidget(race_btn, 0, Qt::AlignRight);
@@ -259,8 +256,8 @@ public:
         lg_box = new QGroupBox(groupBox_3);
         lg_box->setObjectName(QString::fromUtf8("lg_box"));
         lg_box->setEnabled(false);
-        sizePolicy3.setHeightForWidth(lg_box->sizePolicy().hasHeightForWidth());
-        lg_box->setSizePolicy(sizePolicy3);
+        sizePolicy2.setHeightForWidth(lg_box->sizePolicy().hasHeightForWidth());
+        lg_box->setSizePolicy(sizePolicy2);
         verticalLayout_6 = new QVBoxLayout(lg_box);
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);
@@ -279,11 +276,11 @@ public:
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         label_6 = new QLabel(lg_box);
         label_6->setObjectName(QString::fromUtf8("label_6"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Minimum);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Minimum);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
+        label_6->setSizePolicy(sizePolicy3);
         label_6->setMinimumSize(QSize(120, 60));
         label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -291,16 +288,16 @@ public:
 
         lg_fp_ln = new QLineEdit(lg_box);
         lg_fp_ln->setObjectName(QString::fromUtf8("lg_fp_ln"));
-        sizePolicy2.setHeightForWidth(lg_fp_ln->sizePolicy().hasHeightForWidth());
-        lg_fp_ln->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(lg_fp_ln->sizePolicy().hasHeightForWidth());
+        lg_fp_ln->setSizePolicy(sizePolicy1);
         lg_fp_ln->setMinimumSize(QSize(219, 0));
 
         horizontalLayout_3->addWidget(lg_fp_ln);
 
         lg_fp_btn = new QPushButton(lg_box);
         lg_fp_btn->setObjectName(QString::fromUtf8("lg_fp_btn"));
-        sizePolicy2.setHeightForWidth(lg_fp_btn->sizePolicy().hasHeightForWidth());
-        lg_fp_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(lg_fp_btn->sizePolicy().hasHeightForWidth());
+        lg_fp_btn->setSizePolicy(sizePolicy1);
         lg_fp_btn->setMinimumSize(QSize(70, 0));
 
         horizontalLayout_3->addWidget(lg_fp_btn);
@@ -321,8 +318,8 @@ public:
 
         lg_types_list = new QComboBox(lg_box);
         lg_types_list->setObjectName(QString::fromUtf8("lg_types_list"));
-        sizePolicy2.setHeightForWidth(lg_types_list->sizePolicy().hasHeightForWidth());
-        lg_types_list->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(lg_types_list->sizePolicy().hasHeightForWidth());
+        lg_types_list->setSizePolicy(sizePolicy1);
         lg_types_list->setMinimumSize(QSize(300, 0));
 
         gridLayout->addWidget(lg_types_list, 0, 1, 1, 1);
@@ -367,8 +364,11 @@ public:
         gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
         label_30 = new QLabel(col_mask_box);
         label_30->setObjectName(QString::fromUtf8("label_30"));
-        sizePolicy.setHeightForWidth(label_30->sizePolicy().hasHeightForWidth());
-        label_30->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(label_30->sizePolicy().hasHeightForWidth());
+        label_30->setSizePolicy(sizePolicy4);
         label_30->setMinimumSize(QSize(0, 30));
         label_30->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -377,8 +377,8 @@ public:
         col_mask_list = new QComboBox(col_mask_box);
         col_mask_list->addItem(QString());
         col_mask_list->setObjectName(QString::fromUtf8("col_mask_list"));
-        sizePolicy2.setHeightForWidth(col_mask_list->sizePolicy().hasHeightForWidth());
-        col_mask_list->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(col_mask_list->sizePolicy().hasHeightForWidth());
+        col_mask_list->setSizePolicy(sizePolicy1);
         col_mask_list->setMinimumSize(QSize(300, 0));
 
         gridLayout_4->addWidget(col_mask_list, 0, 1, 1, 1);
@@ -399,16 +399,16 @@ public:
 
         col_new_msk_ln = new QLineEdit(col_save_box);
         col_new_msk_ln->setObjectName(QString::fromUtf8("col_new_msk_ln"));
-        sizePolicy2.setHeightForWidth(col_new_msk_ln->sizePolicy().hasHeightForWidth());
-        col_new_msk_ln->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(col_new_msk_ln->sizePolicy().hasHeightForWidth());
+        col_new_msk_ln->setSizePolicy(sizePolicy1);
         col_new_msk_ln->setMinimumSize(QSize(219, 0));
 
         horizontalLayout_4->addWidget(col_new_msk_ln);
 
         col_new_msk_btn = new QPushButton(col_save_box);
         col_new_msk_btn->setObjectName(QString::fromUtf8("col_new_msk_btn"));
-        sizePolicy2.setHeightForWidth(col_new_msk_btn->sizePolicy().hasHeightForWidth());
-        col_new_msk_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(col_new_msk_btn->sizePolicy().hasHeightForWidth());
+        col_new_msk_btn->setSizePolicy(sizePolicy1);
         col_new_msk_btn->setMinimumSize(QSize(70, 0));
 
         horizontalLayout_4->addWidget(col_new_msk_btn);
@@ -425,8 +425,8 @@ public:
         col_box = new QGroupBox(groupBox_3);
         col_box->setObjectName(QString::fromUtf8("col_box"));
         col_box->setEnabled(false);
-        sizePolicy.setHeightForWidth(col_box->sizePolicy().hasHeightForWidth());
-        col_box->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(col_box->sizePolicy().hasHeightForWidth());
+        col_box->setSizePolicy(sizePolicy4);
         verticalLayout_2 = new QVBoxLayout(col_box);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -436,8 +436,8 @@ public:
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         label_10 = new QLabel(col_box);
         label_10->setObjectName(QString::fromUtf8("label_10"));
-        sizePolicy.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
-        label_10->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_10->sizePolicy().hasHeightForWidth());
+        label_10->setSizePolicy(sizePolicy4);
         label_10->setMinimumSize(QSize(0, 30));
         label_10->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -460,8 +460,8 @@ public:
 
         label_18 = new QLabel(col_box);
         label_18->setObjectName(QString::fromUtf8("label_18"));
-        sizePolicy.setHeightForWidth(label_18->sizePolicy().hasHeightForWidth());
-        label_18->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_18->sizePolicy().hasHeightForWidth());
+        label_18->setSizePolicy(sizePolicy4);
         label_18->setMinimumSize(QSize(0, 30));
         label_18->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -474,8 +474,8 @@ public:
 
         label_9 = new QLabel(col_box);
         label_9->setObjectName(QString::fromUtf8("label_9"));
-        sizePolicy.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
-        label_9->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
+        label_9->setSizePolicy(sizePolicy4);
         label_9->setMinimumSize(QSize(0, 30));
         label_9->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -488,8 +488,8 @@ public:
 
         label_17 = new QLabel(col_box);
         label_17->setObjectName(QString::fromUtf8("label_17"));
-        sizePolicy.setHeightForWidth(label_17->sizePolicy().hasHeightForWidth());
-        label_17->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_17->sizePolicy().hasHeightForWidth());
+        label_17->setSizePolicy(sizePolicy4);
         label_17->setMinimumSize(QSize(0, 30));
         label_17->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -512,8 +512,8 @@ public:
 
         label_25 = new QLabel(col_box);
         label_25->setObjectName(QString::fromUtf8("label_25"));
-        sizePolicy.setHeightForWidth(label_25->sizePolicy().hasHeightForWidth());
-        label_25->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_25->sizePolicy().hasHeightForWidth());
+        label_25->setSizePolicy(sizePolicy4);
         label_25->setMinimumSize(QSize(0, 30));
         label_25->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -526,8 +526,8 @@ public:
 
         label_28 = new QLabel(col_box);
         label_28->setObjectName(QString::fromUtf8("label_28"));
-        sizePolicy.setHeightForWidth(label_28->sizePolicy().hasHeightForWidth());
-        label_28->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_28->sizePolicy().hasHeightForWidth());
+        label_28->setSizePolicy(sizePolicy4);
         label_28->setMinimumSize(QSize(0, 30));
         label_28->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -540,8 +540,8 @@ public:
 
         label_19 = new QLabel(col_box);
         label_19->setObjectName(QString::fromUtf8("label_19"));
-        sizePolicy.setHeightForWidth(label_19->sizePolicy().hasHeightForWidth());
-        label_19->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_19->sizePolicy().hasHeightForWidth());
+        label_19->setSizePolicy(sizePolicy4);
         label_19->setMinimumSize(QSize(0, 30));
         label_19->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -549,8 +549,8 @@ public:
 
         label_12 = new QLabel(col_box);
         label_12->setObjectName(QString::fromUtf8("label_12"));
-        sizePolicy.setHeightForWidth(label_12->sizePolicy().hasHeightForWidth());
-        label_12->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_12->sizePolicy().hasHeightForWidth());
+        label_12->setSizePolicy(sizePolicy4);
         label_12->setMinimumSize(QSize(0, 30));
         label_12->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -558,8 +558,8 @@ public:
 
         label_29 = new QLabel(col_box);
         label_29->setObjectName(QString::fromUtf8("label_29"));
-        sizePolicy.setHeightForWidth(label_29->sizePolicy().hasHeightForWidth());
-        label_29->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_29->sizePolicy().hasHeightForWidth());
+        label_29->setSizePolicy(sizePolicy4);
         label_29->setMinimumSize(QSize(0, 30));
         label_29->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -577,8 +577,8 @@ public:
 
         label_21 = new QLabel(col_box);
         label_21->setObjectName(QString::fromUtf8("label_21"));
-        sizePolicy.setHeightForWidth(label_21->sizePolicy().hasHeightForWidth());
-        label_21->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_21->sizePolicy().hasHeightForWidth());
+        label_21->setSizePolicy(sizePolicy4);
         label_21->setMinimumSize(QSize(0, 30));
         label_21->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -586,8 +586,8 @@ public:
 
         label_27 = new QLabel(col_box);
         label_27->setObjectName(QString::fromUtf8("label_27"));
-        sizePolicy.setHeightForWidth(label_27->sizePolicy().hasHeightForWidth());
-        label_27->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_27->sizePolicy().hasHeightForWidth());
+        label_27->setSizePolicy(sizePolicy4);
         label_27->setMinimumSize(QSize(0, 30));
         label_27->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -595,8 +595,8 @@ public:
 
         label_8 = new QLabel(col_box);
         label_8->setObjectName(QString::fromUtf8("label_8"));
-        sizePolicy.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
-        label_8->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
+        label_8->setSizePolicy(sizePolicy4);
         label_8->setMinimumSize(QSize(0, 30));
         label_8->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -619,8 +619,8 @@ public:
 
         id_control_type = new QComboBox(col_box);
         id_control_type->setObjectName(QString::fromUtf8("id_control_type"));
-        sizePolicy.setHeightForWidth(id_control_type->sizePolicy().hasHeightForWidth());
-        id_control_type->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(id_control_type->sizePolicy().hasHeightForWidth());
+        id_control_type->setSizePolicy(sizePolicy4);
         id_control_type->setMinimumSize(QSize(300, 0));
 
         gridLayout_2->addWidget(id_control_type, 0, 1, 1, 1);
@@ -632,8 +632,8 @@ public:
 
         label_16 = new QLabel(col_box);
         label_16->setObjectName(QString::fromUtf8("label_16"));
-        sizePolicy.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
-        label_16->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_16->sizePolicy().hasHeightForWidth());
+        label_16->setSizePolicy(sizePolicy4);
         label_16->setMinimumSize(QSize(0, 30));
         label_16->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -641,8 +641,8 @@ public:
 
         label_13 = new QLabel(col_box);
         label_13->setObjectName(QString::fromUtf8("label_13"));
-        sizePolicy.setHeightForWidth(label_13->sizePolicy().hasHeightForWidth());
-        label_13->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_13->sizePolicy().hasHeightForWidth());
+        label_13->setSizePolicy(sizePolicy4);
         label_13->setMinimumSize(QSize(0, 30));
         label_13->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -655,8 +655,8 @@ public:
 
         label_15 = new QLabel(col_box);
         label_15->setObjectName(QString::fromUtf8("label_15"));
-        sizePolicy.setHeightForWidth(label_15->sizePolicy().hasHeightForWidth());
-        label_15->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_15->sizePolicy().hasHeightForWidth());
+        label_15->setSizePolicy(sizePolicy4);
         label_15->setMinimumSize(QSize(0, 30));
         label_15->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -664,8 +664,8 @@ public:
 
         label_26 = new QLabel(col_box);
         label_26->setObjectName(QString::fromUtf8("label_26"));
-        sizePolicy.setHeightForWidth(label_26->sizePolicy().hasHeightForWidth());
-        label_26->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_26->sizePolicy().hasHeightForWidth());
+        label_26->setSizePolicy(sizePolicy4);
         label_26->setMinimumSize(QSize(0, 30));
         label_26->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -673,8 +673,8 @@ public:
 
         label_22 = new QLabel(col_box);
         label_22->setObjectName(QString::fromUtf8("label_22"));
-        sizePolicy.setHeightForWidth(label_22->sizePolicy().hasHeightForWidth());
-        label_22->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_22->sizePolicy().hasHeightForWidth());
+        label_22->setSizePolicy(sizePolicy4);
         label_22->setMinimumSize(QSize(0, 30));
         label_22->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -682,8 +682,8 @@ public:
 
         label_14 = new QLabel(col_box);
         label_14->setObjectName(QString::fromUtf8("label_14"));
-        sizePolicy.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
-        label_14->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_14->sizePolicy().hasHeightForWidth());
+        label_14->setSizePolicy(sizePolicy4);
         label_14->setMinimumSize(QSize(0, 30));
         label_14->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -691,8 +691,8 @@ public:
 
         label_11 = new QLabel(col_box);
         label_11->setObjectName(QString::fromUtf8("label_11"));
-        sizePolicy.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
-        label_11->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_11->sizePolicy().hasHeightForWidth());
+        label_11->setSizePolicy(sizePolicy4);
         label_11->setMinimumSize(QSize(0, 30));
         label_11->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -710,8 +710,8 @@ public:
 
         label_23 = new QLabel(col_box);
         label_23->setObjectName(QString::fromUtf8("label_23"));
-        sizePolicy.setHeightForWidth(label_23->sizePolicy().hasHeightForWidth());
-        label_23->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_23->sizePolicy().hasHeightForWidth());
+        label_23->setSizePolicy(sizePolicy4);
         label_23->setMinimumSize(QSize(0, 30));
         label_23->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -724,8 +724,8 @@ public:
 
         label_20 = new QLabel(col_box);
         label_20->setObjectName(QString::fromUtf8("label_20"));
-        sizePolicy.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
-        label_20->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_20->sizePolicy().hasHeightForWidth());
+        label_20->setSizePolicy(sizePolicy4);
         label_20->setMinimumSize(QSize(0, 30));
         label_20->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -733,8 +733,8 @@ public:
 
         label_24 = new QLabel(col_box);
         label_24->setObjectName(QString::fromUtf8("label_24"));
-        sizePolicy.setHeightForWidth(label_24->sizePolicy().hasHeightForWidth());
-        label_24->setSizePolicy(sizePolicy);
+        sizePolicy4.setHeightForWidth(label_24->sizePolicy().hasHeightForWidth());
+        label_24->setSizePolicy(sizePolicy4);
         label_24->setMinimumSize(QSize(0, 30));
         label_24->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
@@ -756,8 +756,8 @@ public:
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
         cnl_btn = new QPushButton(groupBox_3);
         cnl_btn->setObjectName(QString::fromUtf8("cnl_btn"));
-        sizePolicy2.setHeightForWidth(cnl_btn->sizePolicy().hasHeightForWidth());
-        cnl_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(cnl_btn->sizePolicy().hasHeightForWidth());
+        cnl_btn->setSizePolicy(sizePolicy1);
         cnl_btn->setMinimumSize(QSize(100, 0));
 
         horizontalLayout_5->addWidget(cnl_btn, 0, Qt::AlignLeft);
@@ -765,8 +765,8 @@ public:
         import_btn = new QPushButton(groupBox_3);
         import_btn->setObjectName(QString::fromUtf8("import_btn"));
         import_btn->setEnabled(false);
-        sizePolicy2.setHeightForWidth(import_btn->sizePolicy().hasHeightForWidth());
-        import_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(import_btn->sizePolicy().hasHeightForWidth());
+        import_btn->setSizePolicy(sizePolicy1);
         import_btn->setMinimumSize(QSize(100, 0));
 
         horizontalLayout_5->addWidget(import_btn, 0, Qt::AlignRight);

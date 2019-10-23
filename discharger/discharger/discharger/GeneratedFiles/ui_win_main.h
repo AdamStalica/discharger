@@ -27,6 +27,9 @@ QT_BEGIN_NAMESPACE
 class Ui_win_mainClass
 {
 public:
+    QAction *actionHelp;
+    QAction *actionAbout_program;
+    QAction *actionReload_CSS;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QScrollArea *mainArea;
@@ -43,19 +46,26 @@ public:
         if (win_mainClass->objectName().isEmpty())
             win_mainClass->setObjectName(QString::fromUtf8("win_mainClass"));
         win_mainClass->resize(994, 766);
+        actionHelp = new QAction(win_mainClass);
+        actionHelp->setObjectName(QString::fromUtf8("actionHelp"));
+        actionAbout_program = new QAction(win_mainClass);
+        actionAbout_program->setObjectName(QString::fromUtf8("actionAbout_program"));
+        actionReload_CSS = new QAction(win_mainClass);
+        actionReload_CSS->setObjectName(QString::fromUtf8("actionReload_CSS"));
         centralWidget = new QWidget(win_mainClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
-        gridLayout->setSpacing(6);
+        gridLayout->setSpacing(0);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
         mainArea = new QScrollArea(centralWidget);
         mainArea->setObjectName(QString::fromUtf8("mainArea"));
         mainArea->setWidgetResizable(true);
         mainArea->setAlignment(Qt::AlignCenter);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 974, 693));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 992, 711));
         verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -83,6 +93,9 @@ public:
 
         menuBar->addAction(menuOption->menuAction());
         menuBar->addAction(menuHelp->menuAction());
+        menuOption->addAction(actionReload_CSS);
+        menuHelp->addAction(actionHelp);
+        menuHelp->addAction(actionAbout_program);
 
         retranslateUi(win_mainClass);
 
@@ -92,6 +105,15 @@ public:
     void retranslateUi(QMainWindow *win_mainClass)
     {
         win_mainClass->setWindowTitle(QCoreApplication::translate("win_mainClass", "win_main", nullptr));
+        actionHelp->setText(QCoreApplication::translate("win_mainClass", "Help", nullptr));
+#if QT_CONFIG(shortcut)
+        actionHelp->setShortcut(QCoreApplication::translate("win_mainClass", "F1", nullptr));
+#endif // QT_CONFIG(shortcut)
+        actionAbout_program->setText(QCoreApplication::translate("win_mainClass", "About program", nullptr));
+        actionReload_CSS->setText(QCoreApplication::translate("win_mainClass", "Reload CSS", nullptr));
+#if QT_CONFIG(shortcut)
+        actionReload_CSS->setShortcut(QCoreApplication::translate("win_mainClass", "F7", nullptr));
+#endif // QT_CONFIG(shortcut)
         menuOption->setTitle(QCoreApplication::translate("win_mainClass", "Option", nullptr));
         menuHelp->setTitle(QCoreApplication::translate("win_mainClass", "Help", nullptr));
     } // retranslateUi

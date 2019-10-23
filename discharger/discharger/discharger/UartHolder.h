@@ -5,13 +5,14 @@
 #include "DeviceError.h"
 #include "ReceivedData.h"
 #include "json.h"
+#include "ClearAble.h"
 
-constexpr auto HANDSHAKE_TIMEOUT = 1000;
+constexpr auto HANDSHAKE_TIMEOUT = 2000;
 
 class QSerialPort;
 class QTimer;
 
-class UartHolder : public QObject
+class UartHolder : public QObject, public ClearAble
 {
 	Q_OBJECT
 
@@ -42,10 +43,13 @@ public:
 	*/
 	void sendStop();
 
+	void clear() override;
+
 private:
 	QSerialPort * serial;
 	QString lastError;
 	QString buffer;
+	QByteArray txBuffer;
 
 	QRegExp regExpTheWhole = QRegExp("[{][^}]+[}]");
 	QRegExp regExpTheBeginning = QRegExp("[{][^}]+");
@@ -60,6 +64,7 @@ private:
 
 private slots:
 	void read();
+	void sendNextBytes(qint64 lastSendBytesWritten);
 
 signals:
 	/**

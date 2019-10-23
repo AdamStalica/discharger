@@ -20,6 +20,7 @@ public:
 
 	UartHolder * uart;
 	QTimer * timer;
+	QTimer * t;
 
 	int i = 0;
 
@@ -47,7 +48,10 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 	// When got handshake start sending data.
 	connect(uart, &UartHolder::gotHandshake, this, [this](int duration) {
 		qDebug() << "Got handshake after " << duration << " us.";
-		timer->start(SENDING_PERIOD);
+		if (duration != -1) {
+			timer->start(SENDING_PERIOD);
+			t->stop();
+		}
 	});
 
 	// When got data, print it.
@@ -77,11 +81,17 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 
 	// Open port
 	qDebug() << "Opening port";
-	uart->open("COM3");
+	uart->open("COM7");
 
 	// Send handshake
 	qDebug() << "Sending handshake";
-	uart->handshake();
+
+	t = new QTimer;
+	connect(t, &QTimer::timeout, this, [this] {
+		uart->handshake();
+		uart->handshake();
+	});
+	t->start(2000);
 }
 
 TestingClass::~TestingClass() {

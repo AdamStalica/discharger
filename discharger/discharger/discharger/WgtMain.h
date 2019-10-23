@@ -3,7 +3,7 @@
 #include <QWidget>
 #include "ui_WgtMain.h"
 
-class WgtMain : public QWidget
+class WgtMain : public QWidget 
 {
 	Q_OBJECT
 

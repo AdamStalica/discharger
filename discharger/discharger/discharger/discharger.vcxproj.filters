@@ -86,10 +86,13 @@
     <ClCompile Include="WgtSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SimData.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="WgtChart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -142,6 +145,9 @@
     <QtMoc Include="WgtChart.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="WinHelp.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="WgtImport.ui">
@@ -174,6 +180,9 @@
     <QtUic Include="WgtChart.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="WinHelp.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="win_main.qrc">
@@ -194,7 +203,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SimData.h">
-      <Filter>Generated Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClearAble.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

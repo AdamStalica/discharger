@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QCloseEvent>
 #include "ui_win_main.h"
 
 #include "WgtNewSpeedway.h"
@@ -11,9 +12,14 @@
 #include "WgtSimConfig.h"
 #include "WgtSim.h"
 
+#include "WinHelp.h"
+
 #include "ApiHolder.h"
 #include "BasicData.h"
 #include "UartHolder.h"
+
+constexpr auto CSS_FILE = "media/style.css";
+constexpr auto HELP_FILE = "help/help.json";
 
 class QWebSocket;
 
@@ -39,5 +45,16 @@ private:
 	WgtSimConfig * simConfig;
 	WgtSim * sim;
 
+	WinHelp * winHelp;
+
+	std::vector<ClearAble *> clearAble;
+
 	QWidget * lastWgt;
+
+
+	void setFrontEnd();
+	void setWgtsConnections();
+	void setWinConnections();
+	void loadCSS();
+	void closeEvent(QCloseEvent *) override;
 };

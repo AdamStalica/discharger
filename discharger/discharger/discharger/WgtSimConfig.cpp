@@ -45,6 +45,11 @@ WgtSimConfig::~WgtSimConfig()
 {
 }
 
+void WgtSimConfig::clear()
+{
+
+}
+
 // TODO remove 1 at the beginning of the tree
 void WgtSimConfig::init()
 {
@@ -72,7 +77,11 @@ void WgtSimConfig::openAndTestCom() {
 		}
 
 		if (uart->open(ui.ports_list->currentText())) {
-			uart->handshake();
+			QTimer::singleShot(500, [this] {
+				qDebug() << uart->isOpen();
+				uart->handshake();
+				uart->handshake();
+			});
 		}
 		else {
 			QMessageBox::critical(this, "Error", uart->getLastError());
@@ -180,6 +189,8 @@ void WgtSimConfig::prepareSimulation() {
 	api->apiInsert(newSimInfo.dump());
 	connect(api, &ApiHolder::gotResponse, this, [this](const QString & data) {
 	
+		api->disconnect();
+
 		json resp = json::parse(data.toStdString());
 		if (resp["status"].get<std::string>() == "OK") {
 			loader->setState("END");

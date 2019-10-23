@@ -93,6 +93,11 @@ void WgtSim::startStopSimulationBtn() {
 	}
 }
 
+void WgtSim::clear()
+{
+
+}
+
 void WgtSim::uartErrorsHolder(const DeviceError & error)
 {
 	qDebug() << error.what().c_str();

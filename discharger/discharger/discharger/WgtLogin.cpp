@@ -28,6 +28,11 @@ WgtLogin::~WgtLogin()
 {
 }
 
+void WgtLogin::clear()
+{
+
+}
+
 void WgtLogin::loginBtn() {
 
 	QString email = ui.email->text();

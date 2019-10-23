@@ -3,6 +3,8 @@
 #include <QWidget>
 #include "ui_WgtSimConfig.h"
 #include "json.h"
+#include "ClearAble.h"
+
 
 constexpr auto SIM_IN_PROGRESS = 0;
 
@@ -14,7 +16,7 @@ class WgtLoader;
 class QStandardItem;
 class QStandardItemModel;
 
-class WgtSimConfig : public QWidget
+class WgtSimConfig : public QWidget, public ClearAble
 {
 	Q_OBJECT
 
@@ -22,6 +24,8 @@ public:
 	WgtSimConfig(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *parent = Q_NULLPTR);
 	void setUartHolder(UartHolder * uart);
 	~WgtSimConfig();
+
+	void clear() override;
 
 private:
 	Ui::WgtSimConfig ui;

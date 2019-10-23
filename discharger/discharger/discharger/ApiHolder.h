@@ -3,19 +3,21 @@
 #include <QObject>
 #include <QNetworkReply>
 
+#include "ClearAble.h"
+
+
 class QNetworkAccessManager;
 
 constexpr auto QTIME_FORMAT = "HH:mm:ss.zzz";
 constexpr auto QDATE_FORMAT = "yyyy-MM-dd";
 constexpr auto QDATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.zzz";
 
-class ApiHolder : public QObject
+class ApiHolder : public QObject, public ClearAble
 {
 	Q_OBJECT
 
 public:
 	ApiHolder(QObject *parent);
-	void logout();
 	~ApiHolder();
 
 	void apiInsert(const QString & param);
@@ -33,6 +35,7 @@ public:
 	QString getApiUserSurname() { return surname; }
 	QString getApiUserEmail() { return email; }
 
+	void clear() override;
 
 signals:
 	void gotResponse(const QString & resp);

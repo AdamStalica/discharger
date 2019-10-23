@@ -1,0 +1,53 @@
+QScrollArea#mainArea {
+    background-color: red;
+}
+
+/*---------------------------- Login --------------------------*/
+QWidget#WgtLogin QGroupBox{
+    background-color: indigo;
+}
+
+/*---------------------------- Main ---------------------------*/
+QWidget#WgtMain QLabel, 
+QWidget#WgtMain QPushButton
+{
+    background-color: blue;
+    color: white;
+}
+
+QWidget#WgtMain QPushButton {
+    height: 50px;
+}
+
+/*-------------------------- Loader ---------------------------*/
+QWidget#WgtLoader {
+    background-color: green;
+}
+
+QWidget#WgtLoader QLabel{
+    background-color: white;
+    border-radius: 10px;
+}
+
+QWidget#WgtLoader QGroupBox{
+    background-color: rgba(80, 165, 30, 0.5);
+    border-radius:10px;
+}
+
+/*------------------------ SimConfig --------------------------*/
+QWidget#WgtSimConfig {
+    background-color: lime;
+}
+
+QWidget#WgtSimConfig QGroupBox QTreeView{
+    background-color: rgb(0, 116, 52);
+}
+
+/*------------------------ QMessageBox ------------------------*/
+QMessageBox {
+    background-color: greenyellow;
+}
+
+QMessageBox QPushButton{
+    background-color: red;
+}

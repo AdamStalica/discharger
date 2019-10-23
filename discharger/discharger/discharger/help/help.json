@@ -1,0 +1,22 @@
+[
+    {
+        "wgtName" : "WgtLogin",
+        "helpHTMLFile" : "help/WgtLogin.html"
+    },
+    {
+        "wgtName" : "WgtMain",
+        "helpHTMLFile" : "help/WgtMain.html"
+    },
+    {
+        "wgtName" : "WgtImport",
+        "helpHTMLFile" : "help/WgtImport.html"
+    },
+    {
+        "wgtName" : "WgtSimConfig",
+        "helpHTMLFile" : "help/WgtSimConfig.html"
+    },
+    {
+        "wgtName" : "WgtSim",
+        "helpHTMLFile" : "help/WgtSim.html"
+    }
+]

@@ -32,7 +32,7 @@ ApiHolder::ApiHolder(QObject *parent)
 	});
 }
 
-void ApiHolder::logout()
+void ApiHolder::clear()
 {
 	name = "";
 	surname = "";

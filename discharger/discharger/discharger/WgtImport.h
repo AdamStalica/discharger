@@ -6,6 +6,7 @@
 #include "WgtNewRace.h"
 
 #include "json.h"
+#include "ClearAble.h"
 
 //class ThreadSynch;
 class ApiHolder;
@@ -19,7 +20,7 @@ class WgtLoader;
 
 */
 
-class WgtImport : public QWidget
+class WgtImport : public QWidget, public ClearAble
 {
 	Q_OBJECT
 
@@ -28,6 +29,7 @@ public:
 	~WgtImport();
 
 	QString getLastError() { return lastError; };
+	void clear() override;
 
 private:
 	Ui::WgtImport ui;
@@ -89,6 +91,7 @@ private:
 	void setMasks(int id_mask);
 	void importData();
 	void updateLogTime();
+
 
 
 private slots:

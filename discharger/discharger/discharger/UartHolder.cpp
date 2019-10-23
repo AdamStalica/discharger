@@ -14,6 +14,7 @@ UartHolder::UartHolder(QObject *parent)
 	serial = new QSerialPort(this);
 
 	connect(serial, SIGNAL(readyRead()), this, SLOT(read()));
+	connect(serial, SIGNAL(bytesWritten()), this, SLOT(sendNextBytes()));
 	connect(serial, &QSerialPort::errorOccurred, this, [this](const QSerialPort::SerialPortError & error) {
 		qDebug() << error;
 	});
@@ -29,7 +30,9 @@ UartHolder::~UartHolder()
 
 void UartHolder::sendData(const std::string & data) {
 	
-	serial->write(data.c_str());
+	txBuffer.append((data + "\n\r").c_str());
+
+	serial->write(txBuffer);
 	serial->waitForBytesWritten(-1);
 }
 
@@ -38,11 +41,11 @@ bool UartHolder::open(const QString & com)
 	if (serial->isOpen()) 
 		return true;
 
-	serial->setBaudRate(9600);
+	serial->setBaudRate(57600);
 	serial->setDataBits(QSerialPort::Data8);
 	serial->setParity(QSerialPort::NoParity);
-	serial->setStopBits(QSerialPort::OneStop);
-	serial->setFlowControl(QSerialPort::FlowControl::SoftwareControl);
+	serial->setStopBits(QSerialPort::TwoStop);
+	serial->setFlowControl(QSerialPort::NoFlowControl);
 	
 	serial->setPortName(com);
 	if (!serial->open(QIODevice::ReadWrite)) {
@@ -66,20 +69,12 @@ void UartHolder::handshake()
 {
 	qTimer->disconnect();
 	connect(qTimer, &QTimer::timeout, this, [this] {
+		
+		lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
+		emit gotHandshake(-1);
+		qTimer->stop();
+	});
 
-		const int tryingLimit = 5;
-		static int counter = 0;
-
-		if (tryingLimit == counter++) {
-			lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
-			emit gotHandshake(-1);
-			qTimer->stop();
-		}
-		else {
-			start = timer.now();
-			sendData("{\"handshake\":\"PC\"}");
-		}
-	}); 
 	qTimer->start(HANDSHAKE_TIMEOUT);
 	start = timer.now();
 
@@ -94,20 +89,32 @@ void UartHolder::handshakeHolder()
 	emit gotHandshake(ms);
 }
 
+void UartHolder::sendNextBytes(qint64 lastSendBytesWritten)
+{
+
+}
+
 void UartHolder::sendData(int id, float current, float temperature)
 {
 	json data = {
 		{"id", id},
-		{"curr", current}
+		{"curr", int(current * 100.0 + 0.5)}
 	};
 	if (temperature != FLT_MAX)
-		data["temp"] = temperature;
+		data["temp"] = int(temperature * 100.0 + 0.5);
 	sendData(data.dump());
 }
 
 void UartHolder::sendStop()
 {
 	sendData("{\"stop\":\"now\"}");
+}
+
+void UartHolder::clear()
+{
+	if (isOpen()) {
+		close();
+	}
 }
 
 void UartHolder::read() {

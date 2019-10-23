@@ -3,11 +3,13 @@
 #include <QObject>
 
 #include "json.h"
+#include "ClearAble.h"
+
 
 class ApiHolder;
 class WgtLoader;
 
-class BasicData : public QObject
+class BasicData : public QObject, public ClearAble
 {
 	Q_OBJECT
 
@@ -15,7 +17,7 @@ public:
 	BasicData(ApiHolder * api, WgtLoader * loader, QObject *parent);
 	void fetchData();
 	QString getLastError() { return lastError; }
-	void clear();
+	void clear() override;
 	~BasicData();
 
 	/*

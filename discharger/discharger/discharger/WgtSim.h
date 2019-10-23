@@ -7,6 +7,8 @@
 #include "json.h"
 #include "SimData.h"
 #include "WgtChart.h"
+#include "ClearAble.h"
+
 
 //#define DoNotSend
 #define Arduino
@@ -24,7 +26,7 @@ class WgtLoader;
 class UartHolder;
 class DeviceError;
 
-class WgtSim : public QWidget, SimData
+class WgtSim : public QWidget, SimData, public ClearAble
 {
 	Q_OBJECT
 
@@ -41,6 +43,8 @@ public:
 	~WgtSim() {
 		//if (simulationInProgress) simulationFinished(SIM_STATE::REMOVED);
 	}
+
+	void clear() override;
 
 private slots:
 	void startStopSimulationBtn();

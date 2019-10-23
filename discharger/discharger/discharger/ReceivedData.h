@@ -116,11 +116,11 @@ inline ReceivedData::ReceivedData(const nlohmann::json & data) : jsonDataObject(
 	timestamp = QDateTime::currentDateTime();
 
 	id = data["id"].get<int>();
-	current = data["curr"].get<double>();
-	battLeftVolt = data["bLV"].get<double>();
-	battRightVolt = data["bRV"].get<double>();
-	battLeftTemp = data["bLT"].get<double>();
-	battRightTemp = data["bRT"].get<double>();
+	current = data["curr"].get<int>() / 100.0;
+	battLeftVolt = data["bLV"].get<int>() / 100.0;
+	battRightVolt = data["bRV"].get<int>() / 100.0;
+	battLeftTemp = data["bLT"].get<int>() / 100.0;
+	battRightTemp = data["bRT"].get<int>() / 100.0;
 }
 
 /*

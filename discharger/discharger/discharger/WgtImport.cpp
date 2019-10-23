@@ -665,3 +665,8 @@ void WgtImport::updateLogTime() {
 		}
 	});
 }
+
+void WgtImport::clear()
+{
+
+}

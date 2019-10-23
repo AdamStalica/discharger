@@ -57,7 +57,7 @@ public:
         if (WgtSimConfig->objectName().isEmpty())
             WgtSimConfig->setObjectName(QString::fromUtf8("WgtSimConfig"));
         WgtSimConfig->resize(510, 714);
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtSimConfig->sizePolicy().hasHeightForWidth());
@@ -68,11 +68,8 @@ public:
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         groupBox_3 = new QGroupBox(WgtSimConfig);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
-        groupBox_3->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
+        groupBox_3->setSizePolicy(sizePolicy);
         groupBox_3->setMinimumSize(QSize(492, 0));
         verticalLayout = new QVBoxLayout(groupBox_3);
         verticalLayout->setSpacing(6);
@@ -80,19 +77,22 @@ public:
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         go_back_btn = new QPushButton(groupBox_3);
         go_back_btn->setObjectName(QString::fromUtf8("go_back_btn"));
-        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(go_back_btn->sizePolicy().hasHeightForWidth());
-        go_back_btn->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(go_back_btn->sizePolicy().hasHeightForWidth());
+        go_back_btn->setSizePolicy(sizePolicy1);
         go_back_btn->setMinimumSize(QSize(100, 0));
 
         verticalLayout->addWidget(go_back_btn);
 
         dev_box = new QGroupBox(groupBox_3);
         dev_box->setObjectName(QString::fromUtf8("dev_box"));
-        sizePolicy.setHeightForWidth(dev_box->sizePolicy().hasHeightForWidth());
-        dev_box->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(dev_box->sizePolicy().hasHeightForWidth());
+        dev_box->setSizePolicy(sizePolicy2);
         dev_box->setMaximumSize(QSize(16777215, 100));
         gridLayout = new QGridLayout(dev_box);
         gridLayout->setSpacing(6);
@@ -110,8 +110,8 @@ public:
 
         open_com_btn = new QPushButton(dev_box);
         open_com_btn->setObjectName(QString::fromUtf8("open_com_btn"));
-        sizePolicy1.setHeightForWidth(open_com_btn->sizePolicy().hasHeightForWidth());
-        open_com_btn->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(open_com_btn->sizePolicy().hasHeightForWidth());
+        open_com_btn->setSizePolicy(sizePolicy);
         open_com_btn->setMinimumSize(QSize(100, 23));
 
         gridLayout->addWidget(open_com_btn, 2, 1, 1, 1, Qt::AlignRight);
@@ -129,8 +129,8 @@ public:
 
         refresh_btn = new QPushButton(dev_box);
         refresh_btn->setObjectName(QString::fromUtf8("refresh_btn"));
-        sizePolicy1.setHeightForWidth(refresh_btn->sizePolicy().hasHeightForWidth());
-        refresh_btn->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(refresh_btn->sizePolicy().hasHeightForWidth());
+        refresh_btn->setSizePolicy(sizePolicy);
         refresh_btn->setMinimumSize(QSize(100, 23));
 
         gridLayout->addWidget(refresh_btn, 0, 1, 1, 1, Qt::AlignRight);
@@ -140,16 +140,16 @@ public:
 
         groupBox_2 = new QGroupBox(groupBox_3);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        sizePolicy.setHeightForWidth(groupBox_2->sizePolicy().hasHeightForWidth());
-        groupBox_2->setSizePolicy(sizePolicy);
+        sizePolicy2.setHeightForWidth(groupBox_2->sizePolicy().hasHeightForWidth());
+        groupBox_2->setSizePolicy(sizePolicy2);
         verticalLayout_3 = new QVBoxLayout(groupBox_2);
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         expand_btn = new QPushButton(groupBox_2);
         expand_btn->setObjectName(QString::fromUtf8("expand_btn"));
-        sizePolicy2.setHeightForWidth(expand_btn->sizePolicy().hasHeightForWidth());
-        expand_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(expand_btn->sizePolicy().hasHeightForWidth());
+        expand_btn->setSizePolicy(sizePolicy1);
         expand_btn->setMinimumSize(QSize(100, 0));
 
         verticalLayout_3->addWidget(expand_btn, 0, Qt::AlignRight);
@@ -176,8 +176,8 @@ public:
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         id_batt_left = new QComboBox(groupBox);
         id_batt_left->setObjectName(QString::fromUtf8("id_batt_left"));
-        sizePolicy2.setHeightForWidth(id_batt_left->sizePolicy().hasHeightForWidth());
-        id_batt_left->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(id_batt_left->sizePolicy().hasHeightForWidth());
+        id_batt_left->setSizePolicy(sizePolicy1);
         id_batt_left->setMinimumSize(QSize(100, 0));
 
         gridLayout_2->addWidget(id_batt_left, 1, 0, 1, 1, Qt::AlignRight);
@@ -189,8 +189,8 @@ public:
 
         id_batt_right = new QComboBox(groupBox);
         id_batt_right->setObjectName(QString::fromUtf8("id_batt_right"));
-        sizePolicy2.setHeightForWidth(id_batt_right->sizePolicy().hasHeightForWidth());
-        id_batt_right->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(id_batt_right->sizePolicy().hasHeightForWidth());
+        id_batt_right->setSizePolicy(sizePolicy1);
         id_batt_right->setMinimumSize(QSize(100, 0));
 
         gridLayout_2->addWidget(id_batt_right, 1, 1, 1, 1, Qt::AlignLeft);
@@ -220,8 +220,8 @@ public:
         prep_sim_btn = new QPushButton(groupBox_3);
         prep_sim_btn->setObjectName(QString::fromUtf8("prep_sim_btn"));
         prep_sim_btn->setEnabled(false);
-        sizePolicy2.setHeightForWidth(prep_sim_btn->sizePolicy().hasHeightForWidth());
-        prep_sim_btn->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(prep_sim_btn->sizePolicy().hasHeightForWidth());
+        prep_sim_btn->setSizePolicy(sizePolicy1);
         prep_sim_btn->setMinimumSize(QSize(150, 0));
 
         verticalLayout->addWidget(prep_sim_btn, 0, Qt::AlignRight);
