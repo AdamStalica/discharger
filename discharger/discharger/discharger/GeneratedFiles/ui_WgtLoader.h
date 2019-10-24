@@ -21,6 +21,8 @@ QT_BEGIN_NAMESPACE
 class Ui_WgtLoader
 {
 public:
+    QVBoxLayout *verticalLayout_3;
+    QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout;
     QGroupBox *groupBox;
     QVBoxLayout *verticalLayout_2;
@@ -31,23 +33,30 @@ public:
     {
         if (WgtLoader->objectName().isEmpty())
             WgtLoader->setObjectName(QString::fromUtf8("WgtLoader"));
-        WgtLoader->resize(200, 185);
+        WgtLoader->resize(527, 205);
         QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtLoader->sizePolicy().hasHeightForWidth());
         WgtLoader->setSizePolicy(sizePolicy);
         WgtLoader->setStyleSheet(QString::fromUtf8(""));
-        verticalLayout = new QVBoxLayout(WgtLoader);
-        verticalLayout->setSpacing(0);
+        verticalLayout_3 = new QVBoxLayout(WgtLoader);
+        verticalLayout_3->setSpacing(0);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalLayout_3->setContentsMargins(0, 0, 0, 0);
+        groupBox_2 = new QGroupBox(WgtLoader);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        verticalLayout = new QVBoxLayout(groupBox_2);
+        verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        groupBox = new QGroupBox(WgtLoader);
+        groupBox = new QGroupBox(groupBox_2);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
         sizePolicy.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
         groupBox->setSizePolicy(sizePolicy);
         groupBox->setMinimumSize(QSize(200, 0));
+        groupBox->setMaximumSize(QSize(512, 16777215));
         groupBox->setStyleSheet(QString::fromUtf8(""));
         groupBox->setAlignment(Qt::AlignCenter);
         verticalLayout_2 = new QVBoxLayout(groupBox);
@@ -80,7 +89,10 @@ public:
         verticalLayout_2->addWidget(comment_lbl, 0, Qt::AlignHCenter);
 
 
-        verticalLayout->addWidget(groupBox, 0, Qt::AlignHCenter|Qt::AlignVCenter);
+        verticalLayout->addWidget(groupBox);
+
+
+        verticalLayout_3->addWidget(groupBox_2);
 
 
         retranslateUi(WgtLoader);
@@ -91,6 +103,7 @@ public:
     void retranslateUi(QWidget *WgtLoader)
     {
         WgtLoader->setWindowTitle(QCoreApplication::translate("WgtLoader", "WgtLoader", nullptr));
+        groupBox_2->setTitle(QString());
         groupBox->setTitle(QString());
         mv_lbl->setText(QCoreApplication::translate("WgtLoader", "Loading", nullptr));
         comment_lbl->setText(QString());

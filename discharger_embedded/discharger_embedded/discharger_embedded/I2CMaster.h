@@ -17,7 +17,8 @@
 
 class I2CMaster
 {
-	UsartHolder * uart;
+protected:
+	//UsartHolder * uart;
 	
 public:
 	I2CMaster(unsigned long fCpu, unsigned long fScl = 100000UL, uint8_t prescaler = 1);
@@ -43,7 +44,7 @@ public:
 	uint8_t readReg(uint8_t, uint8_t, uint8_t*, uint16_t);
 	~I2CMaster() {};
 	
-	void setSerial(UsartHolder * uart) { this->uart = uart; } 
+	//void setSerial(UsartHolder * uart) { this->uart = uart; } 
 	
 protected:
 private:

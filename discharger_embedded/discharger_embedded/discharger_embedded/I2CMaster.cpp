@@ -29,9 +29,8 @@ void I2CMaster::stop()
 }
 
 uint8_t I2CMaster::start(uint8_t address)
-{
-	uart->println("Starting TWI...");
-	
+{	
+	//uart->println("1");
 	// reset TWI control register
 	TWCR = 0;
 	// transmit START condition
@@ -41,7 +40,7 @@ uint8_t I2CMaster::start(uint8_t address)
 	
 	// check if the start condition was successfully transmitted
 	if((TWSR & 0xF8) != TW_START){ return 1; }
-	uart->println("Start condition has been successfully transmitted.");
+	//uart->println("2");
 
 	// load slave address into data register
 	TWDR = address;
@@ -55,8 +54,6 @@ uint8_t I2CMaster::start(uint8_t address)
 	uint8_t twst = TW_STATUS & 0xF8;
 	if ( (twst != TW_MT_SLA_ACK) && (twst != 0x40) ) { return 1; }
 
-	uart->println("TWI connected, address: " + (address / 100 + '0') + ((address % 100) / 10 + '0') + (address % 10 + '0'));
-	
 	return 0;
 }
 

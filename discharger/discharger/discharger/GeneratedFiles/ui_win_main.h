@@ -10,6 +10,7 @@
 #define UI_WIN_MAIN_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
@@ -46,6 +47,9 @@ public:
         if (win_mainClass->objectName().isEmpty())
             win_mainClass->setObjectName(QString::fromUtf8("win_mainClass"));
         win_mainClass->resize(994, 766);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8("media/discharger.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        win_mainClass->setWindowIcon(icon);
         actionHelp = new QAction(win_mainClass);
         actionHelp->setObjectName(QString::fromUtf8("actionHelp"));
         actionAbout_program = new QAction(win_mainClass);
@@ -104,7 +108,7 @@ public:
 
     void retranslateUi(QMainWindow *win_mainClass)
     {
-        win_mainClass->setWindowTitle(QCoreApplication::translate("win_mainClass", "win_main", nullptr));
+        win_mainClass->setWindowTitle(QCoreApplication::translate("win_mainClass", "Discharger", nullptr));
         actionHelp->setText(QCoreApplication::translate("win_mainClass", "Help", nullptr));
 #if QT_CONFIG(shortcut)
         actionHelp->setShortcut(QCoreApplication::translate("win_mainClass", "F1", nullptr));

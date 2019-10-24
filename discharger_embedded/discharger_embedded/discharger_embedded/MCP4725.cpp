@@ -8,39 +8,27 @@
 
 #include "MCP4725.h"
 
-// default constructor
-MCP4725::MCP4725(unsigned long fCpu) : I2CMaster(fCpu)
-{
-} //MCP4725
-
-// default destructor
-MCP4725::~MCP4725()
-{
-} //~MCP4725
-
-uint8_t MCP4725::readData(uint8_t * tab, uint8_t size) {
-	uint8_t ans = 0x00;
+uint16_t MCP4725::readDACValue() {
 	
-	for(uint8_t i = 0; i < 0x08; i++) {
-		ans |= this->receive((DEVICE_ADDRESS | ((i << 1) & 0x0E)), tab, size);	
+	uint8_t data[5];
+	
+	uint8_t ans = this->receive(DEVICE_ADDRESS, data, sizeof(data[5]));	
+	
+	if(!ans) {
+		uint16_t dac = (data[1] << 8) | data[2];
+		return dac;
 	}
-	
-	return ans;
+	return 0xFFFF;
 }
 
-uint8_t MCP4725::writeDACData(uint16_t dacValue) {
+uint8_t MCP4725::writeDACValue(uint16_t dacValue) {
 
 	uint8_t data[3] = {
 		DATA_WRITE_FIRST_BYTE,
 		uint8_t(dacValue >> 8),
 		(uint8_t)dacValue
 	};
-
-	uint8_t ans;	
-	ans =	this->transmit((DEVICE_ADDRESS | (0 << 3) | (0 << 2)), data, sizeof(data));
-	ans |=	this->transmit((DEVICE_ADDRESS | (0 << 3) | (1 << 2)), data, sizeof(data));
-	ans |=	this->transmit((DEVICE_ADDRESS | (1 << 3) | (0 << 2)), data, sizeof(data));
-	ans |=	this->transmit((DEVICE_ADDRESS | (1 << 3) | (1 << 2)), data, sizeof(data));
 	
+	uint8_t ans = this->transmit(DEVICE_ADDRESS, data, sizeof(data));	
 	return ans;
 }

@@ -6,6 +6,10 @@
 */
 
 #include <avr/io.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 
 #ifndef __USARTHOLDER_H__
 #define __USARTHOLDER_H__
@@ -59,6 +63,7 @@ public:
 	void print(uint8_t * data);
 	void print(const char * data);
 	void println(const char * data);
+	void println(uint16_t data);
 	
 	void isrUsart0RxHandler();
 	void isrUsart0UdreHandler();

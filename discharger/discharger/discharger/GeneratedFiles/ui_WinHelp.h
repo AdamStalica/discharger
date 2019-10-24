@@ -10,6 +10,7 @@
 #define UI_WINHELP_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QTextBrowser>
@@ -32,6 +33,9 @@ public:
         if (WinHelp->objectName().isEmpty())
             WinHelp->setObjectName(QString::fromUtf8("WinHelp"));
         WinHelp->resize(484, 378);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8("media/help.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        WinHelp->setWindowIcon(icon);
         verticalLayout_2 = new QVBoxLayout(WinHelp);
         verticalLayout_2->setSpacing(0);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);

@@ -31,9 +31,6 @@ public:
 	Discharger();
 	~Discharger() {}
 	void run();
-private:
-	Discharger( const Discharger &c );
-	Discharger& operator=( const Discharger &c );
 
 };
 

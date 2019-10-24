@@ -2,11 +2,17 @@
 
 #include <QObject>
 
+#include <QSerialPort>
+
 #include "UartHolder.h"
 #include <QTimer>
 #include <QDebug>
 
 #include <map>
+
+#include <thread>
+#include <chrono>
+
 
 constexpr auto SENDING_PERIOD = 1000;
 
@@ -41,7 +47,7 @@ public:
 
 TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 
-
+	/*
 	uart = new UartHolder(this);
 	timer = new QTimer(this);
 
@@ -86,15 +92,83 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 	// Send handshake
 	qDebug() << "Sending handshake";
 
+	uart->serial->waitForReadyRead(100);
+
+
 	t = new QTimer;
 	connect(t, &QTimer::timeout, this, [this] {
-		uart->handshake();
+		
 		uart->handshake();
 	});
 	t->start(2000);
+
+
+	
+	while (1) {
+		while (uart->serial->waitForReadyRead(100));
+	}
+	
+
+	*/
+
+
+
+	std::thread * t1 = new std::thread([] {
+
+
+		QSerialPort * serial = new QSerialPort;
+
+		serial->setBaudRate(57600);
+		serial->setDataBits(QSerialPort::Data8);
+		serial->setParity(QSerialPort::NoParity);
+		serial->setStopBits(QSerialPort::TwoStop);
+		serial->setFlowControl(QSerialPort::NoFlowControl);
+
+		serial->setPortName("COM7");
+		if (!serial->open(QIODevice::ReadWrite)) {
+			qDebug() << serial->errorString();
+			return false;
+		}
+		else {
+
+
+			serial->write("{\"handshake\":\"PC\"}");
+			qDebug() << "{\"handshake\":\"PC\"}";
+			int i = 0;
+
+			while (1) {
+
+				char d;
+
+				QByteArray data;
+				while (serial->waitForReadyRead(100)) {
+					while (serial->bytesAvailable() > 0) {
+						serial->read(&d, 1);
+						if (d == '\n')
+							break;
+						else {
+							data.append(d);
+						}
+					}
+				}
+
+				qDebug() << data;
+
+				qDebug() << ("{\"id\":" + std::to_string(i) + ",\"curr\":2000}").c_str();
+				serial->write(("{\"id\":" + std::to_string(i++) + ",\"curr\":2000}\n\r").c_str());
+
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			}
+		}
+	});
+	t1->detach();
+
+
+
+
 }
 
-TestingClass::~TestingClass() {
-	delete uart;
-	delete timer;
+TestingClass::~TestingClass() 
+{
 }

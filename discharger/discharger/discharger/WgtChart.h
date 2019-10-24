@@ -93,8 +93,21 @@ public:
 		chart->legend()->setAlignment(Qt::AlignBottom);
 
 		ui.layout->addWidget(chartView);
+
+		this->setStyleSheet("QWidget { background-color: rgba(0, 0, 0, 0); }");
+		chart->setTheme(QtCharts::QChart::ChartThemeDark);
 	}
 	
+	template<typename ...V>
+	void setColors(const V &... colors) {
+		if (sizeof...(V) != seriesCount)
+			std::exception(("Series count mismatched. Excepted " + std::to_string(seriesCount) + " got " + std::to_string(sizeof...(V))).c_str());
+		
+		std::vector<QColor> colorsVec = { colors... };
+
+		for (int i = 0; i < seriesCount; ++i)
+			series[names.at(i)]->setColor(colorsVec.at(i));
+	}
 
 	template<typename ...V>
 	void append(const QTime & time, V ...data) {

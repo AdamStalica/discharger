@@ -169,6 +169,7 @@ void WgtSim::fetchedCallback(const std::string & status, int no, const std::stri
 
 	currChart = new WgtChart(this, "Race", "Simulation");
 	currChart->setUnit("A");
+	currChart->setColors(QColor(182, 253, 142), QColor(0, 253, 142));
 	ui.curr_chart_lay->addWidget(currChart);
 
 	voltChart = new WgtChart(this, "Left", "Right");

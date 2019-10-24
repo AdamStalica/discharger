@@ -23,7 +23,7 @@ UartHolder::UartHolder(QObject *parent)
 
 UartHolder::~UartHolder()
 {
-	sendStop();
+	if(isOpen()) sendStop();
 	serial->close();
 	delete serial;
 }

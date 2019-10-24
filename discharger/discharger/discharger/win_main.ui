@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>win_main</string>
+   <string>Discharger</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>media/discharger.ico</normaloff>media/discharger.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">

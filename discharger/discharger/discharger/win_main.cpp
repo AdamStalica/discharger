@@ -56,7 +56,6 @@ win_main::win_main(QWidget *parent)
 	#ifdef TESTING
 	/*************** Testing Class *********************/
 	
-	uart->open("COM3");
 	TestingClass * testingClass = new TestingClass(this);
 	
 	/***************************************************/

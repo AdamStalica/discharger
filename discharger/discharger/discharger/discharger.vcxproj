@@ -156,9 +156,6 @@
     <QtRcc Include="win_main.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="discharger.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ClearAble.h" />
     <ClInclude Include="ReceivedData.h" />
     <ClInclude Include="SimData.h" />
@@ -227,9 +224,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

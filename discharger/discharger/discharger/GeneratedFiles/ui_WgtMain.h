@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QCommandLinkButton>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
@@ -23,6 +24,10 @@ QT_BEGIN_NAMESPACE
 class Ui_WgtMain
 {
 public:
+    QVBoxLayout *verticalLayout_4;
+    QGroupBox *groupBox_2;
+    QVBoxLayout *verticalLayout_3;
+    QFrame *frame;
     QVBoxLayout *verticalLayout_2;
     QPushButton *logout_btn;
     QGroupBox *groupBox;
@@ -36,35 +41,53 @@ public:
     {
         if (WgtMain->objectName().isEmpty())
             WgtMain->setObjectName(QString::fromUtf8("WgtMain"));
-        WgtMain->resize(510, 600);
+        WgtMain->resize(512, 460);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(WgtMain->sizePolicy().hasHeightForWidth());
         WgtMain->setSizePolicy(sizePolicy);
-        verticalLayout_2 = new QVBoxLayout(WgtMain);
+        verticalLayout_4 = new QVBoxLayout(WgtMain);
+        verticalLayout_4->setSpacing(0);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
+        groupBox_2 = new QGroupBox(WgtMain);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        groupBox_2->setMinimumSize(QSize(512, 0));
+        groupBox_2->setMaximumSize(QSize(512, 16777215));
+        verticalLayout_3 = new QVBoxLayout(groupBox_2);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        frame = new QFrame(groupBox_2);
+        frame->setObjectName(QString::fromUtf8("frame"));
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
+        frame->setSizePolicy(sizePolicy1);
+        frame->setFrameShape(QFrame::StyledPanel);
+        frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_2 = new QVBoxLayout(frame);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(30, 30, 30, 30);
-        logout_btn = new QPushButton(WgtMain);
+        logout_btn = new QPushButton(frame);
         logout_btn->setObjectName(QString::fromUtf8("logout_btn"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(logout_btn->sizePolicy().hasHeightForWidth());
-        logout_btn->setSizePolicy(sizePolicy1);
-        logout_btn->setMinimumSize(QSize(100, 0));
-
-        verticalLayout_2->addWidget(logout_btn, 0, Qt::AlignRight|Qt::AlignTop);
-
-        groupBox = new QGroupBox(WgtMain);
-        groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
-        groupBox->setSizePolicy(sizePolicy2);
+        sizePolicy2.setHeightForWidth(logout_btn->sizePolicy().hasHeightForWidth());
+        logout_btn->setSizePolicy(sizePolicy2);
+        logout_btn->setMinimumSize(QSize(100, 0));
+
+        verticalLayout_2->addWidget(logout_btn, 0, Qt::AlignRight);
+
+        groupBox = new QGroupBox(frame);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        sizePolicy1.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
+        groupBox->setSizePolicy(sizePolicy1);
         verticalLayout = new QVBoxLayout(groupBox);
         verticalLayout->setSpacing(15);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -96,14 +119,20 @@ public:
         verticalLayout->addWidget(exp_btn);
 
 
-        verticalLayout_2->addWidget(groupBox, 0, Qt::AlignHCenter|Qt::AlignVCenter);
+        verticalLayout_2->addWidget(groupBox);
 
-        label = new QLabel(WgtMain);
+
+        verticalLayout_3->addWidget(frame, 0, Qt::AlignHCenter|Qt::AlignVCenter);
+
+        label = new QLabel(groupBox_2);
         label->setObjectName(QString::fromUtf8("label"));
-        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy2);
+        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy1);
 
-        verticalLayout_2->addWidget(label, 0, Qt::AlignHCenter|Qt::AlignBottom);
+        verticalLayout_3->addWidget(label, 0, Qt::AlignHCenter|Qt::AlignBottom);
+
+
+        verticalLayout_4->addWidget(groupBox_2);
 
 
         retranslateUi(WgtMain);
@@ -114,8 +143,9 @@ public:
     void retranslateUi(QWidget *WgtMain)
     {
         WgtMain->setWindowTitle(QCoreApplication::translate("WgtMain", "WgtMain", nullptr));
+        groupBox_2->setTitle(QString());
         logout_btn->setText(QCoreApplication::translate("WgtMain", "Logout", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("WgtMain", "Tools", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("WgtMain", " Tools ", nullptr));
         new_sim_btn->setText(QCoreApplication::translate("WgtMain", "New simulation", nullptr));
         imp_btn->setText(QCoreApplication::translate("WgtMain", "Import logs", nullptr));
         exp_btn->setText(QCoreApplication::translate("WgtMain", "Export simulations", nullptr));

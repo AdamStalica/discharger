@@ -1,13 +1,14 @@
 QScrollArea#mainArea {
-    background-color: red;
+    border-image: url(media/background.jpg) 0 0 0 0 stretch stretch;
+	border-width: 0px;
 }
-
-/*---------------------------- Login --------------------------*/
+/*
+/*---------------------------- Login --------------------------*
 QWidget#WgtLogin QGroupBox{
     background-color: indigo;
 }
 
-/*---------------------------- Main ---------------------------*/
+/*---------------------------- Main ---------------------------*
 QWidget#WgtMain QLabel, 
 QWidget#WgtMain QPushButton
 {
@@ -19,7 +20,7 @@ QWidget#WgtMain QPushButton {
     height: 50px;
 }
 
-/*-------------------------- Loader ---------------------------*/
+/*-------------------------- Loader ---------------------------*
 QWidget#WgtLoader {
     background-color: green;
 }
@@ -34,7 +35,7 @@ QWidget#WgtLoader QGroupBox{
     border-radius:10px;
 }
 
-/*------------------------ SimConfig --------------------------*/
+/*------------------------ SimConfig --------------------------*
 QWidget#WgtSimConfig {
     background-color: lime;
 }
@@ -43,11 +44,86 @@ QWidget#WgtSimConfig QGroupBox QTreeView{
     background-color: rgb(0, 116, 52);
 }
 
-/*------------------------ QMessageBox ------------------------*/
+/*------------------------ QMessageBox ------------------------*
 QMessageBox {
     background-color: greenyellow;
 }
 
 QMessageBox QPushButton{
     background-color: red;
+}
+
+*/
+
+QWidget#WgtLogin,
+QWidget#WgtMain,
+QWidget#WgtImport,
+QWidget#WgtSimConfig,
+QWidget#WgtSim,
+QWidget#WgtLoader
+{
+    background-color: rgba(0, 0, 0, 0);
+}
+
+QScrollArea QGroupBox {
+    background-color: rgba(0, 170, 9, 0.719);
+
+    padding: 20px;
+    border-radius: 10px;
+    color: blanchedalmond;
+    font-size: 13px;
+    font-style: italic;
+}
+
+QScrollArea QGroupBox QGroupBox {
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid blanchedalmond;
+    padding: 0;
+    margin: 0px;
+    border-radius: 0;
+}
+
+QScrollArea QGroupBox QGroupBox QGroupBox {
+    background-color: rgba(0, 0, 0, 0);
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+}
+
+QLabel {
+    color: blanchedalmond;
+    font-size: 12px;
+}
+
+QProgressBar {
+    color: blanchedalmond;
+}
+
+QMessageBox QLabel {
+    color: black;
+}
+
+QLineEdit, QComboBox {
+    border: 1px solid rgb(0, 173, 0);
+    padding: 2px;
+    border-radius: 3px;
+}
+
+QPushButton {
+    background-color: rgb(255, 255, 255);
+    padding: 3px 10px 3px 10px;
+    border: 1px solid rgb(0, 173, 0);
+    border-radius: 3px;
+    margin: 3px;
+    min-width: 70px;
+}
+
+QPushButton:hover {
+    background-color: rgb(7, 221, 7);
+}
+
+QCommandLinkButton {
+    border: 0;
+    background-color: none;
+    color: blanchedalmond;
 }

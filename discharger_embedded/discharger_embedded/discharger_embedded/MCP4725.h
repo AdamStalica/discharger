@@ -15,6 +15,7 @@
 #define MPC4725_A0 0
 #define DEVICE_ADDRESS (DEVICE_CODE | (MPC4725_A2 << 3) | (MPC4725_A1 << 2) | (MPC4725_A0 << 1))
 
+// First byte - configuration byte
 /*
 *	WRITE COMMANDS TYPE
 *	C0	|	Type
@@ -26,6 +27,18 @@
 #define MPC4725_C1 1
 #define MPC4725_C0 0
 #define WRITE_COMMAND_TYPE ((MPC4725_C2 << 7) | (MPC4725_C1 << 6) | (MPC4725_C0 << 5))
+
+/*
+*	VREF source
+*	VREF1	|	VREF0	| source
+*	-----------------------------------------------	
+*		0	|	0		|	VDD
+*		1	|	0		|	VREF(Unbuffered)
+*		1	|	1		|	VREF(Buffered)
+*/
+#define VREF1 0
+#define VREF0 0
+#define VREF ((VREF1 << 4) | (VREF0 << 3))
 
 /*
 *	POWER-DOWN BITS
@@ -40,19 +53,26 @@
 #define MPC4725_PD0 0
 #define POWER_DOWN_BITS ((MPC4725_PD1 << 2) | (MPC4725_PD0 << 1))
 
-#define DATA_WRITE_FIRST_BYTE (WRITE_COMMAND_TYPE | POWER_DOWN_BITS)
+/*
+*	Gain selection bit
+*	G = 0 - 1x
+*	G = 1 - 2x (gain of 2). Not applicable when VDD is used as VRL
+*/
+#define GAIN 0
+
+#define DATA_WRITE_FIRST_BYTE (WRITE_COMMAND_TYPE | VREF | POWER_DOWN_BITS | (GAIN << 0))
 
 #include "I2CMaster.h"
 
-class MCP4725 : public I2CMaster
+class MCP4725 : protected I2CMaster
 {
 	
 //functions
 public:
-	MCP4725(unsigned long fCpu);
-	~MCP4725();
-	uint8_t readData(uint8_t * tab, uint8_t size);
-	uint8_t writeDACData(uint16_t dacValue);
+	MCP4725(unsigned long fCpu) : I2CMaster(fCpu) {};
+	~MCP4725() {};
+	uint16_t readDACValue();
+	uint8_t writeDACValue(uint16_t dacValue);
 	
 private:
 	MCP4725( const MCP4725 &c );

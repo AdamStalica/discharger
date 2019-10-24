@@ -87,3 +87,9 @@ void UsartHolder::println(const char * data) {
 	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
 	putBuffer();
 }
+
+void UsartHolder::println(uint16_t data) {
+	_txDataEnd = sprintf((char*)_txBuffer, "%d", data);
+	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
+	putBuffer();
+}

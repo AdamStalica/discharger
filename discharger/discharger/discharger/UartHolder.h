@@ -44,9 +44,9 @@ public:
 	void sendStop();
 
 	void clear() override;
+	QSerialPort * serial;
 
 private:
-	QSerialPort * serial;
 	QString lastError;
 	QString buffer;
 	QByteArray txBuffer;
