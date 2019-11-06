@@ -1,16 +1,16 @@
 #pragma once
 
 #include <QObject>
-#include <chrono>
+#include <QTimer>
+#include <QElapsedTimer>
+
+#include "SerialPortThread.h"
 #include "DeviceError.h"
 #include "ReceivedData.h"
 #include "json.h"
 #include "ClearAble.h"
 
 constexpr auto HANDSHAKE_TIMEOUT = 2000;
-
-class QSerialPort;
-class QTimer;
 
 class UartHolder : public QObject, public ClearAble
 {
@@ -19,6 +19,7 @@ class UartHolder : public QObject, public ClearAble
 public:
 	UartHolder(QObject *parent);
 	~UartHolder();
+
 	bool open(const QString & com);
 	void close();
 	bool isOpen();
@@ -44,27 +45,38 @@ public:
 	void sendStop();
 
 	void clear() override;
-	QSerialPort * serial;
+
+	//QSerialPort * serial;
 
 private:
+
+	SerialPortThread serial;
+
 	QString lastError;
-	QString buffer;
-	QByteArray txBuffer;
+	QRegExp regExpJSON = QRegExp("[{][^}]+[}]");
 
-	QRegExp regExpTheWhole = QRegExp("[{][^}]+[}]");
-	QRegExp regExpTheBeginning = QRegExp("[{][^}]+");
+	QTimer qTimer;
+	QElapsedTimer elapsedTimer;
 
-	std::chrono::high_resolution_clock timer;
-	decltype(timer.now()) start;
+	//QString buffer;
+	//QByteArray txBuffer;
 
-	QTimer * qTimer;
+	//QRegExp regExpTheBeginning = QRegExp("[{][^}]+");
 
-	void sendData(const std::string & data);
+	//std::chrono::high_resolution_clock timer;
+	//decltype(timer.now()) start;
+
+	
+
+	//void sendData(const std::string & data);
+
 	void handshakeHolder();
+	void println(const QString & data);
 
 private slots:
-	void read();
-	void sendNextBytes(qint64 lastSendBytesWritten);
+	void proccessNewLine(const QString & newLine);
+	//void read();
+	//void sendNextBytes(qint64 lastSendBytesWritten);
 
 signals:
 	/**
@@ -86,4 +98,7 @@ signals:
 	*	@param error - An device error object.
 	*/
 	void gotError(const DeviceError & error);
+	
+	void printlnSignal(const QString & data);
+	void closeSignal();
 };

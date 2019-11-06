@@ -9,25 +9,25 @@
 using json = nlohmann::json;
 
 UartHolder::UartHolder(QObject *parent)
-	: QObject(parent)
+	:	QObject(parent),
+		serial(this)
 {
-	serial = new QSerialPort(this);
-
-	connect(serial, SIGNAL(readyRead()), this, SLOT(read()));
-	connect(serial, SIGNAL(bytesWritten()), this, SLOT(sendNextBytes()));
-	connect(serial, &QSerialPort::errorOccurred, this, [this](const QSerialPort::SerialPortError & error) {
+	connect(this, &UartHolder::printlnSignal, &serial, &SerialPortThread::println);
+	connect(this, &UartHolder::closeSignal, &serial, &SerialPortThread::close);
+	connect(&serial, &QThread::finished, &serial, &SerialPortThread::deleteLater);
+	connect(&serial, &SerialPortThread::gotNewLine, this, &UartHolder::proccessNewLine);
+	connect(&serial, &SerialPortThread::errorOccured, this, [this](const QString & error) {
+		lastError = error;
 		qDebug() << error;
 	});
-	qTimer = new QTimer(this);
+
+	serial.setDestructorMsgIfPortOpen("{\"stop\":\"now\"}");
 }
 
 UartHolder::~UartHolder()
 {
-	if(isOpen()) sendStop();
-	serial->close();
-	delete serial;
 }
-
+/*
 void UartHolder::sendData(const std::string & data) {
 	
 	txBuffer.append((data + "\n\r").c_str());
@@ -35,63 +35,54 @@ void UartHolder::sendData(const std::string & data) {
 	serial->write(txBuffer);
 	serial->waitForBytesWritten(-1);
 }
+*/
 
 bool UartHolder::open(const QString & com)
 {
-	if (serial->isOpen()) 
+	if (serial.isOpen()) 
 		return true;
 
-	serial->setBaudRate(57600);
-	serial->setDataBits(QSerialPort::Data8);
-	serial->setParity(QSerialPort::NoParity);
-	serial->setStopBits(QSerialPort::TwoStop);
-	serial->setFlowControl(QSerialPort::NoFlowControl);
+	serial.setPortName(com);
+	serial.setBaudRate(57600);
+	serial.setStopBits(QSerialPort::TwoStop);
 	
-	serial->setPortName(com);
-	if (!serial->open(QIODevice::ReadWrite)) {
-		lastError = serial->errorString();
-		return false;
-	}
-	
-	return true;
+	return serial.open();
 }
 
 void UartHolder::close() {
-	serial->close();
+	emit closeSignal();
 }
 
 bool UartHolder::isOpen()
 {
-	return serial->isOpen();
+	return serial.isOpen();
 }
 
 void UartHolder::handshake()
 {
-	qTimer->disconnect();
-	connect(qTimer, &QTimer::timeout, this, [this] {
+	qTimer.disconnect();
+	connect(&qTimer, &QTimer::timeout, this, [this] {
 		
 		lastError = "Handshake timeout (over " + QString::number(HANDSHAKE_TIMEOUT) + " ms).";
 		emit gotHandshake(-1);
-		qTimer->stop();
+		qTimer.stop();
 	});
 
-	qTimer->start(HANDSHAKE_TIMEOUT);
-	start = timer.now();
+	qTimer.start(HANDSHAKE_TIMEOUT);
+	elapsedTimer.start();
 
-	sendData("{\"handshake\":\"PC\"}");
+	println("{\"handshake\":\"PC\"}");
 }
 
 void UartHolder::handshakeHolder()
 {
-	qTimer->stop();
-	auto end = timer.now();
-	int ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-	emit gotHandshake(ms);
+	qTimer.stop();
+	emit gotHandshake(elapsedTimer.elapsed());
 }
 
-void UartHolder::sendNextBytes(qint64 lastSendBytesWritten)
+void UartHolder::println(const QString & data)
 {
-
+	emit printlnSignal(data);
 }
 
 void UartHolder::sendData(int id, float current, float temperature)
@@ -102,21 +93,49 @@ void UartHolder::sendData(int id, float current, float temperature)
 	};
 	if (temperature != FLT_MAX)
 		data["temp"] = int(temperature * 100.0 + 0.5);
-	sendData(data.dump());
+	println(QString(data.dump().c_str()));
 }
 
 void UartHolder::sendStop()
 {
-	sendData("{\"stop\":\"now\"}");
+	println("{\"stop\":\"now\"}");
 }
 
 void UartHolder::clear()
 {
-	if (isOpen()) {
-		close();
+	serial.close();
+}
+
+void UartHolder::proccessNewLine(const QString & newLine) {
+	if (newLine.contains(regExpJSON)) {
+		regExpJSON.indexIn(newLine);
+
+		QString jsonStr = regExpJSON.capturedTexts().front();
+
+		json received;
+		try {
+			received = json::parse(jsonStr.toStdString());
+		}
+		catch (const std::exception & ex) {
+			lastError = "Can not parse received string.\n" + QString(ex.what());
+			QMessageBox::critical(nullptr, "Error", lastError);
+			//qDebug() << "error UartHolder.cpp : " << buffer;
+			return;
+		}
+
+		if (!received["id"].is_null())
+			emit gotData(ReceivedData(received));
+		else if (!received["handshake"].is_null())
+			handshakeHolder();
+		else if (!received["stop"].is_null())
+			emit gotStop(true);
+		else if (!received["error"].is_null()) {
+			emit gotError(DeviceError(received["error"].get<int>()));
+		}
 	}
 }
 
+/*
 void UartHolder::read() {
 
 
@@ -152,7 +171,7 @@ void UartHolder::read() {
 				}
 				else return;
 			}
-			*/
+			
 
 			json received;
 			try {
@@ -177,3 +196,5 @@ void UartHolder::read() {
 		}
 	}
 }
+
+*/

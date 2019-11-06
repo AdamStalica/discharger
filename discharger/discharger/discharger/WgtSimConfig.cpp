@@ -80,7 +80,6 @@ void WgtSimConfig::openAndTestCom() {
 			QTimer::singleShot(500, [this] {
 				qDebug() << uart->isOpen();
 				uart->handshake();
-				uart->handshake();
 			});
 		}
 		else {

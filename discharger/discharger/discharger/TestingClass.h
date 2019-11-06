@@ -13,6 +13,65 @@
 #include <thread>
 #include <chrono>
 
+#include <QThread>
+
+/*
+
+class SerialPortThread : public QThread
+{
+	Q_OBJECT
+
+private:
+
+	inline void run() override; 
+	inline bool open(
+		const QString & com,
+		qint32 baudRate, 
+		QSerialPort::DataBits dataBits = QSerialPort::DataBits::Data8, 
+		QSerialPort::Parity parity = QSerialPort::Parity::NoParity,
+		QSerialPort::StopBits stopBits = QSerialPort::StopBits::TwoStop,
+		QSerialPort::FlowControl flowControl = QSerialPort::FlowControl::NoFlowControl
+	);
+	inline SerialPortThread(QObject * parent = Q_NULLPTR);
+	QSerialPort * serial = new QSerialPort;
+
+	int i = 0;
+
+signals:
+	void resultReady(const QString & result);
+	void gotError(const QString & error);
+};
+
+SerialPortThread::SerialPortThread(QObject * parent) 
+	: QThread(parent)
+{
+	serial = new QSerialPort(this);
+}
+
+void SerialPortThread::run() {
+	while (1) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+
+		emit resultReady("Execution no. " + QString::number(i++));
+	}
+}
+
+bool SerialPortThread::open(const QString & com, qint32 baudRate, QSerialPort::DataBits dataBits, QSerialPort::Parity parity, QSerialPort::StopBits stopBits, QSerialPort::FlowControl flowControl) {
+	serial->setBaudRate(baudRate);
+	serial->setDataBits(dataBits);
+	serial->setParity(parity);
+	serial->setStopBits(stopBits);
+	serial->setFlowControl(flowControl);
+
+	serial->setPortName(com);
+	if (!serial->open(QIODevice::ReadWrite)) {
+		
+		emit gotError(serial->errorString());
+		return false;
+	}
+	return true;
+}
+*/
 
 constexpr auto SENDING_PERIOD = 1000;
 
@@ -43,7 +102,7 @@ public:
 		{10, 5.4},
 		{11, 0.0},
 	};
-};
+	};
 
 TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 
@@ -112,7 +171,7 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 	*/
 
 
-
+	/*
 	std::thread * t1 = new std::thread([] {
 
 
@@ -133,7 +192,28 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 
 
 			serial->write("{\"handshake\":\"PC\"}");
+			serial->waitForBytesWritten(200);
 			qDebug() << "{\"handshake\":\"PC\"}";
+
+			/*
+			QByteArray data;
+			QRegExp re = QRegExp("[{][^}]+[}]");
+
+			while (1) {
+				while (serial->waitForReadyRead(100)) {
+					while (serial->bytesAvailable() > 0) {
+						serial->read(&d, 1);
+						if (d == '\n')
+							break;
+						else {
+							data.append(d);
+						}
+					}
+				}
+			}
+			*
+
+
 			int i = 0;
 
 			while (1) {
@@ -141,11 +221,11 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 				char d;
 
 				QByteArray data;
-				while (serial->waitForReadyRead(100)) {
+				while (d != '\n') {
+					serial->waitForReadyRead(100);
 					while (serial->bytesAvailable() > 0) {
 						serial->read(&d, 1);
-						if (d == '\n')
-							break;
+						if (d == '\n') break;
 						else {
 							data.append(d);
 						}
@@ -164,7 +244,18 @@ TestingClass::TestingClass(QObject * parent) : QObject(parent) {
 	});
 	t1->detach();
 
+	*/
 
+/*
+	WorkerThread * workerThread = new WorkerThread;
+	connect(workerThread, &WorkerThread::resultReady, this, [](const QString & data) {
+	
+		qDebug() << data;
+	
+	});
+	connect(workerThread, &WorkerThread::finished, workerThread, &QObject::deleteLater);
+	workerThread->start();
+*/
 
 
 }

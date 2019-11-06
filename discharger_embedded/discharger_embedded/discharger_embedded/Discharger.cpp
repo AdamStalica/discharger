@@ -23,10 +23,12 @@ void Discharger::run() {
 	
 	static uint16_t dacValue = 0;
 
-	uint8_t status = dac.writeDACValue(dacValue);
+	//uint8_t status = dac.writeDACValue(dacValue);
 	dacValue += 500;
 	
 	//uart.println(i++);
 	
-	_delay_ms(500);
+	//data.logError(i++);
+	
+	//_delay_ms(500);
 }

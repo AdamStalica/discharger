@@ -81,10 +81,11 @@ void UsartHolder::print(const char * data) {
 }
 
 void UsartHolder::println(const char * data) {
-	while(*data != STR_END_CHAR && _txDataEnd < (TX_BUFFER_SIZE - 1)) {
+	while(*data != STR_END_CHAR && _txDataEnd < (TX_BUFFER_SIZE - 2)) {
 		_txBuffer[_txDataEnd++] = *(data++);
 	}
 	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
+	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
 	putBuffer();
 }
 
