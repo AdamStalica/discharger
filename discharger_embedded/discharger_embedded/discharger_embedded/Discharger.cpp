@@ -13,7 +13,6 @@ Discharger::Discharger()
 		dac(F_CPU),
 		uart(data)
 {
-	DDRA = 0xFF;
 	
 }
 

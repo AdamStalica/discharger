@@ -69,7 +69,7 @@ void SimulationData::sendResponse() {
 		2000,
 		3000
 	);	
-	PORTA = (currentCurrent >> 8);
+	
 	this->println(buff);
 }
 
