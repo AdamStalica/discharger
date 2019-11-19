@@ -12,16 +12,16 @@ UartHolder::UartHolder(QObject *parent)
 	:	QObject(parent),
 		serial(this)
 {
-	connect(this, &UartHolder::printlnSignal, &serial, &SerialPortThread::println);
-	connect(this, &UartHolder::closeSignal, &serial, &SerialPortThread::close);
-	connect(&serial, &QThread::finished, &serial, &SerialPortThread::deleteLater);
-	connect(&serial, &SerialPortThread::gotNewLine, this, &UartHolder::proccessNewLine);
-	connect(&serial, &SerialPortThread::errorOccured, this, [this](const QString & error) {
-		lastError = error;
-		qDebug() << error;
+	//connect(this, &UartHolder::printlnSignal, &serial, &SerialPortThread::println);
+	//connect(this, &UartHolder::closeSignal, &serial, &SerialPortThread::close);
+	//connect(&serial, &QThread::finished, &serial, &SerialPortThread::deleteLater);
+	connect(&serial, &SerialPortThread::gotLineSignal, this, &UartHolder::proccessNewLine);
+	connect(&serial, &SerialPortThread::errorOccuredSignal, this, [this](const std::string & error) {
+		lastError = error.c_str();
+		qDebug() << error.c_str();
 	});
 
-	serial.setDestructorMsgIfPortOpen("{\"stop\":\"now\"}");
+	//serial.setDestructorMsgIfPortOpen("{\"stop\":\"now\"}");
 }
 
 UartHolder::~UartHolder()
@@ -42,15 +42,20 @@ bool UartHolder::open(const QString & com)
 	if (serial.isOpen()) 
 		return true;
 
-	serial.setPortName(com);
-	serial.setBaudRate(57600);
-	serial.setStopBits(QSerialPort::TwoStop);
+	serial.setPortName(com.toStdString());
+	serial.setBaudrate(57600);
+	serial.setStopBits(serial::stopbits_two);
 	
-	return serial.open();
+	serial.open();
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+	return serial.isOpen();
 }
 
 void UartHolder::close() {
-	emit closeSignal();
+	//emit closeSignal();
+	serial.close();
 }
 
 bool UartHolder::isOpen()
@@ -71,7 +76,7 @@ void UartHolder::handshake()
 	qTimer.start(HANDSHAKE_TIMEOUT);
 	elapsedTimer.start();
 
-	println("{\"handshake\":\"PC\"}");
+	serial.println("{\"handshake\":\"PC\"}");
 }
 
 void UartHolder::handshakeHolder()
@@ -82,7 +87,7 @@ void UartHolder::handshakeHolder()
 
 void UartHolder::println(const QString & data)
 {
-	emit printlnSignal(data);
+	//emit printlnSignal(data);
 }
 
 void UartHolder::sendData(int id, float current, float temperature)
@@ -93,7 +98,7 @@ void UartHolder::sendData(int id, float current, float temperature)
 	};
 	if (temperature != FLT_MAX)
 		data["temp"] = int(temperature * 100.0 + 0.5);
-	println(QString(data.dump().c_str()));
+	serial.println(data.dump().c_str());
 }
 
 void UartHolder::sendStop()
@@ -106,9 +111,11 @@ void UartHolder::clear()
 	serial.close();
 }
 
-void UartHolder::proccessNewLine(const QString & newLine) {
-	if (newLine.contains(regExpJSON)) {
-		regExpJSON.indexIn(newLine);
+void UartHolder::proccessNewLine(const std::string & newLine) {
+	QString nl = QString::fromStdString(newLine);
+
+	if (nl.contains(regExpJSON)) {
+		regExpJSON.indexIn(nl);
 
 		QString jsonStr = regExpJSON.capturedTexts().front();
 

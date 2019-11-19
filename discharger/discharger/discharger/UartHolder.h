@@ -74,7 +74,7 @@ private:
 	void println(const QString & data);
 
 private slots:
-	void proccessNewLine(const QString & newLine);
+	void proccessNewLine(const std::string & newLine);
 	//void read();
 	//void sendNextBytes(qint64 lastSendBytesWritten);
 
