@@ -12,11 +12,8 @@ UartHolder::UartHolder(QObject *parent)
 	:	QObject(parent),
 		serial(this)
 {
-	//connect(this, &UartHolder::printlnSignal, &serial, &SerialPortThread::println);
-	//connect(this, &UartHolder::closeSignal, &serial, &SerialPortThread::close);
-	//connect(&serial, &QThread::finished, &serial, &SerialPortThread::deleteLater);
-	connect(&serial, &SerialPortThread::gotLineSignal, this, &UartHolder::proccessNewLine);
-	connect(&serial, &SerialPortThread::errorOccuredSignal, this, [this](const std::string & error) {
+	connect(&serial, &SerialPort::gotLineSignal, this, &UartHolder::proccessNewLine);
+	connect(&serial, &SerialPort::errorOccuredSignal, this, [this](const std::string & error) {
 		lastError = error.c_str();
 		qDebug() << error.c_str();
 	});
@@ -27,15 +24,6 @@ UartHolder::UartHolder(QObject *parent)
 UartHolder::~UartHolder()
 {
 }
-/*
-void UartHolder::sendData(const std::string & data) {
-	
-	txBuffer.append((data + "\n\r").c_str());
-
-	serial->write(txBuffer);
-	serial->waitForBytesWritten(-1);
-}
-*/
 
 bool UartHolder::open(const QString & com)
 {
@@ -46,15 +34,10 @@ bool UartHolder::open(const QString & com)
 	serial.setBaudrate(57600);
 	serial.setStopBits(serial::stopbits_two);
 	
-	serial.open();
-
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-
-	return serial.isOpen();
+	return serial.open();
 }
 
 void UartHolder::close() {
-	//emit closeSignal();
 	serial.close();
 }
 
@@ -85,25 +68,18 @@ void UartHolder::handshakeHolder()
 	emit gotHandshake(elapsedTimer.elapsed());
 }
 
-void UartHolder::println(const QString & data)
-{
-	//emit printlnSignal(data);
-}
-
 void UartHolder::sendData(int id, float current, float temperature)
 {
-	json data = {
-		{"id", id},
-		{"curr", int(current * 100.0 + 0.5)}
-	};
-	if (temperature != FLT_MAX)
-		data["temp"] = int(temperature * 100.0 + 0.5);
-	serial.println(data.dump().c_str());
+	int(current * 100.0 + 0.5);
+
+	std::string toSend = "{\"id\":" + std::to_string(id) + ",\"curr\":" + std::to_string(curr) + (temperature != FLT_MAX ? (",\"temp\":" + std::to_string(int(temperature * 100.0 + 0.5))) : "") + "}";
+
+	serial.println(toSend);
 }
 
 void UartHolder::sendStop()
 {
-	println("{\"stop\":\"now\"}");
+	serial.println("{\"stop\":\"now\"}");
 }
 
 void UartHolder::clear()

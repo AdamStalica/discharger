@@ -98,6 +98,9 @@
     <ClCompile Include="SerialPortThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SerialPort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ApiHolder.h">
@@ -152,6 +155,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="SerialPortThread.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SerialPort.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

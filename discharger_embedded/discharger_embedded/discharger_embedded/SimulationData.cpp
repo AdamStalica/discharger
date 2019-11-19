@@ -63,12 +63,13 @@ void SimulationData::sendResponse() {
 		buff, 
 		"{\"id\":%d,\"curr\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d}",
 		currentId,
-		currentCurrent + 50, //measuredCurrent,
+		(currentCurrent + 50), //measuredCurrent,
 		(1210 - currentCurrent / 100), //measuredBLV,
 		(1207 - currentCurrent / 100), //measuredBRV,
 		2000,
 		3000
 	);	
+	PORTA = (currentCurrent >> 8);
 	this->println(buff);
 }
 

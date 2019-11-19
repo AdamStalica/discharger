@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <QElapsedTimer>
 
-#include "SerialPortThread.h"
+#include "SerialPort.h"
 #include "DeviceError.h"
 #include "ReceivedData.h"
 #include "json.h"
@@ -50,7 +50,7 @@ public:
 
 private:
 
-	SerialPortThread serial;
+	SerialPort serial;
 
 	QString lastError;
 	QRegExp regExpJSON = QRegExp("[{][^}]+[}]");
@@ -71,7 +71,6 @@ private:
 	//void sendData(const std::string & data);
 
 	void handshakeHolder();
-	void println(const QString & data);
 
 private slots:
 	void proccessNewLine(const std::string & newLine);
@@ -98,7 +97,4 @@ signals:
 	*	@param error - An device error object.
 	*/
 	void gotError(const DeviceError & error);
-	
-	void printlnSignal(const QString & data);
-	void closeSignal();
 };
