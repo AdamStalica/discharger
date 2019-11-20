@@ -9,27 +9,38 @@
 #include "Discharger.h"
 
 Discharger::Discharger() 
-	:	data(BAUDRATE, F_CPU), 
+	:	SimulationData(BAUDRATE, F_CPU), 
 		dac(F_CPU),
-		uart(data)
+		adc(F_CPU),
+		uart(static_cast<UsartHolder&>(*this))
 {
-	
+	adc.startConversion();
 }
 
 void Discharger::run() {
 	
 	static uint8_t i = 0;
 	
-	data.run();
+	SimulationData::run();
+	adc.run();
 	
 	static uint16_t dacValue = 0;
 
-	//uint8_t status = dac.writeDACValue(dacValue);
-	dacValue += 500;
+	uint8_t status = dac.writeDACValue(getCurrentCurrent() << 2);
+	
+	//data.setMeauredCurrent(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
+	
+	//dacValue += 500;
 	
 	//uart.println(i++);
 	
-	//data.logError(i++);
+	//data.logError(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
 	
 	//_delay_ms(500);
+}
+
+
+void Discharger::aboutToSendNewData() {
+	adc.countAverages();
+	SimulationData::setMeauredCurrent(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
 }

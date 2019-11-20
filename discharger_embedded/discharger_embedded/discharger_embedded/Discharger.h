@@ -13,17 +13,19 @@
 
 #include "SimulationData.h"
 #include "MCP4725.h"
+#include "AnalogMeasurement.h"
 
 #ifndef __DISCHARGER_H__
 #define __DISCHARGER_H__
 
 
-class Discharger
+class Discharger : private SimulationData
 {
 //variables
 public:
+	AnalogMeasurement adc;
 	MCP4725 dac;
-	SimulationData data;
+	//SimulationData data;
 	UsartHolder & uart;
 
 //functions
@@ -31,6 +33,7 @@ public:
 	Discharger();
 	~Discharger() {}
 	void run();
+	void aboutToSendNewData() override;
 
 };
 

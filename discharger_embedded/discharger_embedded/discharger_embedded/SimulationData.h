@@ -30,6 +30,8 @@ public:
 		: UsartHolder(baudrate, fCpu)
 	{};
 	~SimulationData() {};
+		
+	virtual void aboutToSendNewData() = 0;
 	
 	uint16_t getCurrentCurrent() { return currentCurrent; }
 	uint16_t getCurrentTemp() { return currentTemp; }

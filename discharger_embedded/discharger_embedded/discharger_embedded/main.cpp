@@ -27,3 +27,7 @@ ISR(USART0_RX_vect) {
 ISR(USART0_UDRE_vect) {
 	discharger.uart.isrUsart0UdreHandler();
 }
+
+ISR(ADC_vect) {
+	discharger.adc.isrADCVect();
+}
