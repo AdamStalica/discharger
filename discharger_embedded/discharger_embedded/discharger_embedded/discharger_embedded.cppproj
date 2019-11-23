@@ -165,6 +165,12 @@ if %Connected% == 1  (
     <Compile Include="AnalogMeasurement.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="CurrentDriver.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CurrentDriver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Discharger.cpp">
       <SubType>compile</SubType>
     </Compile>

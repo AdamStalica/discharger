@@ -52,6 +52,9 @@ void SimulationData::processNewData() {
 		if(inProgress) {
 			sendResponse();
 			this->println("{\"stop\":\"stopped\"}");
+			currentId = 0;
+			currentCurrent = 0;
+			currentTemp = 0;
 			inProgress = 0;
 		}
 	}
@@ -74,7 +77,7 @@ void SimulationData::sendResponse() {
 	this->println(buff);
 }
 
-void SimulationData::logError(uint8_t errno) {
+void SimulationData::logError(uint16_t errno) {
 	sprintf(buff, "{\"error\":%d}", errno);
 	this->println(buff);
 }

@@ -13,9 +13,9 @@
 
 class SimulationData : public UsartHolder
 {
-	uint16_t currentId, 
-			 currentCurrent, 
-			 currentTemp;
+	uint16_t currentId = 0, 
+			 currentCurrent = 0, 
+			 currentTemp = 0;
 	uint8_t	 inProgress = 0;
 	uint16_t measuredCurrent,
 			 measuredBLV,
@@ -41,7 +41,7 @@ public:
 	void setMeauredBRV(uint16_t bRV) { measuredBRV = bRV; }
 	void setMeauredBLT(uint16_t bLT) { measuredBLT = bLT; }
 	void setMeauredBRT(uint16_t bRT) { measuredBRT = bRT; }
-	void logError(uint8_t errno);
+	void logError(uint16_t errno);
 	void run();
 
 private:

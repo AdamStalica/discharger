@@ -26,13 +26,12 @@ AnalogMeasurement::AnalogMeasurement(unsigned long fCpu)
 			| (0 << FOC1A) | (0 << FOC1B) | (0 << WGM11) | (0 << WGM10);
 			
 	// New measure every 5ms -> 200 Hz.
-	// fCpu = 1 240 000 Hz.
+	// fCpu = 10 240 000 Hz.
 	TCCR1B =  (0 << WGM13) | (1 << WGM12) | (0 << WGM11) | (0 << WGM10) // CTC timer mode.
 			| (0 << CS12) | (1 << CS11) | (0 << CS00);					// fCpu / 8
 	OCR1B = OCR1A = (fCpu / ADC_MEASURE_F / 8);							// e.g. 10 240 000 / 200 / 8 = 6400 
 	
 }
-
 
 AnalogMeasurement::~AnalogMeasurement()
 {
@@ -45,8 +44,10 @@ void AnalogMeasurement::startConversion() {
 void AnalogMeasurement::run() {
 	if(rawADCFull) {
 		
-		for(uint8_t i = 0; i < ADC_CH_NO; ++i)
+		for(uint8_t i = 0; i < ADC_CH_NO; ++i) {
 			sumADC[i] += rawADC[i];
+			newValsFlags[i] = 1;
+		}
 		++nAvgAdc;
 		
 		rawADCFull = 0;
@@ -68,8 +69,12 @@ void AnalogMeasurement::isrADCVect() {
 	TIFR1 |= (1 << OCF1B); // Clear timer1 compare match B interrupt, enable next conversion.
 }
 
-uint16_t AnalogMeasurement::getAvgADCCh(adcChannels channel) {
+uint16_t AnalogMeasurement::getAvgADC(adcChannels channel) {
 	return avgADC[channel];
+}
+
+uint16_t AnalogMeasurement::getADC(adcChannels channel) {
+	return (nAvgAdc ? (sumADC[channel] / nAvgAdc) : avgADC[channel]);
 }
 
 void AnalogMeasurement::countAverages() {
@@ -79,3 +84,10 @@ void AnalogMeasurement::countAverages() {
 	}
 	nAvgAdc = 0;
 }
+
+uint8_t AnalogMeasurement::isNewValueAvailable(adcChannels channel) {
+	uint8_t ans = newValsFlags[channel];
+	newValsFlags[channel] = 0;
+	return ans;
+}
+

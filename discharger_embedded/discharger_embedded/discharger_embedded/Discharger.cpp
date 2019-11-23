@@ -18,29 +18,51 @@ Discharger::Discharger()
 }
 
 void Discharger::run() {
-	
-	static uint8_t i = 0;
-	
+		
 	SimulationData::run();
 	adc.run();
 	
-	static uint16_t dacValue = 0;
-
-	uint8_t status = dac.writeDACValue(getCurrentCurrent() << 2);
-	
-	//data.setMeauredCurrent(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
-	
-	//dacValue += 500;
-	
-	//uart.println(i++);
-	
-	//data.logError(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
-	
-	//_delay_ms(500);
+	if(adc.isNewValueAvailable(AnalogMeasurement::adcChannels::LEM)) {
+		
+		uint16_t lemAdc = adc.getADC(AnalogMeasurement::adcChannels::LEM);
+		
+		//logError(lemAdc);
+		
+		uint16_t simulatedCurrent = driver.getCurrentFormADC(lemAdc);
+		
+		driver.setSimulatedCurrent(simulatedCurrent);
+		
+		
+		uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(getCurrentCurrent());
+		
+		uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);
+		
+		dac.writeDACValue(dacToSet << 4);
+		
+		logError(simulatedCurrent);
+		 
+		 //_delay_ms(100);
+		
+		/*
+		// 1.0A -> 10
+		uint16_t dacToSet = (4 * getCurrentCurrent()) / 5;
+		
+		dac.writeDACValue(dacToSet << 3);
+		
+		//
+		//uint16_t lemCurrent = lemAdc;
+		*/
+		
+	}
 }
 
 
 void Discharger::aboutToSendNewData() {
 	adc.countAverages();
-	SimulationData::setMeauredCurrent(adc.getAvgADCCh(AnalogMeasurement::adcChannels::LEM));
+	
+	uint16_t simulatedCurrentADC = adc.getAvgADC(AnalogMeasurement::adcChannels::LEM);
+	
+	uint16_t simulatedCurrent = driver.getCurrentFormADC(simulatedCurrentADC);
+	
+	SimulationData::setMeauredCurrent(simulatedCurrent);
 }

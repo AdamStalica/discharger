@@ -14,6 +14,7 @@
 #include "SimulationData.h"
 #include "MCP4725.h"
 #include "AnalogMeasurement.h"
+#include "CurrentDriver.h"
 
 #ifndef __DISCHARGER_H__
 #define __DISCHARGER_H__
@@ -27,6 +28,7 @@ public:
 	MCP4725 dac;
 	//SimulationData data;
 	UsartHolder & uart;
+	CurrentDriver driver;
 
 //functions
 public:
@@ -34,7 +36,6 @@ public:
 	~Discharger() {}
 	void run();
 	void aboutToSendNewData() override;
-
 };
 
 #endif
