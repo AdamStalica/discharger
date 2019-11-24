@@ -15,6 +15,7 @@
 #include "MCP4725.h"
 #include "AnalogMeasurement.h"
 #include "CurrentDriver.h"
+#include "MillisecsCounter.h"
 
 #ifndef __DISCHARGER_H__
 #define __DISCHARGER_H__
@@ -29,6 +30,7 @@ public:
 	//SimulationData data;
 	UsartHolder & uart;
 	CurrentDriver driver;
+	MillisecsCounter ms;
 
 //functions
 public:

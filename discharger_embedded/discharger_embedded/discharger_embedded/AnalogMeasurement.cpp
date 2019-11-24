@@ -74,6 +74,7 @@ uint16_t AnalogMeasurement::getAvgADC(adcChannels channel) {
 }
 
 uint16_t AnalogMeasurement::getADC(adcChannels channel) {
+	newValsFlags[channel] = 0;
 	return (nAvgAdc ? (sumADC[channel] / nAvgAdc) : avgADC[channel]);
 }
 
@@ -86,8 +87,6 @@ void AnalogMeasurement::countAverages() {
 }
 
 uint8_t AnalogMeasurement::isNewValueAvailable(adcChannels channel) {
-	uint8_t ans = newValsFlags[channel];
-	newValsFlags[channel] = 0;
-	return ans;
+	return newValsFlags[channel];
 }
 

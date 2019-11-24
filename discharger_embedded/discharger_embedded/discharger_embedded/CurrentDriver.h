@@ -10,6 +10,11 @@
 #define __CURRENTDRIVER_H__
 
 #include <avr/io.h>
+#include "SimulationData.h"
+
+
+#define F_CPU 10240000UL
+#include <util/delay.h>
 
 #define POINTS_SIZE 3
 
@@ -42,15 +47,17 @@ class CurrentDriver
 
 
 	uint8_t iterationDiv = 1;
-	uint8_t interpolationDiv = 4;
+	uint8_t interpolationDiv = 1;
 
 	uint16_t lastEstimatedMillivolts = 0;
 
 	uint16_t currentlyNextCurrent = 0;
+	
+	SimulationData & uart;
 
 	//functions
 	public:
-	CurrentDriver();
+	CurrentDriver(SimulationData & uart_);
 	~CurrentDriver();
 
 	uint16_t getCurrentFormADC(uint16_t adcCurrent);

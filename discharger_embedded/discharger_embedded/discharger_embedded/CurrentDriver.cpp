@@ -9,10 +9,10 @@
 #include "CurrentDriver.h"
 
 
-CurrentDriver::CurrentDriver()
+CurrentDriver::CurrentDriver(SimulationData & uart_) : uart(uart_)
 {
-	chPoints[pointsEnum::MIN].millivolt = 10;
-	chPoints[pointsEnum::MIN].current = 1;
+	chPoints[pointsEnum::MIN].millivolt = 0;
+	chPoints[pointsEnum::MIN].current = 0;
 	chPoints[pointsEnum::MIDDLE].millivolt = 1250;
 	chPoints[pointsEnum::MIDDLE].current = 1003;
 	chPoints[pointsEnum::MAX].millivolt = 2500;
@@ -41,7 +41,7 @@ uint16_t CurrentDriver::getMillivoltsFromDAC(uint16_t dacVolt) {
 }
 
 uint16_t CurrentDriver::getDACFromMillivolts(uint16_t millivolts) {
-	return (uint32_t(millivolts * DAC_MAX) / DAC_VREF_mV);
+	return (uint32_t(millivolts) * DAC_MAX / DAC_VREF_mV);
 }
 
 void CurrentDriver::setSimulatedCurrent(uint16_t current) {
@@ -57,6 +57,8 @@ void CurrentDriver::setSimulatedCurrent(uint16_t current) {
 		else {
 			index = pointsEnum::MIDDLE;
 		}
+		
+		//uart.logError(index);
 		chPoints[index].current = current;
 		chPoints[index].millivolt = lastEstimatedMillivolts;
 	}
@@ -78,10 +80,12 @@ uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent)
 	uint16_t estimatedMillivolt = 0;
 
 	if (isInterpolationReady()) {
+		//uart.logError(currentlySimulatedCurrent);
 		estimatedMillivolt = getInterpolatedValue(
-		currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
+			requestedCurrent
 		);
-
+		// currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
+		
 		if (requestedCurrent == 0) estimatedMillivolt = 0;
 
 		interpolationDiv = (interpolationDiv == 1 ? interpolationDiv : (interpolationDiv / 2));
@@ -105,8 +109,8 @@ uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent)
 }
 
 uint8_t CurrentDriver::isInterpolationReady() {
+	//chPoints[pointsEnum::MIN].current != 0 &&
 	return (
-	chPoints[pointsEnum::MIN].current != 0 &&
 	chPoints[pointsEnum::MIDDLE].current != 0 &&
 	chPoints[pointsEnum::MAX].current != 0
 	);
@@ -114,6 +118,8 @@ uint8_t CurrentDriver::isInterpolationReady() {
 
 uint16_t CurrentDriver::getInterpolatedValue(uint16_t x) {
 
+	//uart.logError(8888);
+	//uart.logError(x);
 	uint16_t y = 0;
 	for (uint8_t i = 0; i < POINTS_SIZE; ++i) {
 		float t = 1;
@@ -126,5 +132,7 @@ uint16_t CurrentDriver::getInterpolatedValue(uint16_t x) {
 
 		y += uint16_t(t * chPoints[i].millivolt);
 	}
+	//uart.logError(y);
+	//uart.logError(8888);
 	return y;
 }

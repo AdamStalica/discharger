@@ -64,6 +64,11 @@ void UsartHolder::putBuffer() {
 	#endif
 }
 
+void UsartHolder::print(uint16_t data) {
+	_txDataEnd = sprintf((char*)_txBuffer, "%d", data);
+	putBuffer();
+}
+
 void UsartHolder::print(uint8_t * data) {
 	
 	while(*data != STR_END_CHAR && _txDataEnd < TX_BUFFER_SIZE) {

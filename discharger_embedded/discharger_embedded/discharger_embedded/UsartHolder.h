@@ -60,6 +60,7 @@ public:
 		return _rxBuffer; 
 	}
 	
+	void print(uint16_t data);
 	void print(uint8_t * data);
 	void print(const char * data);
 	void println(const char * data);

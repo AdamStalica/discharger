@@ -31,3 +31,7 @@ ISR(USART0_UDRE_vect) {
 ISR(ADC_vect) {
 	discharger.adc.isrADCVect();
 }
+
+ISR(TIMER0_COMPA_vect) {
+	discharger.ms.isrTimer0CompBVect();
+}

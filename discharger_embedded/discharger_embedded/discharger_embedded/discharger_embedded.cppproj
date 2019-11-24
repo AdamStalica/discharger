@@ -192,6 +192,12 @@ if %Connected% == 1  (
     <Compile Include="MCP4725.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="MillisecsCounter.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="MillisecsCounter.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="SimulationData.cpp">
       <SubType>compile</SubType>
     </Compile>
