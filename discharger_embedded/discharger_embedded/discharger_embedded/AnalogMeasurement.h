@@ -52,8 +52,6 @@ public:
 	
 	uint16_t getAvgADC(adcChannels channel);
 	uint16_t getADC(adcChannels channel);
-	
-private:
 
 };
 

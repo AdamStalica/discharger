@@ -5,15 +5,12 @@
  * Author : domin
  */ 
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include "Discharger.h"
 
 Discharger discharger;
 
 int main(void)
 {	
-	sei();
     while (1) 
     {
 		discharger.run();	
@@ -21,17 +18,17 @@ int main(void)
 }
 
 ISR(USART0_RX_vect) {
-	discharger.uart.isrUsart0RxHandler();
+	discharger.isrUsart0RxHandler();
 }
 
 ISR(USART0_UDRE_vect) {
-	discharger.uart.isrUsart0UdreHandler();
+	discharger.isrUsart0UdreHandler();
 }
 
 ISR(ADC_vect) {
-	discharger.adc.isrADCVect();
+	discharger.isrADCVect();
 }
 
 ISR(TIMER0_COMPA_vect) {
-	discharger.ms.isrTimer0CompBVect();
+	discharger.isrTimer0CompBVect();
 }

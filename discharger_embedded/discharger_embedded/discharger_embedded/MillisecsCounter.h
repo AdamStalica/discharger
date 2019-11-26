@@ -13,7 +13,7 @@
 
 class MillisecsCounter
 {
-	uint32_t msSinceDeviceHasStarted = 0;
+	volatile uint32_t msSinceDeviceHasStarted = 0;
 	
 public:
 	~MillisecsCounter();

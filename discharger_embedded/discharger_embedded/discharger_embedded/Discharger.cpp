@@ -13,60 +13,25 @@ Discharger::Discharger()
 		dac(F_CPU),
 		adc(F_CPU),
 		uart(static_cast<UsartHolder&>(*this)),
-		driver(static_cast<SimulationData&>(*this)),
 		ms(F_CPU)
 {
+	sei();
+	wdt_enable(WDTO_1S);
+	
 	adc.startConversion();
+	
+	logError(DEVICE_STARTED);
 }
 
+
 void Discharger::run() {
-		
+	
+	wdt_reset();
+	
 	SimulationData::run();
 	adc.run();
 	
-		
-	if(
-		adc.isNewValueAvailable(AnalogMeasurement::adcChannels::LEM) && 
-		(ms.getMillisecs() % 100 == 0)
-	) 
-	{
-		
-		
-		
-		
-		uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(getCurrentCurrent());
-		
-		uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);
-		
-		dac.writeDACValue(dacToSet << 4);
-		
-		uint16_t lemAdc = adc.getADC(AnalogMeasurement::adcChannels::LEM);
-		
-		//logError(lemAdc);
-		
-		uint16_t simulatedCurrent = driver.getCurrentFormADC(lemAdc);
-		
-		driver.setSimulatedCurrent(simulatedCurrent);
-		
-		/*
-		logError(lemAdc);
-		logError(simulatedCurrent);
-		logError(millivoltsToSet);
-		logError(dacToSet);
-		logError(11111);
-		*/
-		
-		/*
-		// 1.0A -> 10
-		uint16_t dacToSet = (4 * getCurrentCurrent()) / 5;
-		
-		dac.writeDACValue(dacToSet << 3);
-		
-		//
-		//uint16_t lemCurrent = lemAdc;
-		*/
-		
-	}
+	simulationDriver();
 }
 
 
@@ -77,5 +42,27 @@ void Discharger::aboutToSendNewData() {
 	
 	uint16_t simulatedCurrent = driver.getCurrentFormADC(simulatedCurrentADC);
 	
+	driver.setSimulatedCurrent(simulatedCurrent);
+	
 	SimulationData::setMeauredCurrent(simulatedCurrent);
+}
+
+void Discharger::simulationDriver() {
+	
+	static uint8_t canHandle100msTimeOut = 1;
+	if(ms.getMillisecs() % SIMULATION_INTERVAL == 0) {
+		if(canHandle100msTimeOut) {
+			
+			uint16_t newCurrent = getCurrentCurrent();
+			
+			uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(newCurrent);
+			
+			uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);
+			
+			dac.writeDACValue(dacToSet);
+			
+			canHandle100msTimeOut = 0;
+		}
+	}
+	else canHandle100msTimeOut = 1;
 }

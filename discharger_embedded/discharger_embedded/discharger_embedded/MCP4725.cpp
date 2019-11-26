@@ -23,6 +23,7 @@ uint16_t MCP4725::readDACValue() {
 
 uint8_t MCP4725::writeDACValue(uint16_t dacValue) {
 
+	dacValue = dacValue << 4;
 	uint8_t data[3] = {
 		DATA_WRITE_FIRST_BYTE,
 		uint8_t(dacValue >> 8),

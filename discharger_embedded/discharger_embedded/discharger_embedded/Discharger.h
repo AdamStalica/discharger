@@ -8,8 +8,13 @@
 #define BAUDRATE 57600UL
 #define F_CPU 10240000UL
 
+#define DEVICE_STARTED 0
+#define SIMULATION_INTERVAL 100
+
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
+#include <avr/wdt.h>
 
 #include "SimulationData.h"
 #include "MCP4725.h"
@@ -23,21 +28,27 @@
 
 class Discharger : private SimulationData
 {
-//variables
-public:
 	AnalogMeasurement adc;
 	MCP4725 dac;
-	//SimulationData data;
 	UsartHolder & uart;
 	CurrentDriver driver;
 	MillisecsCounter ms;
 
-//functions
+	
+	void aboutToSendNewData() override;
+	void simulationDriver();
+
 public:
 	Discharger();
 	~Discharger() {}
 	void run();
-	void aboutToSendNewData() override;
+	
+	
+// ISR vecs
+	void isrUsart0RxHandler() { uart.isrUsart0RxHandler(); }
+	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
+	void isrADCVect() { adc.isrADCVect(); }
+	void isrTimer0CompBVect() { ms.isrTimer0CompBVect(); }
 };
 
 #endif

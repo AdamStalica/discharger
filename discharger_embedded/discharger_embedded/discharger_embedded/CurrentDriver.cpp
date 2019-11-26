@@ -8,21 +8,13 @@
 
 #include "CurrentDriver.h"
 
-
-CurrentDriver::CurrentDriver(SimulationData & uart_) : uart(uart_)
+CurrentDriver::CurrentDriver()
 {
-	chPoints[pointsEnum::MIN].millivolt = 0;
-	chPoints[pointsEnum::MIN].current = 0;
-	chPoints[pointsEnum::MIDDLE].millivolt = 1250;
-	chPoints[pointsEnum::MIDDLE].current = 1003;
-	chPoints[pointsEnum::MAX].millivolt = 2500;
-	chPoints[pointsEnum::MAX].current = 2007;
+	chPoints[pointsEnum::MIDDLE].millivolt = 3502;
+	chPoints[pointsEnum::MIDDLE].current = 351;
+	chPoints[pointsEnum::MAX].millivolt = DAC_VREF_mV;
+	chPoints[pointsEnum::MAX].current = DEAFULT_MAX_CURRENT_E2mA;
 }
-
-CurrentDriver::~CurrentDriver()
-{
-}
-
 
 /**
 *	adcVolt 0..1023
@@ -44,95 +36,49 @@ uint16_t CurrentDriver::getDACFromMillivolts(uint16_t millivolts) {
 	return (uint32_t(millivolts) * DAC_MAX / DAC_VREF_mV);
 }
 
-void CurrentDriver::setSimulatedCurrent(uint16_t current) {
-	if (current > 0) {
-		uint8_t index;
+void CurrentDriver::setMaxCurrent(uint16_t max) {
+	chPoints[pointsEnum::MAX].current = max;
+}
 
-		if (current < UPPER_MIN_CURRENT_E2mA) {
-			index = pointsEnum::MIN;
-		}
-		else if (current > chPoints[pointsEnum::MAX].current) {
-			index = pointsEnum::MAX;
-		}
-		else {
-			index = pointsEnum::MIDDLE;
-		}
+void CurrentDriver::setSimulatedCurrent(uint16_t current) {
+	if (current > 0 && current < chPoints[pointsEnum::MAX].current) {
 		
-		//uart.logError(index);
-		chPoints[index].current = current;
-		chPoints[index].millivolt = lastEstimatedMillivolts;
+		chPoints[pointsEnum::MIDDLE].current = current;
+		chPoints[pointsEnum::MIDDLE].millivolt = lastEstimatedMillivolts;
 	}
 	currentlySimulatedCurrent = current;
-	iterationDiv = 1;
 	interpolationDiv = 4;
-}
-
-void CurrentDriver::setCurrentToBeSimulated(uint16_t current) {
-	currentlyNextCurrent = current;
-
-
-	if (!isInterpolationReady()) {
-		
-	}
-}
+} 
 
 uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent) {
-	uint16_t estimatedMillivolt = 0;
 
-	if (isInterpolationReady()) {
-		//uart.logError(currentlySimulatedCurrent);
-		estimatedMillivolt = getInterpolatedValue(
-			requestedCurrent
-		);
-		// currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
-		
-		if (requestedCurrent == 0) estimatedMillivolt = 0;
+	uint16_t estimatedMillivolt = getInterpolatedValue(
+		requestedCurrent
+	);
+	// currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
 
-		interpolationDiv = (interpolationDiv == 1 ? interpolationDiv : (interpolationDiv / 2));
-	}
-	else {
-		uint16_t delta = currentlySimulatedCurrent > requestedCurrent ? (currentlySimulatedCurrent - requestedCurrent) : (requestedCurrent - currentlySimulatedCurrent);
-		if (delta < ITERATION_CHANGE_DIV_UNDER_E2mA) {
-			iterationDiv *= 2;
-		}
-		if (delta >= CURRENT_EPS_E3mA) {
-			if (currentlySimulatedCurrent < requestedCurrent) {
-				estimatedMillivolt = lastEstimatedMillivolts + DEFAULT_VOLT_STEP_mV / interpolationDiv;
-			}
-			else {
-				estimatedMillivolt = lastEstimatedMillivolts - DEFAULT_VOLT_STEP_mV / interpolationDiv;
-			}
-		}
-	}
+	if (requestedCurrent == 0) estimatedMillivolt = 0;
+
+	if(interpolationDiv != 1) interpolationDiv /= 2;
+	
 	lastEstimatedMillivolts = estimatedMillivolt;
+	if (estimatedMillivolt >= DAC_VREF_mV) estimatedMillivolt = DAC_VREF_mV - 1;
+
 	return estimatedMillivolt;
 }
 
-uint8_t CurrentDriver::isInterpolationReady() {
-	//chPoints[pointsEnum::MIN].current != 0 &&
-	return (
-	chPoints[pointsEnum::MIDDLE].current != 0 &&
-	chPoints[pointsEnum::MAX].current != 0
-	);
-}
+uint16_t CurrentDriver::getInterpolatedValue(int16_t x) {
 
-uint16_t CurrentDriver::getInterpolatedValue(uint16_t x) {
+	float xx0 = (x - x0);
+	float xx1 = (x - x1);
+	float xx2 = (x - x2);
+	int16_t x1x0 = (x1 - x0);
+	int16_t x1x2 = (x1 - x2);
+	int16_t x2x0 = (x2 - x0);
+	int16_t x2x1 = (x2 - x1);
 
-	//uart.logError(8888);
-	//uart.logError(x);
-	uint16_t y = 0;
-	for (uint8_t i = 0; i < POINTS_SIZE; ++i) {
-		float t = 1;
-
-		for (uint8_t j = 0; j < POINTS_SIZE; ++j) {
-			if (i != j) {
-				t *= (float((int16_t)x - (int16_t)chPoints[j].current) / ((int16_t)chPoints[i].current - (int16_t)chPoints[j].current));
-			}
-		}
-
-		y += uint16_t(t * chPoints[i].millivolt);
-	}
-	//uart.logError(y);
-	//uart.logError(8888);
-	return y;
+	int16_t L1 = int16_t(y1 * ((xx0 / x1x0) * (xx2 / x1x2)));
+	int16_t L2 = int16_t(y2 * ((xx0 / x2x0) * (xx1 / x2x1)));
+	
+	return uint16_t(L1 + L2);
 }

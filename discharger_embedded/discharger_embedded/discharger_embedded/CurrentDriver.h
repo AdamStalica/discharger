@@ -12,22 +12,20 @@
 #include <avr/io.h>
 #include "SimulationData.h"
 
-
-#define F_CPU 10240000UL
-#include <util/delay.h>
-
 #define POINTS_SIZE 3
 
+#define DEAFULT_MAX_CURRENT_E2mA 500
 #define DAC_VREF_mV 5000
-#define DAC_MAX 0x1000
-
-#define UPPER_MIN_CURRENT_E2mA 10
-
-#define DEFAULT_VOLT_STEP_mV 1000
-#define ITERATION_CHANGE_DIV_UNDER_E2mA 50
-#define CURRENT_EPS_E3mA 5
+#define DAC_MAX 0x0FFF
 
 #define INTERPOLATION_mV_MAX_DIFFERENCE 3000
+
+#define x0 ((int16_t)chPoints[0].current)
+#define x1 ((int16_t)chPoints[1].current)
+#define x2 ((int16_t)chPoints[2].current)
+#define y0 ((int16_t)chPoints[0].millivolt)
+#define y1 ((int16_t)chPoints[1].millivolt)
+#define y2 ((int16_t)chPoints[2].millivolt)
 
 
 class CurrentDriver
@@ -43,39 +41,26 @@ class CurrentDriver
 		MAX
 	};
 	simulatedPoint chPoints[3];
-	uint16_t currentlySimulatedCurrent = 0;
-
-
-	uint8_t iterationDiv = 1;
-	uint8_t interpolationDiv = 1;
-
-	uint16_t lastEstimatedMillivolts = 0;
-
-	uint16_t currentlyNextCurrent = 0;
 	
-	SimulationData & uart;
-
-	//functions
+	uint16_t currentlySimulatedCurrent = 0;
+	uint16_t lastEstimatedMillivolts = 0;
+	
+	
+	uint16_t getInterpolatedValue(int16_t x);
+	
 	public:
-	CurrentDriver(SimulationData & uart_);
-	~CurrentDriver();
+	CurrentDriver();
+	~CurrentDriver() {};
 
 	uint16_t getCurrentFormADC(uint16_t adcCurrent);
 	uint16_t getMillivoltsFromDAC(uint16_t dacVolt);
 	uint16_t getDACFromMillivolts(uint16_t millivolts);
 
-
+	
+	void setMaxCurrent(uint16_t max);
 	void setSimulatedCurrent(uint16_t current);
-	void setCurrentToBeSimulated(uint16_t current);
 
 	uint16_t getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent);
-
-	private:
-
-	uint8_t isInterpolationReady();
-	uint16_t getInterpolatedValue(uint16_t x);
-
-
-}; //CurrentDriver
+};
 
 #endif //__CURRENTDRIVER_H__
