@@ -12,6 +12,8 @@
 #define CONVERT_T 0x44
 #define READ_SCRATCHPAD 0xBE
 
+#define MAX_DIFFERENCE 150
+
 uint8_t DS18B20::deviceAvaliable() {
 	return resetPulse();
 }
@@ -35,6 +37,15 @@ int16_t DS18B20::getTemperature() {
 	temperature |= (readByte() << 8);
 	temperature *= 100;
 	temperature /= 16;
+	
+	static uint8_t firstRun = 1;
+	if(!firstRun && mathAbsDiff(lastTemperature, temperature) > MAX_DIFFERENCE) {
+		temperature = lastTemperature;
+	}
+	else {
+		lastTemperature = temperature;
+		firstRun = 0;	
+	}
 		
 	return temperature;
 }

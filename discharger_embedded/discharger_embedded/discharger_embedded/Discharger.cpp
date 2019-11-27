@@ -8,6 +8,8 @@
 
 #include "Discharger.h"
 
+#define CURRENT_ACCURACY 5
+
 Discharger::Discharger() 
 	:	uart(static_cast<UsartHolder&>(*this)),
 		therm1(THERMOMETR_1_PIN),
@@ -41,15 +43,14 @@ void Discharger::run() {
 			
 			if(therm1.deviceAvaliable()) {
 				
-				logError(therm1.getTemperature());
+				debugLog("Temp1 ", therm1.getTemperature());
 				therm1.startConversion();
 			}
 			if(therm2.deviceAvaliable()) {
 				
-				logError(therm2.getTemperature());
+				debugLog("Temp1 ", therm2.getTemperature());
 				therm2.startConversion();
 			}
-			
 			canHandle1000msTimeout = 0;
 		}
 	}
@@ -66,7 +67,9 @@ void Discharger::aboutToSendNewData() {
 	}
 	
 	if(therm2.deviceAvaliable()) {
-		SimulationData::setMeauredBRT(therm2.getTemperature());
+		uint16_t tempBRT = therm2.getTemperature();
+		//debugLog("BRT: ", tempBRT);
+		SimulationData::setMeauredBRT(tempBRT);
 		therm2.startConversion();
 	}
 	
@@ -74,7 +77,36 @@ void Discharger::aboutToSendNewData() {
 	
 	uint16_t simulatedCurrentADC = adc.getAvgADC(AnalogMeasurement::adcChannels::LEM);
 	uint16_t simulatedCurrent = driver.getCurrentFormADC(simulatedCurrentADC);
-	driver.setSimulatedCurrent(simulatedCurrent);
+	
+	/*
+	if(!simulationCurrentAlreadySet)
+		driver.setSimulatedCurrent(simulatedCurrent);
+	else
+	*/ 
+	
+	uint16_t difference = mathAbsDiff(simulatedCurrent, getCurrentCurrent());
+	
+	static uint8_t noAccuracyFittedCounter = 7;
+	static uint8_t gotAccuracy = 1;
+	if(difference < CURRENT_ACCURACY) {
+		if(!gotAccuracy) {
+			
+			driver.setSimulatedCurrent(simulatedCurrent);
+			debugLog("Accuracy fitted.", difference);
+			gotAccuracy = 1;
+		}
+		noAccuracyFittedCounter = 0;
+	}
+	else {
+		gotAccuracy = 0;
+		if((++noAccuracyFittedCounter % 10) == 0) {
+			
+			driver.setSimulatedCurrent(simulatedCurrent);
+			debugLog("Over 10.", noAccuracyFittedCounter);
+			
+			noAccuracyFittedCounter = 0;
+		}
+	}
 	
 	SimulationData::setMeauredCurrent(simulatedCurrent);
 }
@@ -84,9 +116,23 @@ void Discharger::simulationDriver() {
 	static uint8_t canHandle100msTimeOut = 1;
 	if(ms.getMillisecs() % SIMULATION_INTERVAL == 0) {
 		if(canHandle100msTimeOut) {
+			/*
+			uint16_t currentlySimulatedCurrentAdc = adc.getADC(AnalogMeasurement::adcChannels::LEM);
 			
+			uint16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
+			
+			
+			uint16_t diff = mathAbsDiff(currentlySimulatedCurrent, newCurrent);
+			//debugLog("Diff: ", diff);
+			if(	!simulationCurrentAlreadySet && 
+				(diff < CURRENT_ACCURACY)) 
+			{
+				
+				simulationCurrentAlreadySet = 1;
+			}
+			*/
 			uint16_t newCurrent = getCurrentCurrent();
-			
+						
 			uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(newCurrent);
 			
 			uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);

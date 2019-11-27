@@ -115,6 +115,9 @@ void UartHolder::proccessNewLine(const std::string & newLine) {
 		else if (!received["error"].is_null()) {
 			emit gotError(DeviceError(received["error"].get<int>()));
 		}
+		else if (!received["debug"].is_null()) {
+			qDebug() << received["debug"].get<std::string>().c_str();
+		}
 	}
 }
 

@@ -69,7 +69,10 @@ public:
 	
 	void isrUsart0RxHandler();
 	void isrUsart0UdreHandler();
-	
+
+#ifdef DEBUG_MODE
+	void debuger(char * string, int32_t digit);
+#endif
 	
 protected:
 private:

@@ -97,5 +97,18 @@ void UsartHolder::println(const char * data) {
 void UsartHolder::println(uint16_t data) {
 	_txDataEnd = sprintf((char*)_txBuffer, "%d", data);
 	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
+	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
 	putBuffer();
 }
+
+#ifdef DEBUG_MODE
+void UsartHolder::debuger(char * string, int32_t digit) {
+	if(digit == SKIP_SECOND_PARAM)
+		_txDataEnd = sprintf((char*)_txBuffer, "{\"debug\":\"%s\"}", string);
+	else 
+		_txDataEnd = sprintf((char*)_txBuffer, "{\"debug\":\"%s %ld\"}", string, digit);
+	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
+	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
+	putBuffer();
+}
+#endif

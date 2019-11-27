@@ -25,7 +25,7 @@
 #define __DISCHARGER_H__
 
 
-class Discharger : private SimulationData
+class Discharger : public SimulationData
 {
 	AnalogMeasurement adc;
 	MCP4725 dac;
@@ -34,6 +34,8 @@ class Discharger : private SimulationData
 	MillisecsCounter ms;
 	DS18B20 therm1;
 	DS18B20 therm2;
+	
+	uint8_t simulationCurrentAlreadySet = 0;
 
 	
 	void aboutToSendNewData() override;
@@ -50,6 +52,12 @@ public:
 	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
 	void isrADCVect() { adc.isrADCVect(); }
 	void isrTimer0CompBVect() { ms.isrTimer0CompBVect(); }
+		
+#ifdef DEBUG_MODE
+	void debugerUartFunction(char * string, int32_t digit) {
+		uart.debuger(string, digit);
+	};
+#endif
 };
 
 #endif
