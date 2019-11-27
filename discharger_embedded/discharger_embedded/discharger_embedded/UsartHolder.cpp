@@ -10,9 +10,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-UsartHolder::UsartHolder(unsigned long baudRate, unsigned long fCpu)
+UsartHolder::UsartHolder()
 {
-	baudRate = (fCpu / baudRate / 16UL - 1);
+	uint16_t baudRate = (F_CPU / BAUDRATE / 16UL - 1);
 	
 	UBRR0H = (unsigned char)(baudRate >> 8);
 	UBRR0L = (unsigned char)baudRate;		UCSR0B = (1<<RXEN0)|(1<<TXEN0);

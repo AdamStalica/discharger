@@ -70,8 +70,8 @@ void SimulationData::sendResponse() {
 		measuredCurrent,
 		(1210 - currentCurrent / 100), //measuredBLV,
 		(1207 - currentCurrent / 100), //measuredBRV,
-		2000,
-		3000
+		measuredBLT,
+		measuredBRT
 	);	
 	
 	this->println(buff);

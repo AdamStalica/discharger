@@ -8,7 +8,7 @@
 
 #include "AnalogMeasurement.h"
 
-AnalogMeasurement::AnalogMeasurement(unsigned long fCpu)
+AnalogMeasurement::AnalogMeasurement()
 {
 	
 	ADMUX = (1 << REFS1) | (1 << REFS0)			// Internal 2.56V as VREF.
@@ -29,7 +29,7 @@ AnalogMeasurement::AnalogMeasurement(unsigned long fCpu)
 	// fCpu = 10 240 000 Hz.
 	TCCR1B =  (0 << WGM13) | (1 << WGM12) | (0 << WGM11) | (0 << WGM10) // CTC timer mode.
 			| (0 << CS12) | (1 << CS11) | (0 << CS00);					// fCpu / 8
-	OCR1B = OCR1A = (fCpu / ADC_MEASURE_F / 8);							// e.g. 10 240 000 / 200 / 8 = 6400 
+	OCR1B = OCR1A = (F_CPU / ADC_MEASURE_F / 8);							// e.g. 10 240 000 / 200 / 8 = 6400 
 	
 }
 

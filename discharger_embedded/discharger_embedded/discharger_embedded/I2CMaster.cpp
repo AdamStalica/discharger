@@ -9,9 +9,9 @@
 #include <util/twi.h>
 
 
-I2CMaster::I2CMaster(unsigned long fCpu, unsigned long fScl, uint8_t prescaler)
+I2CMaster::I2CMaster(unsigned long fScl, uint8_t prescaler)
 {
-	uint8_t twbrVal = ((fCpu / fScl / prescaler) - 16) / 2;
+	uint8_t twbrVal = ((F_CPU / fScl / prescaler) - 16) / 2;
 	TWBR = twbrVal;
 	
 	TWDR = 0xFF;

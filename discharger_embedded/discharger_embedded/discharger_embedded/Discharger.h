@@ -5,22 +5,21 @@
 * Author: domin
 */
 
-#define BAUDRATE 57600UL
-#define F_CPU 10240000UL
-
 #define DEVICE_STARTED 0
 #define SIMULATION_INTERVAL 100
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-#include <avr/wdt.h>
-
+#include "GlobalDefs.h"
 #include "SimulationData.h"
 #include "MCP4725.h"
 #include "AnalogMeasurement.h"
 #include "CurrentDriver.h"
 #include "MillisecsCounter.h"
+#include "DS18B20.h"
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <avr/wdt.h>
 
 #ifndef __DISCHARGER_H__
 #define __DISCHARGER_H__
@@ -33,6 +32,8 @@ class Discharger : private SimulationData
 	UsartHolder & uart;
 	CurrentDriver driver;
 	MillisecsCounter ms;
+	DS18B20 therm1;
+	DS18B20 therm2;
 
 	
 	void aboutToSendNewData() override;

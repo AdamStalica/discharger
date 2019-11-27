@@ -10,6 +10,7 @@
 #define __ANALOGMEASUREMENT_H__
 
 #include <avr/io.h>
+#include "GlobalDefs.h"
 
 #define ADC_CH_NO 1
 #define ADC_MEASURE_F 200UL
@@ -41,7 +42,7 @@ private:
 	
 //functions
 public:
-	AnalogMeasurement(unsigned long fCpu);
+	AnalogMeasurement();
 	~AnalogMeasurement();
 	
 	void startConversion();

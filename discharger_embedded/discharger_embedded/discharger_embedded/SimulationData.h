@@ -10,6 +10,7 @@
 #define __SIMULATIONDATA_H__
 
 #include "UsartHolder.h"
+#include "GlobalDefs.h"
 
 class SimulationData : public UsartHolder
 {
@@ -26,9 +27,7 @@ class SimulationData : public UsartHolder
 
 //functions
 public:
-	SimulationData(unsigned long baudrate, unsigned long fCpu)
-		: UsartHolder(baudrate, fCpu)
-	{};
+	SimulationData() {};
 	~SimulationData() {};
 		
 	virtual void aboutToSendNewData() = 0;

@@ -5,6 +5,7 @@
 * Author: domin
 */
 
+#include "GlobalDefs.h"
 #include <avr/io.h>
 #include <stdio.h>
 #include <string.h>
@@ -46,7 +47,7 @@ private:
 
 //functions
 public:
-	UsartHolder(unsigned long baudRate, unsigned long fCpu);
+	UsartHolder();
 	~UsartHolder() {};
 	
 	void writeByte(uint8_t data);

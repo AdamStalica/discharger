@@ -47,7 +47,6 @@ void CurrentDriver::setSimulatedCurrent(uint16_t current) {
 		chPoints[pointsEnum::MIDDLE].millivolt = lastEstimatedMillivolts;
 	}
 	currentlySimulatedCurrent = current;
-	interpolationDiv = 4;
 } 
 
 uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent) {
@@ -58,8 +57,6 @@ uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent)
 	// currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
 
 	if (requestedCurrent == 0) estimatedMillivolt = 0;
-
-	if(interpolationDiv != 1) interpolationDiv /= 2;
 	
 	lastEstimatedMillivolts = estimatedMillivolt;
 	if (estimatedMillivolt >= DAC_VREF_mV) estimatedMillivolt = DAC_VREF_mV - 1;

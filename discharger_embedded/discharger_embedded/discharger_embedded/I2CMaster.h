@@ -14,6 +14,7 @@
 
 #include <avr/io.h>
 #include "UsartHolder.h"
+#include "GlobalDefs.h"
 
 class I2CMaster
 {
@@ -21,7 +22,7 @@ protected:
 	//UsartHolder * uart;
 	
 public:
-	I2CMaster(unsigned long fCpu, unsigned long fScl = 100000UL, uint8_t prescaler = 1);
+	I2CMaster(unsigned long fScl = 100000UL, uint8_t prescaler = 1);
 	
 	/**
 	*	Method to transmit data into addressed device

@@ -62,6 +62,7 @@
 
 #define DATA_WRITE_FIRST_BYTE (WRITE_COMMAND_TYPE | VREF | POWER_DOWN_BITS | (GAIN << 0))
 
+#include "GlobalDefs.h"
 #include "I2CMaster.h"
 
 class MCP4725 : protected I2CMaster
@@ -69,7 +70,7 @@ class MCP4725 : protected I2CMaster
 	
 //functions
 public:
-	MCP4725(unsigned long fCpu) : I2CMaster(fCpu) {};
+	MCP4725() {};
 	~MCP4725() {};
 	uint16_t readDACValue();
 	uint8_t writeDACValue(uint16_t dacValue);
