@@ -2,9 +2,10 @@
 
 #include <QWidget>
 #include <QTimer>
+#include <QtQrCodeWidget.h>
 
 #include "ui_WgtSim.h"
-#include "json.h"
+#include <nlohmann/json.h>
 #include "SimData.h"
 #include "WgtChart.h"
 #include "ClearAble.h"
@@ -51,6 +52,7 @@ private slots:
 	void uartErrorsHolder(const DeviceError & error);
 	void sendNextDataToDevice();
 	void deviceStopped(bool gotResponse);
+	void qrCodeDataWithMap(bool withMap);
 
 private:
 	Ui::WgtSim ui;
@@ -63,6 +65,8 @@ private:
 
 	QTimer sendingToDbTimer;
 	QTimer sendingToDeviceTimer;
+
+	QtQrCodeWidget qrWgt;
 
 	int id_batt_left, id_batt_right, id_log_info, id_sim_info;
 	std::string sim_name = "null";

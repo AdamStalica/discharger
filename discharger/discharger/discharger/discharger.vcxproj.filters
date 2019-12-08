@@ -86,16 +86,10 @@
     <ClCompile Include="WgtSim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WgtChart.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SimData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinHelp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SerialPortThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SerialPort.cpp">
@@ -107,9 +101,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="BasicData.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="ThreadSynch.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="UartHolder.h">
@@ -136,13 +127,7 @@
     <QtMoc Include="WgtSimConfig.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="json.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="win_main.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="TestingClass.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WgtSim.h">
@@ -152,9 +137,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WinHelp.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="SerialPortThread.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="SerialPort.h">
@@ -217,5 +199,8 @@
     <ClInclude Include="ClearAble.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

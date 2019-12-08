@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_WinHelp.h"
-#include "json.h"
+#include <nlohmann/json.h>
 
 class WinHelp : public QWidget
 {

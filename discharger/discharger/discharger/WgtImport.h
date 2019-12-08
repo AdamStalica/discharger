@@ -5,7 +5,7 @@
 #include "WgtNewSpeedway.h"
 #include "WgtNewRace.h"
 
-#include "json.h"
+#include <nlohmann/json.h>
 #include "ClearAble.h"
 
 //class ThreadSynch;

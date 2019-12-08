@@ -7,7 +7,7 @@
 #include "SerialPort.h"
 #include "DeviceError.h"
 #include "ReceivedData.h"
-#include "json.h"
+#include <nlohmann/json.h>
 #include "ClearAble.h"
 
 constexpr auto HANDSHAKE_TIMEOUT = 2000;

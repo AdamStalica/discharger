@@ -1,5 +1,5 @@
 #pragma once
-#include "json.h"
+#include <nlohmann/json.h>
 #include <QDateTime>
 
 class ReceivedData

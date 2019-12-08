@@ -30,8 +30,11 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 	connect(ui.set_temp_ln, &QLineEdit::editingFinished, this, [this]() {
 		this->temperatureChanged = true;
 	});
+	connect(ui.qr_code_with_map_check, &QCheckBox::stateChanged, this, &WgtSim::qrCodeDataWithMap);
 
 	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
+	ui.qr_code_layout->addWidget(&qrWgt, Qt::AlignHCenter);
+	qrWgt.hide();
 }
 
 void WgtSim::setUartHolder(UartHolder * uart)
@@ -157,7 +160,8 @@ void WgtSim::deviceStopped(bool gotResponse)
 	);
 	if (resp == QMessageBox::StandardButton::Apply)
 		simulationFinished(SIM_STATE::CONFIRMED);
-	
+
+	ui.start_stop_btn->setText("Start");
 	closeWidget();
 }
 
@@ -215,6 +219,23 @@ void WgtSim::setEndTime(const QDateTime & time)
 	ui.finished_at_lbl->setText(time.toString(QDATE_TIME_FORMAT));
 }
 
+void WgtSim::qrCodeDataWithMap(bool withMap)
+{
+	if (qrWgt.isHidden()) qrWgt.show();
+
+	QString urlWithMap = "http://sgp.slavek.webd.pro/chart_with_map.html?id_sim_info=#&chart=map";
+	QString urlWithoutMap = "http://sgp.slavek.webd.pro/chart.html?id_sim_info=#&chart=basic";
+
+	if (withMap) {
+		urlWithMap.replace("#", QString::number(id_sim_info));
+		qrWgt.setString(urlWithMap);
+	}
+	else {
+		urlWithoutMap.replace("#", QString::number(id_sim_info));
+		qrWgt.setString(urlWithoutMap);
+	}
+}
+
 // private
 
 void WgtSim::startSimulation()
@@ -242,6 +263,8 @@ void WgtSim::startSimulation()
 
 		sendingToDeviceTimer.start(getMeanPeriod());
 		sendingToDbTimer.start(SENDING_TO_DB_PERIOD);
+
+		qrCodeDataWithMap(ui.qr_code_with_map_check->isChecked());
 
 #ifndef DoNotSend
 		this->setSendingIntoDbEnabled(true);
@@ -316,6 +339,8 @@ void WgtSim::closeWidget()
 	sendingToDbTimer.stop();
 	clearData();
 	clearLables();
+
+	qrWgt.hide();
 
 	delete currChart;
 	delete voltChart;

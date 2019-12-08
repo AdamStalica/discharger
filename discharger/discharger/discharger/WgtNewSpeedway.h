@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_WgtNewSpeedway.h"
-#include "json.h"
+#include <nlohmann/json.h>
 
 class ApiHolder;
 class QTimer;

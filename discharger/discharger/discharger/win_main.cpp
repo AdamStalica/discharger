@@ -2,7 +2,7 @@
 
 #include <QDebug>
 #include <QtWebSockets/QtWebSockets>
-#include <nlohmann/json.hpp>
+#include <nlohmann/json.h>
 #include <sstream>
 
 #include <QMessageBox>

@@ -1,7 +1,7 @@
 #include "WgtLogin.h"
 #include "ApiHolder.h"
 #include "WgtLoader.h"
-#include "json.h"
+#include <nlohmann/json.h>
 
 #include <QRegExpValidator>
 #include <QMessageBox>

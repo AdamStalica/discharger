@@ -1,7 +1,7 @@
 #include "WgtNewRace.h"
 
 #include "ApiHolder.h"
-#include "json.h"
+#include <nlohmann/json.h>
 
 #include <QDebug>
 #include <QTimer>

@@ -1,5 +1,5 @@
 #include "SimData.h"
-#include "json.h"
+#include <nlohmann/json.h>
 #include "ApiHolder.h"
 
 #include <QDebug>

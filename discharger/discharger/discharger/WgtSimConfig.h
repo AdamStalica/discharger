@@ -2,7 +2,7 @@
 
 #include <QWidget>
 #include "ui_WgtSimConfig.h"
-#include "json.h"
+#include <nlohmann/json.h>
 #include "ClearAble.h"
 
 

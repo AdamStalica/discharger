@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClearAble" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ClearAble.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ReceivedData" Collapsed="true">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAAAAAAYACAAAACkIAAAAwgAgAAAIoAEgAAAAggA=</HashCode>
+      <FileName>ReceivedData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimData" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAYqAYIEDAAEAAIxOAMIAAAAIxAgQQAGCCEEAiBlAA=</HashCode>
+      <FileName>SimData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeviceError" Collapsed="true">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCAAAAAAAAAAAAAIAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>DeviceError.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="win_main" Collapsed="true">
+    <Position X="17" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEBEAQRAAAABAAACAgAACAAACEQAAACEAU=</HashCode>
+      <FileName>win_main.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SerialPort" Collapsed="true">
+    <Position X="20.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UQgABIAAQCAAAAgBBCBIAACEAABCAACAAYBEACAAAAE=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinHelp" Collapsed="true">
+    <Position X="18.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAgAAAAGAAAAABAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>WinHelp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtChart" Collapsed="true">
+    <Position X="22.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAQiAAABAgQAAAAAAQgAgoAgIAAAAAAEBAAAIAIA=</HashCode>
+      <FileName>WgtChart.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtSim" Collapsed="true">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAKBAACCCAGAAZBAAEBgAQAIBABICAEGgQCAAwCBU=</HashCode>
+      <FileName>WgtSim.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UartHolder" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CFAgiAAAEQQAAgAAACAAEAAABAAAAAAAAIAAACAgAIA=</HashCode>
+      <FileName>UartHolder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtSimConfig" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAgAAAAAQAAEAABAAAAwAAIBBAABAIAASwQAAAIAAM=</HashCode>
+      <FileName>WgtSimConfig.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtLoader" Collapsed="true">
+    <Position X="17" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAIAAAAAAAABAAAAAAAAAIAAAAEY=</HashCode>
+      <FileName>WgtLoader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtMain" Collapsed="true">
+    <Position X="18.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAIIAAAAAAAAAAAAAAAAAAACAAACAA=</HashCode>
+      <FileName>WgtMain.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtLogin" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAEAABIAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>WgtLogin.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtNewRace" Collapsed="true">
+    <Position X="20.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAAAgAAhAAAAAAAACAAQAAAAAA=</HashCode>
+      <FileName>WgtNewRace.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtImport" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAoJQCEAIIAGAANAQEIAACEAAAAAAKCADAQAAAEAMA=</HashCode>
+      <FileName>WgtImport.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ApiHolder" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EECgCAAAAggAEAUgBBAEAAAAQAAECAAAAAAIAAABAoA=</HashCode>
+      <FileName>ApiHolder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BasicData" Collapsed="true">
+    <Position X="14.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAoAAABAABAAgABQAEACABAAgAAAAAAACgAAAAQAIA=</HashCode>
+      <FileName>BasicData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WgtNewSpeedway" Collapsed="true">
+    <Position X="22.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAACEAAAAAAAAAAAAAACAAAAACEAAAAAAAA=</HashCode>
+      <FileName>WgtNewSpeedway.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Typedef Name="simDataType" Collapsed="true">
+    <Position X="18.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimData.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="dbDataType" Collapsed="true">
+    <Position X="17" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SimData.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

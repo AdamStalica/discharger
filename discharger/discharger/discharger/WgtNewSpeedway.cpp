@@ -1,5 +1,5 @@
 #include "WgtNewSpeedway.h"
-#include "json.h";
+#include <nlohmann/json.h>
 
 #include <QRegExpValidator>
 #include <ApiHolder.h>
