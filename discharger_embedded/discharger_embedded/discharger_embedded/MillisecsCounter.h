@@ -14,11 +14,12 @@
 
 class MillisecsCounter
 {
-	volatile uint32_t msSinceDeviceHasStarted = 0;
+	volatile static uint32_t msSinceDeviceHasStarted;
 	
 public:
 	~MillisecsCounter() {};
-	MillisecsCounter() {
+	MillisecsCounter() {};
+	static void init() {
 	
 		TCCR0A = (1 << WGM01);
 		TCCR0B = (1 << CS02) | (1 << CS00);
@@ -27,13 +28,14 @@ public:
 		TIMSK0 = (1 << OCIE0A);	
 	};
 	
-	void isrTimer0CompBVect() {
+	static void isrTimer0CompBVect() {
 		++msSinceDeviceHasStarted;
 	}
 	
-	uint32_t getMillisecs() {
+	static uint32_t getMillisecs() {
 		return msSinceDeviceHasStarted;
 	}
 };
+
 
 #endif //__MILLISECSCOUNTER_H__

@@ -8,7 +8,7 @@
 
 #include "Discharger.h"
 
-#define CURRENT_ACCURACY 5
+#define CURRENT_ACCURACY 15
 
 Discharger::Discharger() 
 	:	uart(static_cast<UsartHolder&>(*this)),
@@ -18,12 +18,17 @@ Discharger::Discharger()
 	sei();
 	wdt_enable(WDTO_1S);
 	
+	MillisecsCounter::init();
+	SafetyGuard::init();
+	
 	adc.startConversion();
 	
 	therm1.startConversion();
 	therm2.startConversion();
 	
-	logError(DEVICE_STARTED);
+	SafetyGuard::setThermometerToObserve(&therm1);
+	
+	logError(DeviceError::DEVICE_STARTED);
 }
 
 
@@ -32,7 +37,10 @@ void Discharger::run() {
 	wdt_reset();
 	
 	SimulationData::run();
+	SafetyGuard::run();
 	adc.run();
+	therm1.run();
+	therm2.run();
 	
 	simulationDriver();
 	
@@ -61,18 +69,9 @@ void Discharger::run() {
 
 void Discharger::aboutToSendNewData() {
 	
-	if(therm1.deviceAvaliable()) {
-		SimulationData::setMeauredBLT(therm1.getTemperature());
-		therm1.startConversion();
-	}
-	
-	if(therm2.deviceAvaliable()) {
-		uint16_t tempBRT = therm2.getTemperature();
-		//debugLog("BRT: ", tempBRT);
-		SimulationData::setMeauredBRT(tempBRT);
-		therm2.startConversion();
-	}
-	
+	SimulationData::setMeauredBLT(therm1.getTemperature());
+	SimulationData::setMeauredBRT(therm2.getTemperature());
+		
 	adc.countAverages();
 	
 	uint16_t simulatedCurrentADC = adc.getAvgADC(AnalogMeasurement::adcChannels::LEM);
@@ -86,6 +85,17 @@ void Discharger::aboutToSendNewData() {
 	
 	uint16_t difference = mathAbsDiff(simulatedCurrent, getCurrentCurrent());
 	
+	
+	
+	static uint16_t lastDifference = 0xFFFF;
+	static uint8_t counter = 0;
+	if( difference < lastDifference || difference > CURRENT_ACCURACY ) {
+		driver.setSimulatedCurrent(simulatedCurrent);
+		lastDifference = difference;
+	}
+	
+	
+	/*
 	static uint8_t noAccuracyFittedCounter = 7;
 	static uint8_t gotAccuracy = 1;
 	if(difference < CURRENT_ACCURACY) {
@@ -98,7 +108,7 @@ void Discharger::aboutToSendNewData() {
 		noAccuracyFittedCounter = 0;
 	}
 	else {
-		gotAccuracy = 0;
+		if(noAccuracyFittedCounter = 1) gotAccuracy = 0;
 		if((++noAccuracyFittedCounter % 10) == 0) {
 			
 			driver.setSimulatedCurrent(simulatedCurrent);
@@ -107,15 +117,18 @@ void Discharger::aboutToSendNewData() {
 			noAccuracyFittedCounter = 0;
 		}
 	}
-	
+	*/
 	SimulationData::setMeauredCurrent(simulatedCurrent);
 }
 
 void Discharger::simulationDriver() {
 	
 	static uint8_t canHandle100msTimeOut = 1;
-	if(ms.getMillisecs() % SIMULATION_INTERVAL == 0) {
+	if(MillisecsCounter::getMillisecs() % SIMULATION_INTERVAL == 0) {
+		
+		
 		if(canHandle100msTimeOut) {
+
 			/*
 			uint16_t currentlySimulatedCurrentAdc = adc.getADC(AnalogMeasurement::adcChannels::LEM);
 			
@@ -131,6 +144,11 @@ void Discharger::simulationDriver() {
 				simulationCurrentAlreadySet = 1;
 			}
 			*/
+			
+			//#define ADC_TEST
+			
+			#ifndef ADC_TEST
+			
 			uint16_t newCurrent = getCurrentCurrent();
 						
 			uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(newCurrent);
@@ -139,8 +157,21 @@ void Discharger::simulationDriver() {
 			
 			dac.writeDACValue(dacToSet);
 			
+			#else
+			
+			adc.countAverages();
+			
+			debugLog("ADC ", adc.getAvgADC(AnalogMeasurement::LEM));
+			
+			#endif
+			
 			canHandle100msTimeOut = 0;
 		}
 	}
 	else canHandle100msTimeOut = 1;
+}
+
+void Discharger::dangerEvent() {
+	logError(getDeviceError());
+	sendDeviceHasStopped();
 }

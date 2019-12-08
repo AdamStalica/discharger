@@ -35,6 +35,11 @@ WgtSim::WgtSim(ApiHolder * api, BasicData * data, WgtLoader * loader, QWidget *p
 	ui.set_temp_ln->setValidator(new QRegExpValidator(QRegExp("-?\\d+\\.?\\d+"), this));
 	ui.qr_code_layout->addWidget(&qrWgt, Qt::AlignHCenter);
 	qrWgt.hide();
+
+	
+	ui.qr_code_link_lbl->setTextFormat(Qt::RichText);
+	ui.qr_code_link_lbl->setTextInteractionFlags(Qt::TextBrowserInteraction);
+	ui.qr_code_link_lbl->setOpenExternalLinks(true);
 }
 
 void WgtSim::setUartHolder(UartHolder * uart)
@@ -225,15 +230,19 @@ void WgtSim::qrCodeDataWithMap(bool withMap)
 
 	QString urlWithMap = "http://sgp.slavek.webd.pro/chart_with_map.html?id_sim_info=#&chart=map";
 	QString urlWithoutMap = "http://sgp.slavek.webd.pro/chart.html?id_sim_info=#&chart=basic";
+	QString htmlUrl = "<a href=\"url\">Click Here!</a>";
 
 	if (withMap) {
 		urlWithMap.replace("#", QString::number(id_sim_info));
+		htmlUrl.replace("url", urlWithMap);
 		qrWgt.setString(urlWithMap);
 	}
 	else {
 		urlWithoutMap.replace("#", QString::number(id_sim_info));
+		htmlUrl.replace("url", urlWithoutMap);
 		qrWgt.setString(urlWithoutMap);
 	}
+	ui.qr_code_link_lbl->setText(htmlUrl);
 }
 
 // private

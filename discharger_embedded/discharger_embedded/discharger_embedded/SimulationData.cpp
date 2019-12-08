@@ -51,11 +51,7 @@ void SimulationData::processNewData() {
 	if(type != NULL) {
 		if(inProgress) {
 			sendResponse();
-			this->println("{\"stop\":\"stopped\"}");
-			currentId = 0;
-			currentCurrent = 0;
-			currentTemp = 0;
-			inProgress = 0;
+			sendDeviceHasStopped();
 		}
 	}
 }
@@ -86,4 +82,13 @@ void SimulationData::run() {
 	if(this->isRxDataReady()) {
 		processNewData();
 	}
+}
+
+void SimulationData::sendDeviceHasStopped() {
+
+	this->println("{\"stop\":\"stopped\"}");
+	currentId = 0;
+	currentCurrent = 0;
+	currentTemp = 0;
+	inProgress = 0;
 }

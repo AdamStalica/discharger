@@ -25,10 +25,12 @@ class SimData
 		int errors = 0;
 
 		void add(const QString & data) {
-			nlohmann::json resp = nlohmann::json::parse(data.toStdString());
-			total += resp["comment"]["total"].get<int>();
-			inserts += resp["comment"]["inserts"].get<int>();
-			errors += resp["comment"]["errors"].get<int>();
+			nlohmann::json resp = nlohmann::json::parse(data.toStdString()); // temporary 
+			if (resp["comment"].is_object()) {
+				total += resp["comment"]["total"].get<int>();
+				inserts += resp["comment"]["inserts"].get<int>();
+				errors += resp["comment"]["errors"].get<int>();
+			}
 		}
 
 		QString toString() {

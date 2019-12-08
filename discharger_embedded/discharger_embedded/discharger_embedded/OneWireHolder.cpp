@@ -85,7 +85,7 @@ void OneWireHolder::writeByte(uint8_t byte_) {
 		bitToSend = (byte_ >> i) & 0x01;
 		writeBit(bitToSend);
 	}
-	_delay_us(10);
+	_delay_us(100);
 }
 
 uint8_t OneWireHolder::readByte() {

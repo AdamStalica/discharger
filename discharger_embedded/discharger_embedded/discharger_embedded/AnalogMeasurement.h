@@ -27,7 +27,7 @@ public:
 private:
 	
 	const uint8_t INPUT_CHANNELS[ADC_CH_NO] = {
-		((1 << MUX4) | (0 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0))	// ADC0 Single ended input.
+		((1 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0))	// ADC0 Single ended input.
 	};
 	
 	uint8_t currentChannel = 0;

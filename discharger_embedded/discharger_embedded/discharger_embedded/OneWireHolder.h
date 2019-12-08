@@ -25,6 +25,7 @@ public:
 	void writeByte(uint8_t byte_);
 	uint8_t readByte();
 	uint8_t resetPulse();
+	uint8_t getPhysicalPin() { return physicalPin_; }
 
 	OneWireHolder(uint8_t physicalPin) : physicalPin_(physicalPin) {};
 	~OneWireHolder() {};

@@ -117,7 +117,7 @@ public:
     QSpacerItem *horizontalSpacer_16;
     QSpacerItem *verticalSpacer_8;
     QVBoxLayout *qr_code_layout;
-    QSpacerItem *verticalSpacer_7;
+    QLabel *qr_code_link_lbl;
     QSpacerItem *horizontalSpacer_17;
     QVBoxLayout *verticalLayout_7;
     QGroupBox *curr_chart_box;
@@ -694,9 +694,10 @@ public:
 
         horizontalLayout_6->addLayout(qr_code_layout);
 
-        verticalSpacer_7 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        qr_code_link_lbl = new QLabel(groupBox_7);
+        qr_code_link_lbl->setObjectName(QString::fromUtf8("qr_code_link_lbl"));
 
-        horizontalLayout_6->addItem(verticalSpacer_7);
+        horizontalLayout_6->addWidget(qr_code_link_lbl);
 
         horizontalSpacer_17 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -817,6 +818,7 @@ public:
         label_12->setText(QCoreApplication::translate("WgtSim", " [\302\260C]", nullptr));
         groupBox_7->setTitle(QCoreApplication::translate("WgtSim", " Results online ", nullptr));
         qr_code_with_map_check->setText(QCoreApplication::translate("WgtSim", "Chart with map", nullptr));
+        qr_code_link_lbl->setText(QString());
         curr_chart_box->setTitle(QCoreApplication::translate("WgtSim", " Current chart ", nullptr));
         vol_chart_box->setTitle(QCoreApplication::translate("WgtSim", " Voltage chart ", nullptr));
     } // retranslateUi
