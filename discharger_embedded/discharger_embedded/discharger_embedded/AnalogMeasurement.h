@@ -12,7 +12,7 @@
 #include <avr/io.h>
 #include "GlobalDefs.h"
 
-#define ADC_CH_NO 1
+#define ADC_CH_NO 2
 #define ADC_MEASURE_F 200UL
 
 class AnalogMeasurement
@@ -21,13 +21,15 @@ class AnalogMeasurement
 public:
 
 	enum adcChannels {
-		LEM	
+		LEM_OUT,
+		LEM_VREF
 	};
 	
 private:
 	
-	const uint8_t INPUT_CHANNELS[ADC_CH_NO] = {
-		((1 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0))	// ADC0 Single ended input.
+	volatile const uint8_t INPUT_CHANNELS[ADC_CH_NO] = {
+		((0 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0)),	// ADC0 Single ended input.
+		((0 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (1 << MUX0))	// ADC1 Single ended input.
 	};
 	
 	uint8_t currentChannel = 0;

@@ -9,6 +9,8 @@
 #include "Discharger.h"
 
 #define CURRENT_ACCURACY 15
+#define TESTS 1
+
 
 Discharger::Discharger() 
 	:	uart(static_cast<UsartHolder&>(*this)),
@@ -29,6 +31,8 @@ Discharger::Discharger()
 	SafetyGuard::setThermometerToObserve(&therm1);
 	
 	logError(DeviceError::DEVICE_STARTED);
+	
+	dac.writeDACValue(0);
 }
 
 
@@ -42,7 +46,9 @@ void Discharger::run() {
 	therm1.run();
 	therm2.run();
 	
-	simulationDriver();
+	if(SimulationData::simulationInProgress() || TESTS) {
+		simulationDriver();	
+	}
 	
 	/*
 	static uint8_t canHandle1000msTimeout = 1;
@@ -74,7 +80,7 @@ void Discharger::aboutToSendNewData() {
 		
 	adc.countAverages();
 	
-	uint16_t simulatedCurrentADC = adc.getAvgADC(AnalogMeasurement::adcChannels::LEM);
+	uint16_t simulatedCurrentADC = tmpGetLEMAvgAdc(); //adc.getAvgADC(AnalogMeasurement::adcChannels::LEM_OUT);
 	uint16_t simulatedCurrent = driver.getCurrentFormADC(simulatedCurrentADC);
 	
 	/*
@@ -145,9 +151,8 @@ void Discharger::simulationDriver() {
 			}
 			*/
 			
-			//#define ADC_TEST
-			
-			#ifndef ADC_TEST
+			#if TESTS==0
+
 			
 			uint16_t newCurrent = getCurrentCurrent();
 						
@@ -159,9 +164,19 @@ void Discharger::simulationDriver() {
 			
 			#else
 			
-			adc.countAverages();
 			
-			debugLog("ADC ", adc.getAvgADC(AnalogMeasurement::LEM));
+			
+			
+			debugLog("T = ", therm1.getTemperature());
+			_delay_ms(1000);
+			adc.countAverages();
+			debugLog("I = ",  driver.getCurrentFormADC(tmpGetLEMAvgAdc())); //tmpGetLEMAvgAdc()
+			
+			
+			//static uint16_t dac_v = 000;
+			dac.writeDACValue(getCurrentCurrent());
+			//debugLog("dac ", dac_v);
+			//dac_v = (dac_v + 50) % 4000;
 			
 			#endif
 			

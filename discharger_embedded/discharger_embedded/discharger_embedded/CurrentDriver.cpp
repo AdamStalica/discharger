@@ -24,6 +24,14 @@ uint16_t CurrentDriver::getCurrentFormADC(uint16_t adcVolt) {
 	return (adcVolt ? (adcVolt * 2 + 7) : 0);
 }
 
+int16_t CurrentDriver::getCurrentFromDifferentianlADC(uint16_t diffAdc) {
+	int16_t volts = diffAdc;
+	if(diffAdc & (1 << 9)) {
+		volts |= 0xFC00; 
+	}
+	return volts;
+}
+
 /**
 *	dac 12 bits
 *	U = dacVolt * DAC_VREF_mV / 2 ^ 12

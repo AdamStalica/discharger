@@ -42,6 +42,7 @@ public:
 	void setMeauredBRT(uint16_t bRT) { measuredBRT = bRT; }
 	void logError(uint16_t errno);
 	void sendDeviceHasStopped();
+	uint8_t simulationInProgress();
 	void run();
 
 private:

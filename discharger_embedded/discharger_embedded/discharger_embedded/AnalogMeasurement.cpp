@@ -11,7 +11,7 @@
 AnalogMeasurement::AnalogMeasurement()
 {
 	
-	ADMUX = (1 << REFS1) | (1 << REFS0)			// Internal 2.56V as VREF.
+	ADMUX = (0 << REFS1) | (1 << REFS0)			// Internal 2.56V as VREF.
 			| (0 << ADLAR)						// Right adjust result.
 			| INPUT_CHANNELS[currentChannel];	// Select first channel as analog input.
 			
@@ -64,7 +64,7 @@ void AnalogMeasurement::isrADCVect() {
 		rawADCFull  = 1;
 	}
 	
-	ADMUX = (ADMUX & 0xE0) | INPUT_CHANNELS[currentChannel];
+	ADMUX = (ADMUX & 0xE0) | INPUT_CHANNELS[(currentChannel >> 1)];
 	
 	TIFR1 |= (1 << OCF1B); // Clear timer1 compare match B interrupt, enable next conversion.
 }

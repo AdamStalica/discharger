@@ -55,8 +55,8 @@ class CurrentDriver
 	uint16_t getCurrentFormADC(uint16_t adcCurrent);
 	uint16_t getMillivoltsFromDAC(uint16_t dacVolt);
 	uint16_t getDACFromMillivolts(uint16_t millivolts);
+	int16_t getCurrentFromDifferentianlADC(uint16_t diffAdc);
 
-	
 	void setMaxCurrent(uint16_t max);
 	void setSimulatedCurrent(uint16_t current);
 

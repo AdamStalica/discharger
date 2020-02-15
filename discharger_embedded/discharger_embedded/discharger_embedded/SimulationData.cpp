@@ -92,3 +92,7 @@ void SimulationData::sendDeviceHasStopped() {
 	currentTemp = 0;
 	inProgress = 0;
 }
+
+uint8_t SimulationData::simulationInProgress() {
+	return currentId != 0;
+}
