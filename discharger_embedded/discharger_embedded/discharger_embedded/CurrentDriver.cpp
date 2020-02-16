@@ -7,14 +7,7 @@
 
 
 #include "CurrentDriver.h"
-
-CurrentDriver::CurrentDriver()
-{
-	chPoints[pointsEnum::MIDDLE].millivolt = 3502;
-	chPoints[pointsEnum::MIDDLE].current = 351;
-	chPoints[pointsEnum::MAX].millivolt = DAC_VREF_mV;
-	chPoints[pointsEnum::MAX].current = DEAFULT_MAX_CURRENT_E2mA;
-}
+#include <stdlib.h>
 
 /**
 *	adcVolt 0..1023
@@ -24,66 +17,66 @@ uint16_t CurrentDriver::getCurrentFormADC(uint16_t adcVolt) {
 	return (adcVolt ? (adcVolt * 2 + 7) : 0);
 }
 
-int16_t CurrentDriver::getCurrentFromDifferentianlADC(uint16_t diffAdc) {
-	int16_t volts = diffAdc;
-	if(diffAdc & (1 << 9)) {
-		volts |= 0xFC00; 
-	}
-	return volts;
-}
-
 /**
 *	dac 12 bits
 *	U = dacVolt * DAC_VREF_mV / 2 ^ 12
 */
 uint16_t CurrentDriver::getMillivoltsFromDAC(uint16_t dacVolt) {
-	return (uint32_t(dacVolt * DAC_VREF_mV) / DAC_MAX);
+	return (uint32_t(dacVolt) * DAC_VREF_mV / DAC_MAX);
 }
 
 uint16_t CurrentDriver::getDACFromMillivolts(uint16_t millivolts) {
 	return (uint32_t(millivolts) * DAC_MAX / DAC_VREF_mV);
 }
 
-void CurrentDriver::setMaxCurrent(uint16_t max) {
-	chPoints[pointsEnum::MAX].current = max;
-}
-
 void CurrentDriver::setSimulatedCurrent(uint16_t current) {
-	if (current > 0 && current < chPoints[pointsEnum::MAX].current) {
-		
-		chPoints[pointsEnum::MIDDLE].current = current;
-		chPoints[pointsEnum::MIDDLE].millivolt = lastEstimatedMillivolts;
-	}
-	currentlySimulatedCurrent = current;
-} 
-
-uint16_t CurrentDriver::getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent) {
-
-	uint16_t estimatedMillivolt = getInterpolatedValue(
-		requestedCurrent
-	);
-	// currentlySimulatedCurrent + (requestedCurrent - currentlySimulatedCurrent) / interpolationDiv
-
-	if (requestedCurrent == 0) estimatedMillivolt = 0;
 	
-	lastEstimatedMillivolts = estimatedMillivolt;
-	if (estimatedMillivolt >= DAC_VREF_mV) estimatedMillivolt = DAC_VREF_mV - 1;
+	if (!setupFinished) {
+		currents[currents.back] = current;
+		if (current > MAX_CURRENT || GET_VOLT(currents.back) == MAX_VOLT_mV) {
+			setupFinished = 1;
+		}
+		return;
+	}
 
-	return estimatedMillivolt;
+	lastParams.simCurr = current;
 }
 
-uint16_t CurrentDriver::getInterpolatedValue(int16_t x) {
-
-	float xx0 = (x - x0);
-	float xx1 = (x - x1);
-	float xx2 = (x - x2);
-	int16_t x1x0 = (x1 - x0);
-	int16_t x1x2 = (x1 - x2);
-	int16_t x2x0 = (x2 - x0);
-	int16_t x2x1 = (x2 - x1);
-
-	int16_t L1 = int16_t(y1 * ((xx0 / x1x0) * (xx2 / x1x2)));
-	int16_t L2 = int16_t(y2 * ((xx0 / x2x0) * (xx1 / x2x1)));
+uint16_t CurrentDriver::getEstimatedMillivolts(int16_t requestedCurrent) {
 	
-	return uint16_t(L1 + L2);
+	if (!setupFinished) {
+		return GET_VOLT(++currents.back);
+	}
+
+	uint8_t u1Id = getLowerVoltIdForCurr(requestedCurrent);
+	uint8_t isNewVal = (u1Id != (lastParams.volt / VOLT_DELTA_mV));
+
+	if (((currents[u1Id] + EPS) >= requestedCurrent && (currents[u1Id] - EPS) <= requestedCurrent) || requestedCurrent < MIN_CURRENT) {
+		lastParams.volt = GET_VOLT(u1Id);
+	}
+	else {
+		int16_t deltaCurr = currents[u1Id + 1] - currents[u1Id];
+
+		if (isNewVal) {
+			int16_t deltaReqCurr = requestedCurrent - currents[u1Id];
+			int16_t deltaReqVolt = (VOLT_DELTA_mV * deltaReqCurr) / deltaCurr;
+			lastParams.volt = (GET_VOLT(u1Id) + deltaReqVolt);
+		}
+		else {
+			int16_t deltaSim = requestedCurrent - lastParams.simCurr;
+			if (abs(deltaSim) > EPS) {
+				int16_t deltaReqCurr = lastParams.reqCurr - currents[u1Id];
+				int16_t deltaReqVolt = (VOLT_DELTA_mV * deltaReqCurr) / deltaCurr;
+
+				if (deltaSim > 0) {
+					deltaReqVolt = VOLT_DELTA_mV - deltaReqVolt;
+					deltaReqCurr = deltaCurr - deltaReqCurr;
+				}
+
+				lastParams.volt += ((deltaReqVolt * deltaSim) / deltaReqCurr);
+			}
+		}
+	}
+	lastParams.reqCurr = requestedCurrent;
+	return lastParams.volt;
 }

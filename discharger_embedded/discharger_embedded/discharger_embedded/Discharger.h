@@ -6,7 +6,7 @@
 */
 
 //#define DEVICE_STARTED 0
-#define SIMULATION_INTERVAL 1000
+#define SIMULATION_INTERVAL 100
 
 #include "GlobalDefs.h"
 #include "SimulationData.h"
@@ -49,25 +49,13 @@ public:
 	void run();
 	
 	
-	uint16_t tmpGetLEMAvgAdc() {
-		return (adc.getAvgADC(AnalogMeasurement::LEM_OUT)
-		-
-		adc.getAvgADC(AnalogMeasurement::LEM_VREF)
-		);
-	};
-	
-	uint16_t tmpGetLEMAdc() {
-		return (adc.getADC(AnalogMeasurement::LEM_OUT)
-		-
-		adc.getADC(AnalogMeasurement::LEM_VREF)
-		);
-	};
-	
 // ISR vecs
 	void isrUsart0RxHandler() { uart.isrUsart0RxHandler(); }
 	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
 	void isrADCVect() { adc.isrADCVect(); }
 	void isrTimer0CompBVect() { MillisecsCounter::isrTimer0CompBVect(); }
+		
+	void stopDevice() override;
 		
 #ifdef DEBUG_MODE
 	void debugerUartFunction(char * string, int32_t digit) {

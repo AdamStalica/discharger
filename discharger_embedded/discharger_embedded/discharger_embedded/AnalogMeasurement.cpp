@@ -8,10 +8,15 @@
 
 #include "AnalogMeasurement.h"
 
+uint8_t AnalogMeasurement::isDiffrentialChannel(AdcChannels channel)
+{
+	return (INPUT_CHANNELS[channel] & ((1 << MUX4) | (1 << MUX3))) != 0;
+}
+
 AnalogMeasurement::AnalogMeasurement()
 {
 	
-	ADMUX = (0 << REFS1) | (1 << REFS0)			// Internal 2.56V as VREF.
+	ADMUX = (1 << REFS1) | (1 << REFS0)			// Internal 2.56V as VREF.
 			| (0 << ADLAR)						// Right adjust result.
 			| INPUT_CHANNELS[currentChannel];	// Select first channel as analog input.
 			
@@ -33,10 +38,6 @@ AnalogMeasurement::AnalogMeasurement()
 	
 }
 
-AnalogMeasurement::~AnalogMeasurement()
-{
-}
-
 void AnalogMeasurement::startConversion() {
 	ADCSRA |= (1 << ADSC);
 }
@@ -45,7 +46,7 @@ void AnalogMeasurement::run() {
 	if(rawADCFull) {
 		
 		for(uint8_t i = 0; i < ADC_CH_NO; ++i) {
-			sumADC[i] += rawADC[i];
+			sumADC[i] += getADC(static_cast<AdcChannels>(i));
 			newValsFlags[i] = 1;
 		}
 		++nAvgAdc;
@@ -69,13 +70,29 @@ void AnalogMeasurement::isrADCVect() {
 	TIFR1 |= (1 << OCF1B); // Clear timer1 compare match B interrupt, enable next conversion.
 }
 
-uint16_t AnalogMeasurement::getAvgADC(adcChannels channel) {
+int16_t AnalogMeasurement::getAvgADC(AdcChannels channel) {
 	return avgADC[channel];
 }
 
-uint16_t AnalogMeasurement::getADC(adcChannels channel) {
+/**
+ * Getter.
+ * ADC = Vin * 1024 / Vref = Vin * 1024 / 2560 
+ */
+int16_t AnalogMeasurement::getADC(AdcChannels channel) {
 	newValsFlags[channel] = 0;
-	return (nAvgAdc ? (sumADC[channel] / nAvgAdc) : avgADC[channel]);
+	
+	if(isDiffrentialChannel(channel)) {
+		// ADC = (Vpos - Vneg) * GAIN * 512 / Vref = (Vpos - Vneg) * 512 / 2560
+		if((rawADC[channel] >> 9)) {
+			// The value is negative
+			return (rawADC[channel] - 1024) << 1;
+		}
+		else {
+			// The value is positive
+			return rawADC[channel] << 1;
+		}
+	}
+	return rawADC[channel];
 }
 
 void AnalogMeasurement::countAverages() {
@@ -86,7 +103,15 @@ void AnalogMeasurement::countAverages() {
 	nAvgAdc = 0;
 }
 
-uint8_t AnalogMeasurement::isNewValueAvailable(adcChannels channel) {
+uint8_t AnalogMeasurement::isNewValueAvailable(AdcChannels channel) {
 	return newValsFlags[channel];
 }
 
+/**
+ * Getter.
+ * Vin = ADC * Vref / 1024 / ADC * 2560 / 1024
+ */
+int16_t AnalogMeasurement::convertAdcToMillivolts(int16_t adc_)
+{
+	return (adc_ * 5) >> 1;
+}

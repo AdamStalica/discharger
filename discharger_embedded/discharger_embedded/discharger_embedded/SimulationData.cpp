@@ -6,6 +6,7 @@
 */
 
 #include "SimulationData.h"
+#include <avr/pgmspace.h>
 
 void SimulationData::processNewData() {
 	
@@ -59,23 +60,25 @@ void SimulationData::processNewData() {
 void SimulationData::sendResponse() {
 	
 	aboutToSendNewData();
+	//char str[] PROGMEM = "{\"id\":%d,\"curr\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d}";
+	//strcpy_P(_txBuffer, (PGM_P)pgm_read_word(str));
 	sprintf(
-		buff, 
+		_txBuffer, 
 		"{\"id\":%d,\"curr\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d}",
 		currentId,
 		measuredCurrent,
-		(1210 - currentCurrent / 100), //measuredBLV,
-		(1207 - currentCurrent / 100), //measuredBRV,
+		measuredBLV,
+		measuredBRV,
 		measuredBLT,
 		measuredBRT
 	);	
 	
-	this->println(buff);
+	this->println(_txBuffer);
 }
 
 void SimulationData::logError(uint16_t errno) {
-	sprintf(buff, "{\"error\":%d}", errno);
-	this->println(buff);
+	sprintf(_txBuffer, "{\"error\":%d}", errno);
+	this->println(_txBuffer);
 }
 
 void SimulationData::run() {
@@ -86,6 +89,7 @@ void SimulationData::run() {
 
 void SimulationData::sendDeviceHasStopped() {
 
+	stopDevice();
 	this->println("{\"stop\":\"stopped\"}");
 	currentId = 0;
 	currentCurrent = 0;

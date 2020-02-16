@@ -117,8 +117,8 @@ inline ReceivedData::ReceivedData(const nlohmann::json & data) : jsonDataObject(
 
 	id = data["id"].get<int>();
 	current = data["curr"].get<int>() / 10.0;
-	battLeftVolt = data["bLV"].get<int>() / 100.0;
-	battRightVolt = data["bRV"].get<int>() / 100.0;
+	battLeftVolt = data["bLV"].get<int>() / 1000.0;
+	battRightVolt = data["bRV"].get<int>() / 1000.0;
 	battLeftTemp = data["bLT"].get<int>() / 100.0;
 	battRightTemp = data["bRT"].get<int>() / 100.0;
 }

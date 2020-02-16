@@ -36,12 +36,13 @@ class UsartHolder
 //variables
 public:
 protected:
+	char _txBuffer[TX_BUFFER_SIZE];
 private:
-	uint8_t _txBuffer[TX_BUFFER_SIZE];
+
 	uint8_t _txDataEnd = 0;
 	uint8_t _txDataPtr = 0;
 
-	uint8_t _rxBuffer[RX_BUFFER_SIZE];
+	char _rxBuffer[RX_BUFFER_SIZE];
 	uint8_t _rxDataEnd = 0;
 	uint8_t _rxDataReady = 0;
 
@@ -55,7 +56,7 @@ public:
 	//virtual void rxDataReady() {};
 	uint8_t isRxDataReady() { return _rxDataReady; }
 	uint8_t getRxDataSize() { return _rxDataEnd; }
-	uint8_t * getRxData() {  
+	char * getRxData() {  
 		_rxDataEnd = 0;
 		_rxDataReady = 0;
 		return _rxBuffer; 

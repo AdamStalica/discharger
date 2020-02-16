@@ -9,7 +9,7 @@
 #include "Discharger.h"
 
 #define CURRENT_ACCURACY 15
-#define TESTS 1
+#define TESTS 0
 
 
 Discharger::Discharger() 
@@ -73,112 +73,49 @@ void Discharger::run() {
 }
 
 
+void Discharger::stopDevice()
+{
+	dac.writeDACValue(0);
+}
+
 void Discharger::aboutToSendNewData() {
 	
 	SimulationData::setMeauredBLT(therm1.getTemperature());
 	SimulationData::setMeauredBRT(therm2.getTemperature());
-		
-	adc.countAverages();
-	
-	uint16_t simulatedCurrentADC = tmpGetLEMAvgAdc(); //adc.getAvgADC(AnalogMeasurement::adcChannels::LEM_OUT);
-	uint16_t simulatedCurrent = driver.getCurrentFormADC(simulatedCurrentADC);
-	
-	/*
-	if(!simulationCurrentAlreadySet)
-		driver.setSimulatedCurrent(simulatedCurrent);
-	else
-	*/ 
-	
-	uint16_t difference = mathAbsDiff(simulatedCurrent, getCurrentCurrent());
-	
-	
-	
-	static uint16_t lastDifference = 0xFFFF;
-	static uint8_t counter = 0;
-	if( difference < lastDifference || difference > CURRENT_ACCURACY ) {
-		driver.setSimulatedCurrent(simulatedCurrent);
-		lastDifference = difference;
-	}
-	
-	
-	/*
-	static uint8_t noAccuracyFittedCounter = 7;
-	static uint8_t gotAccuracy = 1;
-	if(difference < CURRENT_ACCURACY) {
-		if(!gotAccuracy) {
-			
-			driver.setSimulatedCurrent(simulatedCurrent);
-			debugLog("Accuracy fitted.", difference);
-			gotAccuracy = 1;
-		}
-		noAccuracyFittedCounter = 0;
-	}
-	else {
-		if(noAccuracyFittedCounter = 1) gotAccuracy = 0;
-		if((++noAccuracyFittedCounter % 10) == 0) {
-			
-			driver.setSimulatedCurrent(simulatedCurrent);
-			debugLog("Over 10.", noAccuracyFittedCounter);
-			
-			noAccuracyFittedCounter = 0;
-		}
-	}
-	*/
-	SimulationData::setMeauredCurrent(simulatedCurrent);
 }
 
 void Discharger::simulationDriver() {
 	
 	static uint8_t canHandle100msTimeOut = 1;
 	if(MillisecsCounter::getMillisecs() % SIMULATION_INTERVAL == 0) {
-		
-		
 		if(canHandle100msTimeOut) {
-
-			/*
-			uint16_t currentlySimulatedCurrentAdc = adc.getADC(AnalogMeasurement::adcChannels::LEM);
-			
-			uint16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
-			
-			
-			uint16_t diff = mathAbsDiff(currentlySimulatedCurrent, newCurrent);
-			//debugLog("Diff: ", diff);
-			if(	!simulationCurrentAlreadySet && 
-				(diff < CURRENT_ACCURACY)) 
-			{
+			if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
-				simulationCurrentAlreadySet = 1;
+				adc.countAverages();
+				int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
+				int16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
+				driver.setSimulatedCurrent(currentlySimulatedCurrent);
+				
+				SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
+	
+				SimulationData::setMeauredBLV(
+					AnalogMeasurement::convertAdcToMillivolts(
+						adc.getAvgADC(AnalogMeasurement::BLV)
+					)
+				);
+	
+				SimulationData::setMeauredBRV(
+					AnalogMeasurement::convertAdcToMillivolts(
+						adc.getAvgADC(AnalogMeasurement::BRV)
+					)
+				);
 			}
-			*/
-			
-			#if TESTS==0
-
-			
-			uint16_t newCurrent = getCurrentCurrent();
 						
-			uint16_t millivoltsToSet = driver.getEstimatedMillivoltsToBeSet(newCurrent);
-			
+			uint16_t newCurrent = getCurrentCurrent();
+			uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
 			uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);
 			
 			dac.writeDACValue(dacToSet);
-			
-			#else
-			
-			
-			
-			
-			debugLog("T = ", therm1.getTemperature());
-			_delay_ms(1000);
-			adc.countAverages();
-			debugLog("I = ",  driver.getCurrentFormADC(tmpGetLEMAvgAdc())); //tmpGetLEMAvgAdc()
-			
-			
-			//static uint16_t dac_v = 000;
-			dac.writeDACValue(getCurrentCurrent());
-			//debugLog("dac ", dac_v);
-			//dac_v = (dac_v + 50) % 4000;
-			
-			#endif
 			
 			canHandle100msTimeOut = 0;
 		}

@@ -10,57 +10,65 @@
 #define __CURRENTDRIVER_H__
 
 #include <avr/io.h>
-#include "SimulationData.h"
+#include "GlobalDefs.h"
 
-#define POINTS_SIZE 3
-
-#define DEAFULT_MAX_CURRENT_E2mA 500
 #define DAC_VREF_mV 5000
-#define DAC_MAX 0x0FFF
+#define DAC_MAX 0x1000
 
-#define INTERPOLATION_mV_MAX_DIFFERENCE 3000
+#define EPS 1
 
-#define x0 ((int16_t)chPoints[0].current)
-#define x1 ((int16_t)chPoints[1].current)
-#define x2 ((int16_t)chPoints[2].current)
-#define y0 ((int16_t)chPoints[0].millivolt)
-#define y1 ((int16_t)chPoints[1].millivolt)
-#define y2 ((int16_t)chPoints[2].millivolt)
-
+#define MAX_VOLT_mV 5000
+#define MAX_CURRENT 300 // 300 = 30A
+#define MIN_CURRENT 9
+#define VOLT_DELTA_mV 100
+#define CURR_TAB_SIZE (MAX_VOLT_mV / VOLT_DELTA_mV)
+#define GET_VOLT(id) (id * VOLT_DELTA_mV)
 
 class CurrentDriver
 {
-	struct simulatedPoint {
-		uint16_t current = 0;
-		uint16_t millivolt = 0;
-	};
+	struct Currents
+	{
+		uint16_t _tab_[CURR_TAB_SIZE] = { 0 };
+		uint8_t back = 0xFF;
 
-	enum pointsEnum {
-		MIN,
-		MIDDLE,
-		MAX
-	};
-	simulatedPoint chPoints[3];
-	
-	uint16_t currentlySimulatedCurrent = 0;
-	uint16_t lastEstimatedMillivolts = 0;
-	
-	
-	uint16_t getInterpolatedValue(int16_t x);
-	
-	public:
-	CurrentDriver();
+		uint16_t & operator[](uint8_t id) { return _tab_[id]; }
+
+	} currents;
+
+	struct LastParams
+	{
+		int16_t volt = 0,
+		reqCurr = 0,
+		simCurr = 0;
+
+	} lastParams;
+	uint8_t setupFinished = 0;
+
+public:
+	CurrentDriver() {};
 	~CurrentDriver() {};
 
 	uint16_t getCurrentFormADC(uint16_t adcCurrent);
 	uint16_t getMillivoltsFromDAC(uint16_t dacVolt);
 	uint16_t getDACFromMillivolts(uint16_t millivolts);
-	int16_t getCurrentFromDifferentianlADC(uint16_t diffAdc);
 
-	void setMaxCurrent(uint16_t max);
 	void setSimulatedCurrent(uint16_t current);
+	uint16_t getEstimatedMillivolts(int16_t requestedCurrent);
 
-	uint16_t getEstimatedMillivoltsToBeSet(uint16_t requestedCurrent);
-};
+private:
+
+	uint8_t getLowerVoltIdForCurr(int16_t curr) {
+		if (curr >= MAX_CURRENT)
+		return (currents.back - 1);
+		for (uint8_t i = 0; i < currents.back; ++i) {
+			if (currents[i + 1] > curr && currents[i] <= curr) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
+
+}; //CurrentDriver
 
 #endif //__CURRENTDRIVER_H__

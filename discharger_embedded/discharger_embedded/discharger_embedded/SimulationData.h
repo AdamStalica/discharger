@@ -18,12 +18,12 @@ class SimulationData : public UsartHolder
 			 currentCurrent = 0, 
 			 currentTemp = 0;
 	uint8_t	 inProgress = 0;
-	uint16_t measuredCurrent,
-			 measuredBLV,
-			 measuredBRV,
-			 measuredBLT,
-			 measuredBRT;
-	char buff[70];
+	uint16_t measuredCurrent = 0,
+			 measuredBLV = 0,
+			 measuredBRV = 0,
+			 measuredBLT = 0,
+			 measuredBRT = 0;
+	//char buff[70];
 
 //functions
 public:
@@ -31,6 +31,7 @@ public:
 	~SimulationData() {};
 		
 	virtual void aboutToSendNewData() = 0;
+	virtual void stopDevice() = 0;
 	
 	uint16_t getCurrentCurrent() { return currentCurrent; }
 	uint16_t getCurrentTemp() { return currentTemp; }
@@ -44,6 +45,8 @@ public:
 	void sendDeviceHasStopped();
 	uint8_t simulationInProgress();
 	void run();
+	
+	
 
 private:
 	SimulationData( const SimulationData &c );
