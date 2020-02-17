@@ -74,7 +74,7 @@ void UartHolder::sendData(int id, float current, float temperature)
 
 	int curr = int(current * 10.0 + 0.5);
 
-	std::string toSend = "{\"id\":" + std::to_string(id) + ",\"curr\":" + std::to_string(curr) + (temperature != FLT_MAX ? (",\"temp\":" + std::to_string(int(temperature * 100.0 + 0.5))) : "") + "}";
+	std::string toSend = "{\"id\":" + std::to_string(id) + ",\"I\":" + std::to_string(curr) + (temperature != FLT_MAX ? (",\"temp\":" + std::to_string(int(temperature * 100.0 + 0.5))) : "") + "}";
 
 	serial.println(toSend);
 }

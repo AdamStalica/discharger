@@ -5,6 +5,7 @@
 * Author: domin
 */
 
+#include <avr/pgmspace.h>
 #include "GlobalDefs.h"
 #include <avr/io.h>
 #include <stdio.h>
@@ -20,25 +21,19 @@
 #define TX_BUFFER_SIZE 100
 #define RX_BUFFER_SIZE 100
 
-#define END_LINE_CHAR1 '\n'
-#define END_LINE_CHAR2 '\r'
+#define END_LINE_CHAR1 '\r'
+#define END_LINE_CHAR2 '\n'
 #define STR_END_CHAR '\0'
 
-/*
-#ifndef F_CPU
-	# warning "F_CPU has not been defined!"
-	#define F_CPU 1000000
-#endif
-*/
 
 class UsartHolder
 {
 //variables
 public:
 protected:
-	char _txBuffer[TX_BUFFER_SIZE];
 private:
 
+	char _txBuffer[TX_BUFFER_SIZE];
 	uint8_t _txDataEnd = 0;
 	uint8_t _txDataPtr = 0;
 
@@ -62,11 +57,10 @@ public:
 		return _rxBuffer; 
 	}
 	
-	void print(uint16_t data);
-	void print(uint8_t * data);
-	void print(const char * data);
-	void println(const char * data);
-	void println(uint16_t data);
+	void print(const char * data, ...);
+	void printP(const PROGMEM char * data, ...);
+	void print(int32_t data);
+	void endl();
 	
 	void isrUsart0RxHandler();
 	void isrUsart0UdreHandler();

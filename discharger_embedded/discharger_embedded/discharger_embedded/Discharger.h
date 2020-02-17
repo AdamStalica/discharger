@@ -14,12 +14,12 @@
 #include "AnalogMeasurement.h"
 #include "CurrentDriver.h"
 #include "DS18B20.h"
-#include "MillisecsCounter.h"
+#include "Millis.h"
 #include "SafetyGuard.h"
+#include "Led.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 #include <avr/wdt.h>
 
 #ifndef __DISCHARGER_H__
@@ -40,8 +40,11 @@ class Discharger : public SimulationData, SafetyGuard
 	uint8_t stoppedByBtn = 0;
 
 	void aboutToSendNewData() override;
+	void stopDevice() override;
+	void communicationEstablished() override;
+	void deviceStopRequest() override;
+	
 	void simulationDriver();
-	void dangerEvent() override;
 
 public:
 	Discharger();
@@ -53,9 +56,8 @@ public:
 	void isrUsart0RxHandler() { uart.isrUsart0RxHandler(); }
 	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
 	void isrADCVect() { adc.isrADCVect(); }
-	void isrTimer0CompBVect() { MillisecsCounter::isrTimer0CompBVect(); }
+	void isrTimer0CompBVect() { Millis::isrTimer0CompBVect(); }
 		
-	void stopDevice() override;
 		
 #ifdef DEBUG_MODE
 	void debugerUartFunction(char * string, int32_t digit) {

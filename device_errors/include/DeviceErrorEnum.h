@@ -1,8 +1,23 @@
 
-namespace DeviceError {
-    enum {
-        DEVICE_STARTED,
-        STOPPED_BY_BTN,
-        STOPPED_OVER_TEMP
+namespace Device {
+    enum Error {
+        DEVICE_STARTED = 0,
+        STOPPED_BY_SAFETY_BTN,
+        STOPPED_RADIATOR_TEMP_TOO_HIGH,
+		STOPPED_VOLTAGE_TOO_LOW,
+		STOPPED_CURRENT_TOO_HIGH,
+		CURRENT_IS_REQUIRED,
+		
+		NO_ERROR = 0xFF
     };
+	
+	enum Warning {
+		SAFETY_BTN_PRESSED = 1,
+		RADIATOR_TEMP_TOO_HIGH,
+		VOLTAGE_TOO_LOW,
+		CURRENT_TOO_HIGH,
+		RECEIVED_NOT_STANDARDIZED_DATA,
+		
+		NO_WARNING = 0xFF
+	};
 }

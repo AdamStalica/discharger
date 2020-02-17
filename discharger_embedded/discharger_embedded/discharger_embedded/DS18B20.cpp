@@ -7,7 +7,7 @@
 
 
 #include "DS18B20.h"
-#include "MillisecsCounter.h"
+#include "Millis.h"
 
 #define SKIP_ROM 0xCC
 #define CONVERT_T 0x44
@@ -37,9 +37,9 @@ int16_t DS18B20::getTemperature() {
 
 void DS18B20::run() {
 	
-	if((MillisecsCounter::getMillisecs() - lastReadTimestamp) > READ_INTERVAL_MS) {
+	if((Millis::get() - lastReadTimestamp) > READ_INTERVAL_MS) {
 		
-		lastReadTimestamp = MillisecsCounter::getMillisecs();
+		lastReadTimestamp = Millis::get();
 		
 		if(deviceAvaliable()) {
 			

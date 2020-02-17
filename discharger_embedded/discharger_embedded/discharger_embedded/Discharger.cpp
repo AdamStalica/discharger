@@ -27,8 +27,9 @@ Discharger::Discharger()
 	sei();
 	wdt_enable(WDTO_1S);
 	
-	MillisecsCounter::init();
+	Millis::init();
 	SafetyGuard::init();
+	led.init();
 	
 	adc.startConversion();
 	
@@ -37,9 +38,11 @@ Discharger::Discharger()
 	
 	SafetyGuard::setThermometerToObserve(&therm1);
 	
-	logError(DeviceError::DEVICE_STARTED);
+	//logError(DeviceError::DEVICE_STARTED);
 	
 	dac.writeDACValue(0);
+	
+	led.green().blink();
 }
 
 
@@ -52,10 +55,13 @@ void Discharger::run() {
 	adc.run();
 	therm1.run();
 	therm2.run();
+	led.run();
 	
 	if(SimulationData::simulationInProgress() || TESTS) {
 		simulationDriver();	
 	}
+	
+	
 	
 	/*
 	static uint8_t canHandle1000msTimeout = 1;
@@ -85,16 +91,26 @@ void Discharger::stopDevice()
 	dac.writeDACValue(0);
 }
 
+void Discharger::communicationEstablished() {
+	led.green();
+}
+
+void Discharger::deviceStopRequest() {
+	//logError(getDeviceError());
+	sendDeviceHasStopped();
+}
+
 void Discharger::aboutToSendNewData() {
-	
-	SimulationData::setMeauredBLT(therm1.getTemperature());
-	SimulationData::setMeauredBRT(therm2.getTemperature());
+	debugLog("T", SimulationData::getRadiatorTempLimit());
+	led.blue();
+	SimulationData::setBattLeftTemp(therm1.getTemperature());
+	SimulationData::setBattRightTemp(therm2.getTemperature());
 }
 
 void Discharger::simulationDriver() {
 	
 	static uint8_t canHandle100msTimeOut = 1;
-	if(MillisecsCounter::getMillisecs() % SIMULATION_INTERVAL == 0) {
+	if(Millis::get() % SIMULATION_INTERVAL == 0) {
 		if(canHandle100msTimeOut) {
 			if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
@@ -105,13 +121,13 @@ void Discharger::simulationDriver() {
 				
 				SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
 	
-				SimulationData::setMeauredBLV(
+				SimulationData::setBattLeftVolt(
 					AnalogMeasurement::convertAdcToMillivolts(
 						adc.getAvgADC(AnalogMeasurement::BLV)
 					)
 				);
 	
-				SimulationData::setMeauredBRV(
+				SimulationData::setBattRightVolt(
 					AnalogMeasurement::convertAdcToMillivolts(
 						adc.getAvgADC(AnalogMeasurement::BRV)
 					)
@@ -127,9 +143,4 @@ void Discharger::simulationDriver() {
 		}
 	}
 	else canHandle100msTimeOut = 1;
-}
-
-void Discharger::dangerEvent() {
-	logError(getDeviceError());
-	sendDeviceHasStopped();
 }

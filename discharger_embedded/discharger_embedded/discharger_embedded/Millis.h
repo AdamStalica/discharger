@@ -1,24 +1,27 @@
 /* 
-* MillisecsCounter.h
+* Millis.h
 *
 * Created: 24.11.2019 09:58:59
 * Author: domin
 */
 
 
-#ifndef __MILLISECSCOUNTER_H__
-#define __MILLISECSCOUNTER_H__
+#ifndef __MILLIS_H__
+#define __MILLIS_H__
 
 #include <avr/io.h>
 #include "GlobalDefs.h"
 
-class MillisecsCounter
+
+class Millis
 {
 	volatile static uint32_t msSinceDeviceHasStarted;
 	
-public:
-	~MillisecsCounter() {};
-	MillisecsCounter() {};
+public:	
+	static uint32_t get() {
+		return msSinceDeviceHasStarted;
+	}
+
 	static void init() {
 	
 		TCCR0A = (1 << WGM01);
@@ -37,5 +40,4 @@ public:
 	}
 };
 
-
-#endif //__MILLISECSCOUNTER_H__
+#endif //__MILLIS_H__

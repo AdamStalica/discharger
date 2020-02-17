@@ -12,12 +12,7 @@
 #include <avr/io.h>
 #include "GlobalDefs.h"
 
-#define SIM_EPS 1
-#define SIM_MAX_CURRENT 300
-#define SIM_MIN_CURRENT 9
-#define SIM_MAX_VOLT 5000
-
-#define INTERPOLATION
+//#define INTERPOLATION
 #ifdef INTERPOLATION
 #define SIM_INTPOL_POINT_NUM 3
 #define SIM_INTPOL_REC_CYC_NUM 10

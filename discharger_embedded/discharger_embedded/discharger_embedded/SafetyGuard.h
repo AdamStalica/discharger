@@ -11,24 +11,31 @@
 
 #include "GlobalDefs.h"
 #include "DS18B20.h"
+#include "Button.h"
 
 #define TEMPERATURE_ARRAY_SIZE 6
 
 
 
-class SafetyGuard
+class SafetyGuard : ExecuteDelay
 {
+	uint8_t _safety_btn_was_pressed = 0;
+	uint32_t _safety_event_start = 0;
+	
+	
+	Button safetyBtn;
 	
 	DS18B20 * thermometer;
 	uint16_t tempsArray[TEMPERATURE_ARRAY_SIZE] = { 0 };
-	uint8_t deviceError = DeviceError::DEVICE_STARTED;
+	uint8_t deviceError = Device::Error::DEVICE_STARTED;
 	
 	void review();
 	void reset() { while(1); };
 	
 public:
-	SafetyGuard() {};
+	SafetyGuard() : ExecuteDelay(SAFETY_GUARD_INTERVAL) {};
 	~SafetyGuard() {};
+		
 	
 	void init();
 	
@@ -38,7 +45,7 @@ protected:
 	uint8_t getDeviceError() { return deviceError; }
 	void run();
 	
-	virtual void dangerEvent() = 0;
+	virtual void deviceStopRequest() = 0;
 };
 
 #endif //__SAFETYGUARD_H__

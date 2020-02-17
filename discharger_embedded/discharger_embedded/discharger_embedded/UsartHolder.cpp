@@ -40,7 +40,7 @@ void UsartHolder::writeByte(uint8_t data) {
 
 void UsartHolder::readData() {
 	uint8_t byte = UDR0;
-	if(	byte != END_LINE_CHAR1 && byte != END_LINE_CHAR2) {
+	if(byte != END_LINE_CHAR2) {
 		
 		_rxBuffer[_rxDataEnd++] = byte;
 		
@@ -64,51 +64,42 @@ void UsartHolder::putBuffer() {
 	#endif
 }
 
-void UsartHolder::print(uint16_t data) {
-	_txDataEnd = sprintf((char*)_txBuffer, "%d", data);
+void UsartHolder::print(const char * data, ...) {
+	va_list arglist;
+	va_start( arglist, data );
+	_txDataEnd += vsprintf(&_txBuffer[_txDataEnd], data, arglist);	
+	va_end( arglist );
 	putBuffer();
 }
 
-void UsartHolder::print(uint8_t * data) {
-	
-	while(*data != STR_END_CHAR && _txDataEnd < TX_BUFFER_SIZE) {
-		_txBuffer[_txDataEnd++] = *(data++);
-	}
+void UsartHolder::printP(const PROGMEM char * data, ...) {
+	va_list arglist;
+	va_start( arglist, data );
+	_txDataEnd += vsprintf_P(&_txBuffer[_txDataEnd], data, arglist);
+	va_end( arglist );
 	putBuffer();
 }
 
-void UsartHolder::print(const char * data) {
-	
-	while(*data != STR_END_CHAR && _txDataEnd < TX_BUFFER_SIZE) {
-		_txBuffer[_txDataEnd++] = *(data++);
-	}
+void UsartHolder::print(int32_t data) {
+	_txDataEnd += sprintf_P(&_txBuffer[_txDataEnd], PSTR("%ld"), data);
 	putBuffer();
 }
 
-void UsartHolder::println(const char * data) {
-	while(*data != STR_END_CHAR && _txDataEnd < (TX_BUFFER_SIZE - 2)) {
-		_txBuffer[_txDataEnd++] = *(data++);
-	}
+void UsartHolder::endl() {
 	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
 	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
 	putBuffer();
 }
 
-void UsartHolder::println(uint16_t data) {
-	_txDataEnd = sprintf((char*)_txBuffer, "%d", data);
-	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
-	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
-	putBuffer();
-}
+
 
 #ifdef DEBUG_MODE
 void UsartHolder::debuger(char * string, int32_t digit) {
+	
 	if(digit == SKIP_SECOND_PARAM)
-		_txDataEnd = sprintf((char*)_txBuffer, "{\"debug\":\"%s\"}", string);
+		printP(PSTR("{\"debug\":\"%s\"}"), string);
 	else 
-		_txDataEnd = sprintf((char*)_txBuffer, "{\"debug\":\"%s %ld\"}", string, digit);
-	_txBuffer[_txDataEnd++] = END_LINE_CHAR1;
-	_txBuffer[_txDataEnd++] = END_LINE_CHAR2;
-	putBuffer();
+		printP(PSTR("{\"debug\":\"%s %ld\"}"), string, digit);
+	endl();
 }
 #endif

@@ -84,7 +84,7 @@ void SerialPort::close()
 
 void SerialPort::println(const std::string & line)
 {
-	write(line + "\n\r");
+	write(line + "\r\n");
 }
 
 void SerialPort::write(const std::string & data)

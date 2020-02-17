@@ -5,31 +5,55 @@
 * Author: domin
 */
 
-
+#include "SimulationData.h"
 #include "SafetyGuard.h"
-#include "MillisecsCounter.h"
-
-#define LEDS_OFF (LED_PORT |= (1 << LED_RED) | (1 << LED_GREEN) | (1 << LED_BLUE))
-#define LED_ON(LED_) (LED_PORT = (LED_PORT & ~(1 << LED_)))
-
-#define STP_PRESSED ((STP_BTN_PIN & (1 << STP_BTN)) == 0)
-
-#define STP_BTN_PRESSED_N (STOP_BTN_DURATION_MS / SAFETY_GUARD_INTERVAL_MS)
+#include "Millis.h"
+#include "Led.h"
 
 void SafetyGuard::init()
 {
-	LED_DDR |= (1 << LED_RED) | (1 << LED_GREEN) | (1 << LED_BLUE);
-	LEDS_OFF;
-	LED_ON(LED_GREEN);
 	STP_BTN_DDR = (STP_BTN_DDR & ~(1 << STP_BTN));
 	STP_BTN_PORT |= (1 << STP_BTN);
+	safetyBtn.init(&STP_BTN_PIN, STP_BTN);
 } 
 
 
 void SafetyGuard::run() {
 	
+	safetyBtn.run();
+	if(safetyBtn.isPressed()) {
+		SimulationData::logWarning(Device::Warning::SAFETY_BTN_PRESSED);
+		led.red().blink();
+		_safety_btn_was_pressed = 1;
+		_safety_event_start = Millis::get();
+		safetyBtn.setHandled();
+	}
+		
+	if(skipThisTime()) return;
+	
+	if(_safety_btn_was_pressed) {
+		if((Millis::get() - _safety_event_start) > SAFETY_BTN_PRESS_TIMEOUT) {
+			SimulationData::logError(Device::Error::STOPPED_BY_SAFETY_BTN);
+			led.red();
+			_safety_btn_was_pressed = 0;
+		}
+		else {
+			if(safetyBtn.isRelesed()) {
+				led.green().blink();
+				_safety_btn_was_pressed = 0;
+			}
+		}
+		return;
+	}
+	
+	
+	
+	/*
+	
+	
+	
 	static uint8_t handled = 0;
-	if((MillisecsCounter::getMillisecs() % SAFETY_GUARD_INTERVAL_MS) == 0) {
+	if((Millis::get() % SAFETY_GUARD_INTERVAL_MS) == 0) {
 	
 		if(handled == 0) {
 			handled = 1;
@@ -39,9 +63,12 @@ void SafetyGuard::run() {
 	else {
 		handled = 0;
 	}
+	
+	*/
 }
 
 void SafetyGuard::review() {
+	/*
 	
 	static uint8_t tempsArrayIte = 0;
 	if(thermometer->isNewValueAvaliable()) {
@@ -56,11 +83,11 @@ void SafetyGuard::review() {
 		
 		if((sum / TEMPERATURE_ARRAY_SIZE) > MAX_TEMPERAUTRE_mCE1) {
 			
-			if(deviceError == DeviceError::DEVICE_STARTED) {
-				deviceError = DeviceError::STOPPED_OVER_TEMP;
-				LEDS_OFF;
-				LED_ON(LED_RED);
-				dangerEvent();	
+			if(deviceError == Device::Error::DEVICE_STARTED) {
+				deviceError = Device::Error::STOPPED_RADIATOR_TEMP_TOO_HIGH;
+				//LEDS_OFF;
+				//LED_ON(LED_RED);
+				deviceStopRequest();	
 			}
 		}
 	}
@@ -68,27 +95,27 @@ void SafetyGuard::review() {
 	static uint8_t stpPressesCounter = 0;
 	if(STP_PRESSED) {
 		if(stpPressesCounter == 0) {
-			LEDS_OFF;
-			LED_ON(LED_BLUE);
+			//LEDS_OFF;
+			//LED_ON(LED_BLUE);
 			
-			if(deviceError != DeviceError::DEVICE_STARTED) reset();
+			if(deviceError != Device::Error::DEVICE_STARTED) reset();
 		}
 		if(stpPressesCounter == STP_BTN_PRESSED_N) {
-			LEDS_OFF;
-			LED_ON(LED_RED);
-			deviceError = DeviceError::STOPPED_BY_BTN;
-			dangerEvent();
+			//LEDS_OFF;
+			//LED_ON(LED_RED);
+			deviceError = Device::Error::STOPPED_BY_SAFETY_BTN;
+			deviceStopRequest();
 		}
 		++stpPressesCounter;
 	}
 	else if(stpPressesCounter != 0) {
 		
 		stpPressesCounter = 0;
-		if(deviceError == DeviceError::DEVICE_STARTED) {
-			LEDS_OFF;
-			LED_ON(LED_GREEN);
+		if(deviceError == Device::Error::DEVICE_STARTED) {
+			//LEDS_OFF;
+			//LED_ON(LED_GREEN);
 		}
 		
 	}
-	
+	*/
 }

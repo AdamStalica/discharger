@@ -6,97 +6,140 @@
 */
 
 #include "SimulationData.h"
-#include <avr/pgmspace.h>
+
+Device::Error SimulationData::lastError = Device::Error::NO_ERROR;
+Device::Warning SimulationData::lastWarn = Device::Warning::NO_WARNING;
+uint16_t SimulationData::voltLimit = BATT_VOLT_LIMIT;
+uint16_t SimulationData::radiatorTempLimit = RADIATOR_TEMP_LIMIT;
+uint16_t SimulationData::measuredCurrent = 0;
+uint16_t SimulationData::measuredBLV = 0;
+uint16_t SimulationData::measuredBRV = 0;
+uint16_t SimulationData::measuredBLT = 0;
+uint16_t SimulationData::measuredBRT = 0;
+uint16_t SimulationData::measuredRT = 0;
 
 void SimulationData::processNewData() {
 	
-	char * data = (char*)this->getRxData();
+	char * data = this->getRxData();
 	
-	char * type = strstr(data, "handshake");
-	if(type != NULL) {
-		this->println("{\"handshake\":\"DD\"}");
+	if(doesStrContainParam(data, "handshake")) {
+		sendHandshake();
+		return;
 	}
 	
-	type = strstr(data, "id");
-	if(type != NULL) {
+	if(doesStrContainParam(data, "id")) {
 		
-		if(inProgress)
+		if(inProgress) {
 			sendResponse();
+		}
 		else {
 			inProgress = 1;
 		}
+			
+		currentId = getUIntValueFromStr(data, "id");
 		
-		char * begin = strchr(type, ':');
-		if(begin == NULL) 
+		if(doesStrContainParam(data, "I")) {
+			currentCurrent = getUIntValueFromStr(data, "I");
+		}
+		else {
+			logError(Device::Error::CURRENT_IS_REQUIRED);
 			return;
-		++begin;
+		}
 		
-		currentId = (uint16_t)strtol(begin, &type, 10);
+		if(!_comm_established) {
+			_comm_established = 1;
+			communicationEstablished();
+		}
 		
-		begin = strchr(type, ':');
-		if(begin == NULL)
-			return;
-		++begin;
+		if(doesStrContainParam(data, "TL")) {
+			voltLimit = getUIntValueFromStr(data, "TL");
+		}
+		if(doesStrContainParam(data, "VL")) {
+			radiatorTempLimit = getUIntValueFromStr(data, "TL");
+		}
 		
-		currentCurrent = (uint16_t)strtol(begin, &type, 10);
-		
-		begin = strchr(type, ':');
-		if(begin == NULL)
-			return;
-		++begin;
-		
-		currentTemp = (uint16_t)strtol(begin, &type, 10);
+		return;
 	}
 	
-	type = strstr(data, "stop");
-	if(type != NULL) {
-		if(inProgress) {
-			sendResponse();
-			sendDeviceHasStopped();
-		}
+	if(doesStrContainParam(data, "stop")) {
+		sendResponse();
+		sendDeviceHasStopped();
+		return;
 	}
+	
+	logWarning(Device::Warning::RECEIVED_NOT_STANDARDIZED_DATA);
+	debugLog(data, strlen(data));
 }
 
 void SimulationData::sendResponse() {
 	
-	aboutToSendNewData();
-	//char str[] PROGMEM = "{\"id\":%d,\"curr\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d}";
-	//strcpy_P(_txBuffer, (PGM_P)pgm_read_word(str));
-	sprintf(
-		_txBuffer, 
-		"{\"id\":%d,\"curr\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d}",
+	aboutToSendNewData();	
+	printP(
+		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"RT\":%d}"),
 		currentId,
 		measuredCurrent,
 		measuredBLV,
 		measuredBRV,
 		measuredBLT,
-		measuredBRT
-	);	
-	
-	this->println(_txBuffer);
+		measuredBRT,
+		measuredRT
+	);
+	endl();
 }
 
-void SimulationData::logError(uint16_t errno) {
-	sprintf(_txBuffer, "{\"error\":%d}", errno);
-	this->println(_txBuffer);
+void SimulationData::sendHandshake() {
+	printP(PSTR("{\"handshake\":\"DD\"}"));
+	endl();
+	_comm_established = 1;
+	communicationEstablished();
+}
+
+void SimulationData::sendError() {
+	printP(PSTR("{\"error\":%d}"), lastError);
+	endl();
+}
+
+void SimulationData::sendWarning() {
+	printP(PSTR("{\"warn\":%d}"), lastWarn);
+	endl();
 }
 
 void SimulationData::run() {
 	if(this->isRxDataReady()) {
 		processNewData();
 	}
+	
+	if(lastError != Device::Error::NO_ERROR) {
+		sendError();
+		lastError = Device::Error::NO_ERROR;
+	}
+	if(lastWarn != Device::Warning::NO_WARNING) {
+		sendWarning();
+		lastWarn = Device::Warning::NO_WARNING;
+	}
 }
 
 void SimulationData::sendDeviceHasStopped() {
 
 	stopDevice();
-	this->println("{\"stop\":\"stopped\"}");
+	printP(PSTR("{\"stop\":\"stopped\"}"));
+	endl();
 	currentId = 0;
 	currentCurrent = 0;
-	currentTemp = 0;
+	//currentTL = 0;
 	inProgress = 0;
 }
 
 uint8_t SimulationData::simulationInProgress() {
 	return currentId != 0;
+}
+
+uint8_t SimulationData::doesStrContainParam(char * str, char * param) {
+	return (strstr(str, param) != nullptr);
+}
+
+uint16_t SimulationData::getUIntValueFromStr(char * str, char * name) {
+	char * type = strstr(str, name);
+	char * begin = strchr(type, ':') + 1;
+	return strtol(begin, &type, 10);
 }
