@@ -9,6 +9,9 @@
 #ifndef __MCP4725_H__
 #define __MCP4725_H__
 
+#define MCP4725_MAX_DAC (1 << 11)
+#define MCP4725_VREF 5000
+
 #define DEVICE_CODE 0xC0
 #define MPC4725_A2 0
 #define MPC4725_A1 0
@@ -74,6 +77,8 @@ public:
 	~MCP4725() {};
 	uint16_t readDACValue();
 	uint8_t writeDACValue(uint16_t dacValue);
+	static uint16_t convertMillivoltsToDAC(uint16_t millivolts);
+	uint8_t writeMillivolts(uint16_t millivolts);
 	
 private:
 	MCP4725( const MCP4725 &c );

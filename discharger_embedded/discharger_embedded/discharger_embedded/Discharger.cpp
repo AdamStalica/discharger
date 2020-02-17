@@ -11,6 +11,13 @@
 #define CURRENT_ACCURACY 15
 #define TESTS 0
 
+/*
+	TODO:
+		- terms,
+		- communication,
+		
+*/
+
 
 Discharger::Discharger() 
 	:	uart(static_cast<UsartHolder&>(*this)),
@@ -113,9 +120,8 @@ void Discharger::simulationDriver() {
 						
 			uint16_t newCurrent = getCurrentCurrent();
 			uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
-			uint16_t dacToSet = driver.getDACFromMillivolts(millivoltsToSet);
 			
-			dac.writeDACValue(dacToSet);
+			dac.writeMillivolts(millivoltsToSet);
 			
 			canHandle100msTimeOut = 0;
 		}

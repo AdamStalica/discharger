@@ -33,3 +33,11 @@ uint8_t MCP4725::writeDACValue(uint16_t dacValue) {
 	uint8_t ans = this->transmit(DEVICE_ADDRESS, data, sizeof(data));	
 	return ans;
 }
+
+uint16_t MCP4725::convertMillivoltsToDAC(uint16_t millivolts) {
+	return (uint32_t(millivolts) * MCP4725_MAX_DAC / MCP4725_VREF);
+}
+
+uint8_t MCP4725::writeMillivolts(uint16_t millivolts) {
+	return writeDACValue(convertMillivoltsToDAC(millivolts));
+}
