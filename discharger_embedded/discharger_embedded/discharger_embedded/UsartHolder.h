@@ -7,7 +7,6 @@
 
 #include <avr/pgmspace.h>
 #include "GlobalDefs.h"
-#include <avr/io.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,8 +14,6 @@
 
 #ifndef __USARTHOLDER_H__
 #define __USARTHOLDER_H__
-
-#define TX_INT_ENABLED
 
 #define TX_BUFFER_SIZE 100
 #define RX_BUFFER_SIZE 100

@@ -22,6 +22,7 @@ namespace Device {
 		RADIATOR_THERM_CRC,
 		BATT_LEFT_THERM_CRC,
 		BATT_RIGHT_THERM_CRC,
+		WDT_RESET,
 		
 		NO_WARNING = 0xFF
 	};

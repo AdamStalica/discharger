@@ -7,6 +7,11 @@
 
 
 #include "Discharger.h"
+#include <util/delay.h>
+
+#define wdt_interrput_enable() (	\
+	WDTCSR |= (1 << WDIE)			\
+)
 
 Discharger::Discharger() 
 	:	uart(static_cast<UsartHolder&>(*this)),
@@ -15,8 +20,9 @@ Discharger::Discharger()
 		therm3(THERMOMETER_1_PIN),
 		simDelay(SIMULATION_INTERVAL)
 {
-	sei();
 	wdt_enable(WDTO_1S);
+	wdt_interrput_enable();
+	sei();
 		
 	Millis::init();
 	SafetyGuard::init();
@@ -121,5 +127,7 @@ void Discharger::simulationDriver() {
 }
 
 void Discharger::isrWDT() {
-	
+	logWarning(Device::Warning::WDT_RESET);
+	SimulationData::run();
+	_delay_ms(10);
 }
