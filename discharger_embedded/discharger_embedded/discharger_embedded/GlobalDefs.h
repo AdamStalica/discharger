@@ -40,7 +40,7 @@
 /*																									*/
 /*		PC0		SCL				I2C - MCP4725 					4.7k PULL UP						*/
 /*		PC1		SDA				I2C - MCP4725 					4.7k PULL UP						*/
-/*		PC5		1Wire			THERMOMETER	1 - RADIATOR		4.7k PULL UP						*/
+/*		PC5		1Wire			THERMOMETER	1 - HEAT SINK		4.7k PULL UP						*/
 /*		PC6		1Wire			THERMOMETER 2 - BATTERY LEFT	4.7k PULL UP						*/
 /*		PC7		!Wire			THERMOMETER 3 - BATTERY RIGHT	4.7k PULL UP						*/
 /*																									*/
@@ -78,17 +78,17 @@
 /****************************************************************************************************/
 /*					    						SAFETY												*/
 /****************************************************************************************************/
-#define SAFETY_GUARD_INTERVAL		500						// ms
-#define SAFETY_TIMEOUT				10000					// ms
-#define SAFETY_BTN_PRESS_TIMEOUT	5000					// ms
-#define BATT_VOLT_LIMIT_DEFAULT		10000					// mV
-#define RADIATOR_TEMP_LIMIT_DEFAULT 8000					// 10^-2 °C
-#define SAFETY_MAX_CURRENT			(SIM_MAX_CURRENT + 50)	// 10^-1A
-#define BTN_ACTIVE					0
-#define STP_BTN						PB3
-#define STP_BTN_DDR					DDRB
-#define STP_BTN_PORT				PORTB
-#define STP_BTN_PIN					PINB
+#define SAFETY_GUARD_INTERVAL			500						// ms
+#define SAFETY_TIMEOUT					10000					// ms
+#define SAFETY_BTN_PRESS_TIMEOUT		5000					// ms
+#define BATT_VOLT_LIMIT_DEFAULT			10000					// mV
+#define HEAT_SINK_TEMP_LIMIT_DEFAULT	8000					// 10^-2 °C
+#define SAFETY_MAX_CURRENT				(SIM_MAX_CURRENT + 50)	// 10^-1A
+#define BTN_ACTIVE						0
+#define STP_BTN							PB3
+#define STP_BTN_DDR						DDRB
+#define STP_BTN_PORT					PORTB
+#define STP_BTN_PIN						PINB
 
 
 /****************************************************************************************************/

@@ -47,7 +47,7 @@ public:
 	void setBattRightVolt(uint16_t bRV) { measuredBRV = bRV; }
 	void setBattLeftTemp(uint16_t bLT) { measuredBLT = bLT; }
 	void setBattRightTemp(uint16_t bRT) { measuredBRT = bRT; }
-	void setRadiatorTemp(uint16_t RT) { measuredRT = RT; }
+	void setHeatSinkTemp(uint16_t RT) { measuredRT = RT; }
 	void setDeviceHasStopped();
 	
 	void sendDeviceHasStopped();
@@ -57,13 +57,13 @@ public:
 	static void logWarning(Device::Warning warnNo) { lastWarn = warnNo; }
 	
 	static uint16_t getVoltageLimit()		{ return voltLimit; }
-	static uint16_t getRadiatorTempLimit()	{ return radiatorTempLimit; }
+	static uint16_t getHeatSinkTempLimit()	{ return radiatorTempLimit; }
 	static uint16_t getMeasuredCurrent()	{ return measuredCurrent; }	
 	static uint16_t getBattLeftVolt()		{ return measuredBLV; }
 	static uint16_t getBattRightVolt()		{ return measuredBRV; }
 	static uint16_t getBattLeftTemp()		{ return measuredBLT; }
 	static uint16_t getBattRightTemp()		{ return measuredBRT; }
-	static uint16_t getRadiatorTemp()		{ return measuredRT; }
+	static uint16_t getHeatSinkTemp()		{ return measuredRT; }
 		
 	static uint8_t isSimulationInProgress() { return inProgress; };
 

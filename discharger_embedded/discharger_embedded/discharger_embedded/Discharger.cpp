@@ -37,11 +37,11 @@ Discharger::Discharger()
 	
 	led.green().blink();
 	
-	therm1.setOnCrcNoMatchWarning(Device::Warning::RADIATOR_THERM_CRC);
+	therm1.setOnCrcNoMatchWarning(Device::Warning::HEAT_SINK_THERM_CRC);
 	therm2.setOnCrcNoMatchWarning(Device::Warning::BATT_LEFT_THERM_CRC);
 	therm3.setOnCrcNoMatchWarning(Device::Warning::BATT_RIGHT_THERM_CRC);
-	therm1.setOnCrcNoMatchError(Device::Error::STOPPED_RADIATOR_THERM_CRC);
-	therm1.setOnNotAvaliableError(Device::Error::STOPPED_RADIATOR_THERM_NOT_AVALIABLE);
+	therm1.setOnCrcNoMatchError(Device::Error::STOPPED_HEAT_SINK_THERM_CRC);
+	therm1.setOnNotAvaliableError(Device::Error::STOPPED_HEAT_SINK_THERM_NOT_AVALIABLE);
 }
 
 void Discharger::run() {
@@ -111,7 +111,7 @@ void Discharger::simulationDriver() {
 		);
 	}
 	if(therm1.isNewValueAvaliable()) {
-		SimulationData::setRadiatorTemp(therm1.getTemperature());
+		SimulationData::setHeatSinkTemp(therm1.getTemperature());
 	}
 	if(therm2.isNewValueAvaliable()) {
 		SimulationData::setBattLeftTemp(therm2.getTemperature());

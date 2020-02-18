@@ -59,10 +59,10 @@ void SafetyGuard::run() {
 	
 	if(safetyCheckEvent(
 			OVER_TEMP, 
-			Device::Warning::RADIATOR_TEMP_TOO_HIGH, 
-			Device::Error::STOPPED_RADIATOR_TEMP_TOO_HIGH, 
+			Device::Warning::HEAT_SINK_TEMP_TOO_HIGH, 
+			Device::Error::STOPPED_HEAT_SINK_TEMP_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
-			(SimulationData::getRadiatorTemp() > SimulationData::getRadiatorTempLimit())
+			(SimulationData::getHeatSinkTemp() > SimulationData::getHeatSinkTempLimit())
 		)
 	) return;
 
