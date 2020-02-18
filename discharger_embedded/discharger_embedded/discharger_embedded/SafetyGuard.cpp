@@ -10,6 +10,8 @@
 #include "Millis.h"
 #include "Led.h"
 
+Device::Error SafetyGuard::error = Device::Error::NO_ERROR;
+
 void SafetyGuard::init()
 {
 	STP_BTN_DDR = (STP_BTN_DDR & ~(1 << STP_BTN));
@@ -22,100 +24,114 @@ void SafetyGuard::run() {
 	
 	safetyBtn.run();
 	if(safetyBtn.isPressed()) {
+		if(!SimulationData::isSimulationInProgress()) {
+			led.red();
+			//reset();
+		}
+		
 		SimulationData::logWarning(Device::Warning::SAFETY_BTN_PRESSED);
-		led.red().blink();
-		_safety_btn_was_pressed = 1;
-		_safety_event_start = Millis::get();
+		safetyEventStart(SafetyEvents::SAFETY_BTN);
+		
 		safetyBtn.setHandled();
 	}
-		
-	if(skipThisTime()) return;
 	
-	if(_safety_btn_was_pressed) {
-		if((Millis::get() - _safety_event_start) > SAFETY_BTN_PRESS_TIMEOUT) {
+	if(!SimulationData::isSimulationInProgress()) return;
+
+	if(error != Device::Error::NO_ERROR) {
+		SimulationData::logError(error);
+		safetyEventTimeout();
+		error = Device::Error::NO_ERROR;
+		return;
+	}
+
+	if(runDelay.skipThisTime()) return;
+	
+	
+	if(_safetyEvent == SafetyEvents::SAFETY_BTN) {
+		if(hasTimeoutOccured(SAFETY_BTN_PRESS_TIMEOUT)) {
 			SimulationData::logError(Device::Error::STOPPED_BY_SAFETY_BTN);
-			led.red();
-			_safety_btn_was_pressed = 0;
+			safetyEventTimeout();
 		}
-		else {
-			if(safetyBtn.isRelesed()) {
-				led.green().blink();
-				_safety_btn_was_pressed = 0;
-			}
+		else if(safetyBtn.isRelesed()) {
+			safetyEventStop();
 		}
 		return;
 	}
 	
-	
-	
-	/*
-	
-	
-	
-	static uint8_t handled = 0;
-	if((Millis::get() % SAFETY_GUARD_INTERVAL_MS) == 0) {
-	
-		if(handled == 0) {
-			handled = 1;
-			review();
-		}		
-	}	
-	else {
-		handled = 0;
-	}
-	
-	*/
+	if(safetyCheckEvent(
+			OVER_TEMP, 
+			Device::Warning::RADIATOR_TEMP_TOO_HIGH, 
+			Device::Error::STOPPED_RADIATOR_TEMP_TOO_HIGH, 
+			SAFETY_TIMEOUT, 
+			(SimulationData::getRadiatorTemp() > SimulationData::getRadiatorTempLimit())
+		)
+	) return;
+
+	if(safetyCheckEvent(
+			OVER_CURR, 
+			Device::Warning::CURRENT_TOO_HIGH, 
+			Device::Error::STOPPED_CURRENT_TOO_HIGH, 
+			SAFETY_TIMEOUT, 
+			(SimulationData::getMeasuredCurrent() > SAFETY_MAX_CURRENT)
+		)
+	) return;
+
+	if(safetyCheckEvent(
+			UNDER_VOLT, 
+			Device::Warning::VOLTAGE_TOO_LOW, 
+			Device::Error::STOPPED_VOLTAGE_TOO_LOW, 
+			SAFETY_TIMEOUT, 
+			(
+				SimulationData::getBattLeftVolt() < SimulationData::getVoltageLimit() ||
+				SimulationData::getBattRightVolt() < SimulationData::getVoltageLimit()
+			)
+		)
+	) return;
 }
 
-void SafetyGuard::review() {
-	/*
-	
-	static uint8_t tempsArrayIte = 0;
-	if(thermometer->isNewValueAvaliable()) {
-		
-		tempsArray[tempsArrayIte] = thermometer->getTemperature();
-		tempsArrayIte = (++tempsArrayIte % TEMPERATURE_ARRAY_SIZE);
-		
-		uint32_t sum = 0;
-		for(uint8_t i = 0; i < TEMPERATURE_ARRAY_SIZE; ++i) {
-			sum += tempsArray[i];
+uint8_t SafetyGuard::safetyCheckEvent(
+	SafetyEvents event, 
+	Device::Warning warn, 
+	Device::Error error,
+	uint32_t timeout,
+	uint8_t logicState) 
+{
+	if(logicState) {
+		if(_safetyEvent == NONE) {
+			SimulationData::logWarning(warn);
+			safetyEventStart(event);
 		}
-		
-		if((sum / TEMPERATURE_ARRAY_SIZE) > MAX_TEMPERAUTRE_mCE1) {
-			
-			if(deviceError == Device::Error::DEVICE_STARTED) {
-				deviceError = Device::Error::STOPPED_RADIATOR_TEMP_TOO_HIGH;
-				//LEDS_OFF;
-				//LED_ON(LED_RED);
-				deviceStopRequest();	
+		else if(_safetyEvent == event) {
+			if(hasTimeoutOccured(timeout)) {
+				SimulationData::logError(error);
+				safetyEventTimeout();
 			}
 		}
+		return 1;
 	}
-	
-	static uint8_t stpPressesCounter = 0;
-	if(STP_PRESSED) {
-		if(stpPressesCounter == 0) {
-			//LEDS_OFF;
-			//LED_ON(LED_BLUE);
-			
-			if(deviceError != Device::Error::DEVICE_STARTED) reset();
-		}
-		if(stpPressesCounter == STP_BTN_PRESSED_N) {
-			//LEDS_OFF;
-			//LED_ON(LED_RED);
-			deviceError = Device::Error::STOPPED_BY_SAFETY_BTN;
-			deviceStopRequest();
-		}
-		++stpPressesCounter;
-	}
-	else if(stpPressesCounter != 0) {
-		
-		stpPressesCounter = 0;
-		if(deviceError == Device::Error::DEVICE_STARTED) {
-			//LEDS_OFF;
-			//LED_ON(LED_GREEN);
-		}
-		
-	}
-	*/
+	else if(_safetyEvent == event) {
+		safetyEventStop();
+	}	
+	return 0;
+}
+
+void SafetyGuard::safetyEventStart(SafetyEvents event) {
+	led.red().blink();
+	_safetyEvent = event;
+	_safetyEventStart = Millis::get();
+}
+
+void SafetyGuard::safetyEventStop() {
+	led.previousState();
+	_safetyEvent = NONE;
+}
+
+void SafetyGuard::safetyEventTimeout() {
+	led.red();
+	_safetyEvent = NONE;
+	deviceStopRequest();
+}
+
+uint8_t SafetyGuard::hasTimeoutOccured(uint32_t limit) {
+	return ((Millis::get() - _safetyEventStart) > limit);
 }

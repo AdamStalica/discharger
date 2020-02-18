@@ -6,17 +6,19 @@
 */
 
 #include "SimulationData.h"
+#include "SafetyGuard.h"
 
 Device::Error SimulationData::lastError = Device::Error::NO_ERROR;
 Device::Warning SimulationData::lastWarn = Device::Warning::NO_WARNING;
-uint16_t SimulationData::voltLimit = BATT_VOLT_LIMIT;
-uint16_t SimulationData::radiatorTempLimit = RADIATOR_TEMP_LIMIT;
+uint16_t SimulationData::voltLimit = BATT_VOLT_LIMIT_DEFAULT;
+uint16_t SimulationData::radiatorTempLimit = RADIATOR_TEMP_LIMIT_DEFAULT;
 uint16_t SimulationData::measuredCurrent = 0;
 uint16_t SimulationData::measuredBLV = 0;
 uint16_t SimulationData::measuredBRV = 0;
 uint16_t SimulationData::measuredBLT = 0;
 uint16_t SimulationData::measuredBRT = 0;
 uint16_t SimulationData::measuredRT = 0;
+uint8_t SimulationData::inProgress = 0;
 
 void SimulationData::processNewData() {
 	
@@ -34,6 +36,7 @@ void SimulationData::processNewData() {
 		}
 		else {
 			inProgress = 1;
+			simHasStarted();
 		}
 			
 		currentId = getUIntValueFromStr(data, "id");
@@ -42,20 +45,14 @@ void SimulationData::processNewData() {
 			currentCurrent = getUIntValueFromStr(data, "I");
 		}
 		else {
-			logError(Device::Error::CURRENT_IS_REQUIRED);
+			SafetyGuard::stopDevice(Device::Error::CURRENT_IS_REQUIRED);
 			return;
 		}
-		
-		if(!_comm_established) {
-			_comm_established = 1;
-			communicationEstablished();
-		}
-		
 		if(doesStrContainParam(data, "TL")) {
-			voltLimit = getUIntValueFromStr(data, "TL");
+			radiatorTempLimit = getUIntValueFromStr(data, "TL");
 		}
 		if(doesStrContainParam(data, "VL")) {
-			radiatorTempLimit = getUIntValueFromStr(data, "TL");
+			voltLimit = getUIntValueFromStr(data, "VL");
 		}
 		
 		return;
@@ -90,7 +87,7 @@ void SimulationData::sendResponse() {
 void SimulationData::sendHandshake() {
 	printP(PSTR("{\"handshake\":\"DD\"}"));
 	endl();
-	_comm_established = 1;
+	//_comm_established = 1;
 	communicationEstablished();
 }
 
@@ -119,21 +116,25 @@ void SimulationData::run() {
 	}
 }
 
-void SimulationData::sendDeviceHasStopped() {
-
-	stopDevice();
-	printP(PSTR("{\"stop\":\"stopped\"}"));
-	endl();
+void SimulationData::setDeviceHasStopped()
+{
 	currentId = 0;
 	currentCurrent = 0;
-	//currentTL = 0;
 	inProgress = 0;
 }
 
+void SimulationData::sendDeviceHasStopped() {
+
+	printP(PSTR("{\"stop\":\"stopped\"}"));
+	endl();
+	setDeviceHasStopped();
+	raceivedStopDevice();
+}
+/*
 uint8_t SimulationData::simulationInProgress() {
 	return currentId != 0;
 }
-
+*/
 uint8_t SimulationData::doesStrContainParam(char * str, char * param) {
 	return (strstr(str, param) != nullptr);
 }

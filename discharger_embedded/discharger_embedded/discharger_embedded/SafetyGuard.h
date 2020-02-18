@@ -13,38 +13,38 @@
 #include "DS18B20.h"
 #include "Button.h"
 
-#define TEMPERATURE_ARRAY_SIZE 6
-
-
-
-class SafetyGuard : ExecuteDelay
+class SafetyGuard
 {
-	uint8_t _safety_btn_was_pressed = 0;
-	uint32_t _safety_event_start = 0;
-	
-	
+	ExecuteDelay runDelay;
 	Button safetyBtn;
 	
-	DS18B20 * thermometer;
-	uint16_t tempsArray[TEMPERATURE_ARRAY_SIZE] = { 0 };
-	uint8_t deviceError = Device::Error::DEVICE_STARTED;
+	static Device::Error error;
 	
-	void review();
-	void reset() { while(1); };
+	enum SafetyEvents {
+		NONE,
+		SAFETY_BTN,
+		OVER_TEMP,
+		OVER_CURR,
+		UNDER_VOLT	
+	} _safetyEvent = NONE;
+	uint32_t _safetyEventStart = 0;
+		
+	uint8_t safetyCheckEvent(SafetyEvents event, Device::Warning warn, Device::Error error, uint32_t timeout, uint8_t logicState);
+	void safetyEventStart(SafetyEvents event);
+	void safetyEventStop();
+	void safetyEventTimeout();
+	uint8_t hasTimeoutOccured(uint32_t limit);
 	
 public:
-	SafetyGuard() : ExecuteDelay(SAFETY_GUARD_INTERVAL) {};
+	SafetyGuard() : runDelay(SAFETY_GUARD_INTERVAL) {};
 	~SafetyGuard() {};
-		
 	
-	void init();
+	static void reset() { while(1); };
+	static void stopDevice(Device::Error err) { error = err; }
 	
 protected:
-
-	void setThermometerToObserve(DS18B20 * therm) { thermometer = therm; }
-	uint8_t getDeviceError() { return deviceError; }
-	void run();
-	
+	void init();
+	void run();	
 	virtual void deviceStopRequest() = 0;
 };
 

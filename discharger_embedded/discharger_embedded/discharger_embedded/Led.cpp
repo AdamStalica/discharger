@@ -9,6 +9,8 @@
 Led led;
 
 void Led::setLedBit(uint8_t ledBit) {
+	lastBlink_ = blink_;
+	lastLedBit_ = ledBit_;
 	ledBit_ = ledBit;
 	blink_ = 0;
 	LED_OFF;
@@ -17,19 +19,18 @@ void Led::setLedBit(uint8_t ledBit) {
 
 void Led::run() {
 	if(!blink_) return;
-	static uint8_t canHandle = 1;
-	if((Millis::get() % BLINKING_PERIOD) < 50) {
-		if(canHandle) {
-			if(LED_IS_OFF) {
-				LED_ON(ledBit_);
-			}
-			else {
-				LED_OFF;
-			}
-			canHandle = 0;
-		}
+	if(runDelay.skipThisTime()) return;
+			
+	if(LED_IS_OFF) {
+		LED_ON(ledBit_);
 	}
 	else {
-		canHandle = 1;
+		LED_OFF;
 	}
+}
+
+void Led::previousState() {
+	blink_ = lastBlink_;
+	setLedBit(lastLedBit_);
+	blink_ = lastBlink_;
 }

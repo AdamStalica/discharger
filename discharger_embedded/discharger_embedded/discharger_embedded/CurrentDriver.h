@@ -12,7 +12,6 @@
 #include <avr/io.h>
 #include "GlobalDefs.h"
 
-//#define INTERPOLATION
 #ifdef INTERPOLATION
 #define SIM_INTPOL_POINT_NUM 3
 #define SIM_INTPOL_REC_CYC_NUM 10

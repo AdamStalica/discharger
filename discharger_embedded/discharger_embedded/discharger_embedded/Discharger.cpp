@@ -8,48 +8,40 @@
 
 #include "Discharger.h"
 
-#define CURRENT_ACCURACY 15
-#define TESTS 0
-
-/*
-	TODO:
-		- terms,
-		- communication,
-		
-*/
-
-
 Discharger::Discharger() 
-	:	uart(static_cast<UsartHolder&>(*this)),
-		therm1(THERMOMETR_1_PIN),
-		therm2(THERMOMETR_2_PIN)
+	:	therm1(	THERMOMETER_1_PIN, Device::Warning::RADIATOR_THERM_CRC, 
+				Device::Error::STOPPED_RADIATOR_THERM_CRC, 
+				Device::Error::STOPPED_RADIATOR_THERM_NOT_AVALIABLE),
+		therm2(THERMOMETER_2_PIN, Device::Warning::BATT_LEFT_THERM_CRC),
+		therm3(THERMOMETER_2_PIN, Device::Warning::BATT_RIGHT_THERM_CRC),
+		simDelay(SIMULATION_INTERVAL)
 {
 	sei();
 	wdt_enable(WDTO_1S);
 	
+	
+	//logError(Device::DEVICE_STARTED);
+	
 	Millis::init();
 	SafetyGuard::init();
 	led.init();
-	
+	 
 	adc.startConversion();
-	
 	therm1.startConversion();
 	therm2.startConversion();
-	
-	SafetyGuard::setThermometerToObserve(&therm1);
-	
-	//logError(DeviceError::DEVICE_STARTED);
+	therm3.startConversion();
 	
 	dac.writeDACValue(0);
-	
+
 	led.green().blink();
+	//debugLog("OK");
 }
 
 
 void Discharger::run() {
 	
 	wdt_reset();
-	
+	debugLog("OK");
 	SimulationData::run();
 	SafetyGuard::run();
 	adc.run();
@@ -57,38 +49,17 @@ void Discharger::run() {
 	therm2.run();
 	led.run();
 	
-	if(SimulationData::simulationInProgress() || TESTS) {
+	if(SimulationData::isSimulationInProgress()) {
 		simulationDriver();	
 	}
-	
-	
-	
-	/*
-	static uint8_t canHandle1000msTimeout = 1;
-	if(ms.getMillisecs() % 1000 == 0) {
-		if(canHandle1000msTimeout) {
-			
-			if(therm1.deviceAvaliable()) {
-				
-				debugLog("Temp1 ", therm1.getTemperature());
-				therm1.startConversion();
-			}
-			if(therm2.deviceAvaliable()) {
-				
-				debugLog("Temp1 ", therm2.getTemperature());
-				therm2.startConversion();
-			}
-			canHandle1000msTimeout = 0;
-		}
-	}
-	else canHandle1000msTimeout = 1;
-	/**/
 }
 
+void Discharger::simHasStarted() {
+	led.blue();
+}
 
-void Discharger::stopDevice()
-{
-	dac.writeDACValue(0);
+void Discharger::raceivedStopDevice() {
+	SafetyGuard::reset();
 }
 
 void Discharger::communicationEstablished() {
@@ -96,51 +67,56 @@ void Discharger::communicationEstablished() {
 }
 
 void Discharger::deviceStopRequest() {
-	//logError(getDeviceError());
-	sendDeviceHasStopped();
+	dac.writeDACValue(0);
+	setDeviceHasStopped();	
 }
 
 void Discharger::aboutToSendNewData() {
-	debugLog("T", SimulationData::getRadiatorTempLimit());
-	led.blue();
-	SimulationData::setBattLeftTemp(therm1.getTemperature());
-	SimulationData::setBattRightTemp(therm2.getTemperature());
+	//debugLog("T", SimulationData::getRadiatorTempLimit());
+	//led.blue();
 }
 
 void Discharger::simulationDriver() {
 	
-	static uint8_t canHandle100msTimeOut = 1;
-	if(Millis::get() % SIMULATION_INTERVAL == 0) {
-		if(canHandle100msTimeOut) {
-			if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
-				
-				adc.countAverages();
-				int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
-				int16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
-				driver.setSimulatedCurrent(currentlySimulatedCurrent);
-				
-				SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
+	if(simDelay.skipThisTime()) return;
 	
-				SimulationData::setBattLeftVolt(
-					AnalogMeasurement::convertAdcToMillivolts(
-						adc.getAvgADC(AnalogMeasurement::BLV)
-					)
-				);
-	
-				SimulationData::setBattRightVolt(
-					AnalogMeasurement::convertAdcToMillivolts(
-						adc.getAvgADC(AnalogMeasurement::BRV)
-					)
-				);
-			}
-						
-			uint16_t newCurrent = getCurrentCurrent();
-			uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
-			
-			dac.writeMillivolts(millivoltsToSet);
-			
-			canHandle100msTimeOut = 0;
-		}
+	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
+				
+		adc.countAverages();
+		int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
+		int16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
+		driver.setSimulatedCurrent(currentlySimulatedCurrent);
+				
+		SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
+	}						
+	if(adc.isNewValueAvailable(AnalogMeasurement::BRV)) {
+		SimulationData::setBattLeftVolt(
+			AnalogMeasurement::convertAdcToMillivolts(
+				adc.getAvgADC(AnalogMeasurement::BLV)
+			)
+		);
 	}
-	else canHandle100msTimeOut = 1;
+	if(adc.isNewValueAvailable(AnalogMeasurement::BLV)) {
+		SimulationData::setBattRightVolt(
+			AnalogMeasurement::convertAdcToMillivolts(
+				adc.getAvgADC(AnalogMeasurement::BRV)
+			)
+		);
+	}
+	if(therm1.isNewValueAvaliable()) {
+		SimulationData::setBattLeftTemp(therm1.getTemperature());
+	}
+	if(therm2.isNewValueAvaliable()) {
+		SimulationData::setBattRightTemp(therm2.getTemperature());
+	}
+			
+	uint16_t newCurrent = getCurrentCurrent();
+	uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
+			
+	dac.writeMillivolts(millivoltsToSet);
 }
+/*
+void Discharger::isrWDT() {
+
+}
+*/

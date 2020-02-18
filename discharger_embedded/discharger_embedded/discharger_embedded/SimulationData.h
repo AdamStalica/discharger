@@ -24,19 +24,20 @@ class SimulationData : public UsartHolder
 					measuredBLT,
 					measuredBRT,
 					measuredRT;
+					
+	static uint8_t inProgress;
 	
 	uint16_t currentId = 0, 
 			 currentCurrent = 0;
-	uint8_t	 inProgress = 0;
-	uint8_t _comm_established = 0;
-
+			 
 //functions
 public:
 	SimulationData() {};
 	~SimulationData() {};
 		
+	virtual void simHasStarted() = 0;
 	virtual void aboutToSendNewData() = 0;
-	virtual void stopDevice() = 0;
+	virtual void raceivedStopDevice() = 0;
 	virtual void communicationEstablished() = 0;
 	
 	uint16_t getCurrentCurrent() { return currentCurrent; }
@@ -47,9 +48,9 @@ public:
 	void setBattLeftTemp(uint16_t bLT) { measuredBLT = bLT; }
 	void setBattRightTemp(uint16_t bRT) { measuredBRT = bRT; }
 	void setRadiatorTemp(uint16_t RT) { measuredRT = RT; }
+	void setDeviceHasStopped();
 	
 	void sendDeviceHasStopped();
-	uint8_t simulationInProgress();
 	void run();
 	
 	static void logError(Device::Error errno) { lastError = errno; }
@@ -63,6 +64,8 @@ public:
 	static uint16_t getBattLeftTemp()		{ return measuredBLT; }
 	static uint16_t getBattRightTemp()		{ return measuredBRT; }
 	static uint16_t getRadiatorTemp()		{ return measuredRT; }
+		
+	static uint8_t isSimulationInProgress() { return inProgress; };
 
 private:
 	SimulationData( const SimulationData &c );
