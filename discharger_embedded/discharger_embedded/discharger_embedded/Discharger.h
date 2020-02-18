@@ -31,6 +31,7 @@ class Discharger : public SimulationData, SafetyGuard
 {
 	AnalogMeasurement adc;
 	MCP4725 dac;
+	UsartHolder & uart;
 	CurrentDriver driver;
 	DS18B20 therm1;
 	DS18B20 therm2;
@@ -57,16 +58,16 @@ public:
 	
 	
 // ISR vecs
-	void isrUsart0RxHandler() { isrUsart0RxHandler(); }
-	void isrUsart0UdreHandler() { isrUsart0UdreHandler(); }
+	void isrUsart0RxHandler() { uart.isrUsart0RxHandler(); }
+	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
 	void isrADCVect() { adc.isrADCVect(); }
 	void isrTimer0CompBVect() { Millis::isrTimer0CompBVect(); }
-	//void isrWDT();
+	void isrWDT();
 		
 		
 #ifdef DEBUG_MODE
 	void debugerUartFunction(char * string, int32_t digit) {
-		debuger(string, digit);
+		uart.debuger(string, digit);
 	};
 #endif
 };

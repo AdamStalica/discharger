@@ -55,13 +55,19 @@ void DS18B20::run() {
 			_isNewValue = 1;
 			_crcNoMatchCounter = 0;
 		}
-		else if(_crcNoMatchCounter++ > THERM_CRC_NO_MATCH_MAX) {
-			if(_errorCrc != Device::Error::NO_ERROR)
-				SafetyGuard::stopDevice(_errorCrc);
+		else {
+			if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_ERR) {
+				if(_errorCrc != Device::Error::NO_ERROR)
+					SafetyGuard::stopDevice(_errorCrc);
+				_crcNoMatchCounter = 0;
+			}
+			else if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_WARN) { 
+				if(_warnCrc != Device::Warning::NO_WARNING) 
+					SimulationData::logWarning(_warnCrc);
+			}
+			++_crcNoMatchCounter;
 		}
-		else if(_warnCrc != Device::Warning::NO_WARNING) {
-			SimulationData::logWarning(_warnCrc);
-		}
+		
 		startConversion();
 	}	
 	else if(_errorNotAvaliable != Device::Error::NO_ERROR) {

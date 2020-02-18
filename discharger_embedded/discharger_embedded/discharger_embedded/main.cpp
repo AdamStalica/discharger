@@ -38,8 +38,7 @@ ISR(ADC_vect) {
 ISR(TIMER0_COMPA_vect) {
 	discharger.isrTimer0CompBVect();
 }
-/*
+
 ISR(WDT_vect) {
 	discharger.isrWDT();
 }
-*/

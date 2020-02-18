@@ -101,11 +101,12 @@
 /****************************************************************************************************/
 /*												DS18B20												*/
 /****************************************************************************************************/
-#define TEMP_READ_INTERVAL		800		// ms
-#define THERM_CRC_NO_MATCH_MAX	50
-#define THERMOMETER_1_PIN		PC5
-#define THERMOMETER_2_PIN		PC6
-#define THERMOMETER_3_PIN		PC7
+#define TEMP_READ_INTERVAL			800		// ms
+#define THERM_CRC_NO_MATCH_MAX_WARN	10
+#define THERM_CRC_NO_MATCH_MAX_ERR	60
+#define THERMOMETER_1_PIN			PC5
+#define THERMOMETER_2_PIN			PC6
+#define THERMOMETER_3_PIN			PC7
 
 
 /****************************************************************************************************/
@@ -122,7 +123,7 @@
 /****************************************************************************************************/
 /*												  ADC												*/
 /****************************************************************************************************/
-#define ADC_CH_NUN			3
+#define ADC_CH_NUM			3
 #define ADC_MEASURE_FREQ	200UL	// Hz
 // Channel 1, differential - PA0 positive, PA1 negative input
 #define ADC_CH1_CONF		((1 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0))

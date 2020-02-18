@@ -45,7 +45,7 @@ void AnalogMeasurement::startConversion() {
 void AnalogMeasurement::run() {
 	if(rawADCFull) {
 		
-		for(uint8_t i = 0; i < ADC_CH_NUN; ++i) {
+		for(uint8_t i = 0; i < ADC_CH_NUM; ++i) {
 			sumADC[i] += getADC(static_cast<AdcChannels>(i));
 			newValsFlags[i] = 1;
 		}
@@ -60,7 +60,7 @@ void AnalogMeasurement::isrADCVect() {
 	// Skip first measurement, process each channel twice.
 	rawADC[(currentChannel >> 1)] = ADC;
 	
-	if(++currentChannel == (ADC_CH_NUN << 1)) {
+	if(++currentChannel == (ADC_CH_NUM << 1)) {
 		currentChannel = 0;
 		rawADCFull  = 1;
 	}
@@ -96,7 +96,7 @@ int16_t AnalogMeasurement::getADC(AdcChannels channel) {
 }
 
 void AnalogMeasurement::countAverages() {
-	for (uint8_t i = 0; i < ADC_CH_NUN; ++i) {
+	for (uint8_t i = 0; i < ADC_CH_NUM; ++i) {
 		avgADC[i] = sumADC[i] / nAvgAdc;
 		sumADC[i] = 0;
 	}

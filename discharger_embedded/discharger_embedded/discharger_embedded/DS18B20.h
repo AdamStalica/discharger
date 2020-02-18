@@ -20,9 +20,9 @@ inline uint16_t mathAbsDiff(uint16_t a, uint16_t b) {
 class DS18B20 : private OneWireHolder
 {
 	ExecuteDelay runDelay;
-	Device::Warning _warnCrc;
-	Device::Error _errorCrc;
-	Device::Error _errorNotAvaliable;
+	Device::Warning _warnCrc = Device::Warning::NO_WARNING;
+	Device::Error _errorCrc = Device::Error::NO_ERROR;
+	Device::Error _errorNotAvaliable = Device::Error::NO_ERROR;
 	
 	uint8_t _crcNoMatchCounter = 0;
 	uint8_t _isNewValue = 0;
@@ -32,16 +32,9 @@ class DS18B20 : private OneWireHolder
 	uint8_t CRC8(uint8_t *inData, uint8_t len);
 	
 public:
-	DS18B20(uint8_t physicalPin, 
-			Device::Warning warnCrc = Device::Warning::NO_WARNING, 
-			Device::Error errorCrc = Device::Error::NO_ERROR,
-			Device::Error errorNotAvaliable = Device::Error::NO_ERROR
-			) : 
+	DS18B20(uint8_t physicalPin) : 
 			OneWireHolder(physicalPin),
-			runDelay(TEMP_READ_INTERVAL, 1),
-			_warnCrc(warnCrc),
-			_errorCrc(errorCrc),
-			_errorNotAvaliable(errorNotAvaliable)
+			runDelay(TEMP_READ_INTERVAL, 1)
 			
 	{};
 	~DS18B20() {};
@@ -50,6 +43,10 @@ public:
 	uint8_t startConversion();
 	int16_t getTemperature();
 	uint8_t isNewValueAvaliable() { return _isNewValue; };
+		
+	void setOnCrcNoMatchWarning(Device::Warning warn) { _warnCrc = warn; }
+	void setOnCrcNoMatchError(Device::Error error) { _errorCrc = error; }
+	void setOnNotAvaliableError(Device::Error error) { _errorNotAvaliable = error; }
 	
 	void run();
 	

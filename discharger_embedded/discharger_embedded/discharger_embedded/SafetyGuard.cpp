@@ -22,11 +22,18 @@ void SafetyGuard::init()
 
 void SafetyGuard::run() {
 	
+	if(error != Device::Error::NO_ERROR) {
+		SimulationData::logError(error);
+		safetyEventTimeout();
+		error = Device::Error::NO_ERROR;
+		return;
+	}
+	
 	safetyBtn.run();
 	if(safetyBtn.isPressed()) {
 		if(!SimulationData::isSimulationInProgress()) {
 			led.red();
-			//reset();
+			reset();
 		}
 		
 		SimulationData::logWarning(Device::Warning::SAFETY_BTN_PRESSED);
@@ -36,14 +43,6 @@ void SafetyGuard::run() {
 	}
 	
 	if(!SimulationData::isSimulationInProgress()) return;
-
-	if(error != Device::Error::NO_ERROR) {
-		SimulationData::logError(error);
-		safetyEventTimeout();
-		error = Device::Error::NO_ERROR;
-		return;
-	}
-
 	if(runDelay.skipThisTime()) return;
 	
 	

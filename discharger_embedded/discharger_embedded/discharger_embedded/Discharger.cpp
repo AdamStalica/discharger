@@ -9,19 +9,15 @@
 #include "Discharger.h"
 
 Discharger::Discharger() 
-	:	therm1(	THERMOMETER_1_PIN, Device::Warning::RADIATOR_THERM_CRC, 
-				Device::Error::STOPPED_RADIATOR_THERM_CRC, 
-				Device::Error::STOPPED_RADIATOR_THERM_NOT_AVALIABLE),
-		therm2(THERMOMETER_2_PIN, Device::Warning::BATT_LEFT_THERM_CRC),
-		therm3(THERMOMETER_2_PIN, Device::Warning::BATT_RIGHT_THERM_CRC),
+	:	uart(static_cast<UsartHolder&>(*this)),
+		therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
+		therm2(THERMOMETER_2_PIN),
+		therm3(THERMOMETER_1_PIN),
 		simDelay(SIMULATION_INTERVAL)
 {
 	sei();
 	wdt_enable(WDTO_1S);
-	
-	
-	//logError(Device::DEVICE_STARTED);
-	
+		
 	Millis::init();
 	SafetyGuard::init();
 	led.init();
@@ -30,23 +26,28 @@ Discharger::Discharger()
 	therm1.startConversion();
 	therm2.startConversion();
 	therm3.startConversion();
-	
+	wdt_reset();
 	dac.writeDACValue(0);
-
+	
 	led.green().blink();
-	//debugLog("OK");
+	
+	therm1.setOnCrcNoMatchWarning(Device::Warning::RADIATOR_THERM_CRC);
+	therm2.setOnCrcNoMatchWarning(Device::Warning::BATT_LEFT_THERM_CRC);
+	therm3.setOnCrcNoMatchWarning(Device::Warning::BATT_RIGHT_THERM_CRC);
+	therm1.setOnCrcNoMatchError(Device::Error::STOPPED_RADIATOR_THERM_CRC);
+	therm1.setOnNotAvaliableError(Device::Error::STOPPED_RADIATOR_THERM_NOT_AVALIABLE);
 }
-
 
 void Discharger::run() {
 	
 	wdt_reset();
-	debugLog("OK");
+	
 	SimulationData::run();
 	SafetyGuard::run();
 	adc.run();
 	therm1.run();
 	therm2.run();
+	therm3.run();
 	led.run();
 	
 	if(SimulationData::isSimulationInProgress()) {
@@ -104,10 +105,13 @@ void Discharger::simulationDriver() {
 		);
 	}
 	if(therm1.isNewValueAvaliable()) {
-		SimulationData::setBattLeftTemp(therm1.getTemperature());
+		SimulationData::setRadiatorTemp(therm1.getTemperature());
 	}
 	if(therm2.isNewValueAvaliable()) {
-		SimulationData::setBattRightTemp(therm2.getTemperature());
+		SimulationData::setBattLeftTemp(therm2.getTemperature());
+	}
+	if(therm3.isNewValueAvaliable()) {
+		SimulationData::setBattRightTemp(therm3.getTemperature());
 	}
 			
 	uint16_t newCurrent = getCurrentCurrent();
@@ -115,8 +119,7 @@ void Discharger::simulationDriver() {
 			
 	dac.writeMillivolts(millivoltsToSet);
 }
-/*
-void Discharger::isrWDT() {
 
+void Discharger::isrWDT() {
+	
 }
-*/

@@ -25,7 +25,7 @@ public:
 	
 private:
 	
-	volatile const uint8_t INPUT_CHANNELS[ADC_CH_NUN] = {
+	volatile const uint8_t INPUT_CHANNELS[ADC_CH_NUM] = {
 		ADC_CH1_CONF,	// ADC0 Single ended input.
 		ADC_CH2_CONF,	// ADC1 Single ended input.
 		ADC_CH3_CONF	// ADC1 Single ended input.
@@ -33,13 +33,13 @@ private:
 	
 	uint8_t currentChannel = 0;
 	volatile uint8_t rawADCFull = 0;
-	volatile uint16_t rawADC[ADC_CH_NUN] = { 0 };
+	volatile uint16_t rawADC[ADC_CH_NUM] = { 0 };
 		
-	int16_t avgADC[ADC_CH_NUN] = { 0 };
-	int32_t sumADC[ADC_CH_NUN] = { 0 };
+	int16_t avgADC[ADC_CH_NUM] = { 0 };
+	int32_t sumADC[ADC_CH_NUM] = { 0 };
 	uint16_t nAvgAdc = 0;
 	
-	uint16_t newValsFlags[ADC_CH_NUN] = { 0 };
+	uint16_t newValsFlags[ADC_CH_NUM] = { 0 };
 		
 	uint8_t isDiffrentialChannel(AdcChannels channel);
 	
