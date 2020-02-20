@@ -46,7 +46,7 @@ public:
     {
         if (win_mainClass->objectName().isEmpty())
             win_mainClass->setObjectName(QString::fromUtf8("win_mainClass"));
-        win_mainClass->resize(994, 766);
+        win_mainClass->resize(1098, 876);
         QIcon icon;
         icon.addFile(QString::fromUtf8("media/discharger.ico"), QSize(), QIcon::Normal, QIcon::Off);
         win_mainClass->setWindowIcon(icon);
@@ -69,7 +69,7 @@ public:
         mainArea->setAlignment(Qt::AlignCenter);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 992, 711));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 1096, 821));
         verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -82,7 +82,7 @@ public:
         win_mainClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(win_mainClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 994, 21));
+        menuBar->setGeometry(QRect(0, 0, 1098, 21));
         menuOption = new QMenu(menuBar);
         menuOption->setObjectName(QString::fromUtf8("menuOption"));
         menuHelp = new QMenu(menuBar);

@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
@@ -25,14 +26,14 @@ public:
     QVBoxLayout *verticalLayout_2;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
-    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
     QTextBrowser *textBrowser;
 
     void setupUi(QWidget *WinHelp)
     {
         if (WinHelp->objectName().isEmpty())
             WinHelp->setObjectName(QString::fromUtf8("WinHelp"));
-        WinHelp->resize(484, 378);
+        WinHelp->resize(653, 640);
         QIcon icon;
         icon.addFile(QString::fromUtf8("media/help.ico"), QSize(), QIcon::Normal, QIcon::Off);
         WinHelp->setWindowIcon(icon);
@@ -46,17 +47,16 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 482, 376));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 651, 638));
         scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8("border: 0;"));
-        verticalLayout = new QVBoxLayout(scrollAreaWidgetContents);
-        verticalLayout->setSpacing(0);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout = new QHBoxLayout(scrollAreaWidgetContents);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         textBrowser = new QTextBrowser(scrollAreaWidgetContents);
         textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
 
-        verticalLayout->addWidget(textBrowser);
+        horizontalLayout->addWidget(textBrowser);
 
         scrollArea->setWidget(scrollAreaWidgetContents);
 

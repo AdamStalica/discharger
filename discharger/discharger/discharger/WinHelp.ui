@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>484</width>
-    <height>378</height>
+    <width>653</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,29 +43,14 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>482</width>
-        <height>376</height>
+        <width>651</width>
+        <height>638</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">border: 0;</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QTextBrowser" name="textBrowser"/>
        </item>

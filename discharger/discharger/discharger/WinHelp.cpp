@@ -1,6 +1,7 @@
 #include "WinHelp.h"
 #include "QFile"
 #include "QDebug"
+#include <qmessagebox.h>
 
 using json = nlohmann::json;
 

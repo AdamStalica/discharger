@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "discharger_desktop", "discharger_desktop\discharger_desktop.vcxproj", "{BABD1DDC-C2B9-40E5-8DD6-26DCF91284C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BABD1DDC-C2B9-40E5-8DD6-26DCF91284C3}.Debug|x86.ActiveCfg = Debug|Win32
+		{BABD1DDC-C2B9-40E5-8DD6-26DCF91284C3}.Debug|x86.Build.0 = Debug|Win32
+		{BABD1DDC-C2B9-40E5-8DD6-26DCF91284C3}.Release|x86.ActiveCfg = Release|Win32
+		{BABD1DDC-C2B9-40E5-8DD6-26DCF91284C3}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D3312D5-C00E-4884-B6B9-A347ED06FD7C}
+	EndGlobalSection
+EndGlobal
