@@ -10,6 +10,8 @@
 
 using json = nlohmann::json;
 
+std::function<void(bool, std::string &&)> ApiHolder::apiCallback = ApiHolder::tmpCallback;
+
 ApiHolder::ApiHolder(QObject *parent)
 	: QObject(parent)
 {

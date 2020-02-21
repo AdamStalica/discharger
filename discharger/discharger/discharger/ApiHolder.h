@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QNetworkReply>
+#include <functional>
 
 #include "ClearAble.h"
 
@@ -36,6 +37,17 @@ public:
 	QString getApiUserEmail() { return email; }
 
 	void clear() override;
+
+
+	static std::function<void(bool, std::string &&)> apiCallback;
+	template<class Functor>
+	static void post(const std::string & url, const std::string & post, Functor & callback) {
+
+	}
+	
+	static void tmpCallback(bool success, std::string && data) {
+		success = 1;
+	}
 
 signals:
 	void gotResponse(const QString & resp);

@@ -31,9 +31,18 @@
     <ClCompile Include="MainWin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WebApi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WebApi.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -49,5 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="discharger_desktop.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,8 @@
 #include "MainWin.h"
+#include "ObjectFactory.h"
 #include <QMessageBox>
+
+std::function<void(bool, std::string &&)> MainWin::apiCallback = MainWin::tmpCallback;
 
 MainWin::MainWin(QWidget *parent)
 	: QMainWindow(parent)
@@ -7,6 +10,11 @@ MainWin::MainWin(QWidget *parent)
 	ui.setupUi(this);
 	setDockedWidgetsVisibility(false);
 	setTestToolBarVisibility(false);
+
+
+	ObjectFactory::createInstance(new WebApi(this));
+
+	WebApi * webApi = ObjectFactory::getInstance<WebApi>();
 
 
 	connect(ui.btnLogIn, &QPushButton::clicked, [this] {
@@ -36,6 +44,8 @@ MainWin::MainWin(QWidget *parent)
 			!ui.dockWgtCommFlow->isVisible()
 		);
 	});
+
+	post("", "", MainWin::tmpCallback);
 }
 
 void MainWin::setDockedWidgetsVisibility(bool visible)
@@ -49,3 +59,8 @@ void MainWin::setTestToolBarVisibility(bool visible)
 	ui.toolBarTest->setVisible(visible);
 }
 
+/*
+
+
+
+*/
