@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include<map>
+#include <map>
 #include <typeinfo>
 
 class ObjectFactory
@@ -12,6 +12,8 @@ public:
 	static void createInstance(T * obj);
 	template<class T>
 	static T * getInstance();
+	template<class T>
+	static bool hasInstance();
 	static void deleteFactory();
 };
 
@@ -19,7 +21,7 @@ template<class T>
 inline void ObjectFactory::createInstance(T * obj)
 {
 	const size_t hash = typeid(T).hash_code();
-	if (objects.find(hash) != objects.end())
+	if (hasInstance<T>())
 		delete objects[hash];
 	objects[hash] = qobject_cast<QObject *>(obj);
 }
@@ -33,4 +35,10 @@ inline T * ObjectFactory::getInstance()
 	Q_ASSERT(instance != nullptr);
 
 	return instance;
+}
+
+template<class T>
+inline bool ObjectFactory::hasInstance() {
+	const size_t hash = typeid(T).hash_code();
+	return (objects.find(hash) != objects.end());
 }

@@ -37,12 +37,18 @@
     <ClCompile Include="ObjectFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WebApi.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="User.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

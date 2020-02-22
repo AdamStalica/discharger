@@ -2,41 +2,37 @@
 
 #include "ObjectFactory.h"
 #include <QObject>
-#include <QUrl>
-#include <QNetworkRequest>
-#include <QNetworkAccessManager>
-
+#include <QDebug>
 #include <functional>
+
+class QNetworkAccessManager;
+class QNetworkReply;
 
 class WebApi : public QObject
 {
 	Q_OBJECT
 
 public:
-
 	WebApi(QObject *parent);
-	
 	~WebApi();
 
+	void POST(
+		const std::string & fileName, 
+		const std::string & post, 
+		std::function<void(bool, std::string &&)> callback
+	);
+
 private:
-	static const std::string API_URL;
+	const std::string API_URL{ "http://api.sgp.slavek.webd.pro" };
+	
+	QNetworkAccessManager * mgr;
+	std::function<void(bool, std::string &&)> apiCallback{ 
+		[](bool sucess, std::string && str) {
+			qDebug() << "Api default callback\n"
+				<< "Requested " << (sucess ? "successfully" : "unsuccessfully") << "."
+				<< (str.compare("") ? "" : ("\nResponse:\n" + str).c_str());
+		} 
+	};
 
-	std::string hi;
-
-	QNetworkAccessManager mgr;
-	static std::function<void(bool, std::string &&)> apiCallback;
-
-
-	template<class Functor>
-	static void post(const std::string & url, const std::string & post, Functor & callback);
-
-
-	//static WebApi instance;
+	void processNetworkReply(QNetworkReply * repl);
 };
-
-template<class Functor>
-inline void WebApi::post(const std::string & url, const std::string & post, Functor & callback)
-{
-	apiCallback = callback;
-
-}

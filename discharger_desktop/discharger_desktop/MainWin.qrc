@@ -2,4 +2,22 @@
   <qresource prefix="MainWin">
     <file>style.qss</file>
   </qresource>
+  <qresource prefix="schems">
+    <file>media/schems/double_battery.png</file>
+    <file>media/schems/single_battery.png</file>
+  </qresource>
+  <qresource prefix="icons">
+    <file>media/icons/chart.ico</file>
+    <file>media/icons/comm_flow.ico</file>
+    <file>media/icons/discharger.ico</file>
+    <file>media/icons/error.ico</file>
+    <file>media/icons/help.ico</file>
+    <file>media/icons/logout.ico</file>
+    <file>media/icons/parameters.ico</file>
+    <file>media/icons/qr_code.ico</file>
+    <file>media/icons/start.ico</file>
+    <file>media/icons/stop.ico</file>
+    <file>media/icons/warning.ico</file>
+    <file>media/icons/web.ico</file>
+  </qresource>
 </RCC>

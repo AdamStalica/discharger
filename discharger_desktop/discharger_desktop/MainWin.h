@@ -28,21 +28,11 @@ private:
 	void setDockedWidgetsVisibility(bool visible);
 	void setTestToolBarVisibility(bool visible);
 
+	void logout();
 
+	void setupMainToolBar();
+	void setupTestToolBar();
 
-
-
-
-
-
-	static std::function<void(bool, std::string &&)> apiCallback;
-	template<class Functor>
-	static void post(const std::string & url, const std::string & post, Functor & callback) {
-		apiCallback = callback;
-		apiCallback(false, "");
-	}
-
-	static void tmpCallback(bool success, std::string && data) {
-		success = 1;
-	}
+	void testStart();
+	void testStop();
 };
