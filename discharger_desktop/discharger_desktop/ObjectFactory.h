@@ -5,6 +5,7 @@
 
 class ObjectFactory
 {
+	// TODO: Smart pointers
 	static std::map<size_t, QObject *> objects;
 
 public:

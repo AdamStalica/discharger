@@ -32,10 +32,10 @@ void User::logIn(const QString & mail, const QString & password) {
 				resp["no"].get<int>();
 			userLoggedIn = true;
 
-			loggedInCallback(true, resp["comment"].get<std::string>());
+			loggedInCallback(true, resp["comment"].get<std::string>().c_str());
 		}
 		else {
-			loggedInCallback(false, resp["comment"].get<std::string>());
+			loggedInCallback(false, resp["comment"].get<std::string>().c_str());
 		}
 	});
 }
@@ -46,6 +46,6 @@ void User::logOut() {
 	name = surname = email = "";
 }
 
-void User::setOnLoggedInCallback(std::function<void(bool, const std::string&)> callback) {
+void User::setOnLoggedInCallback(std::function<void(bool, const QString&)> callback) {
 	loggedInCallback = callback;
 }

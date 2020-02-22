@@ -13,8 +13,8 @@ private:
 	unsigned int id{ 0 };
 	bool userLoggedIn{ false };
 
-	std::function<void(bool, std::string)> loggedInCallback{
-		[](bool success, const std::string & response) {}
+	std::function<void(bool, QString)> loggedInCallback{
+		[](bool success, const QString & response) {}
 	};
 
 public:
@@ -24,10 +24,12 @@ public:
 	void logIn(const QString & mail, const QString & password);
 	void logOut();
 
-	void setOnLoggedInCallback(std::function<void(bool, const std::string &)> callback);
+	void setOnLoggedInCallback(std::function<void(bool, const QString &)> callback);
 
 	QString getName()	{ return name; }
 	QString getSurname(){ return surname; }
 	QString getEmail()	{ return email; }
 	unsigned int getId(){ return id; }
+
+	operator bool() { return userLoggedIn; }
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ObjectFactory.h"
+#include "nlohmann/json.h"
 #include <QObject>
 #include <QDebug>
 #include <functional>
@@ -19,6 +20,15 @@ public:
 	void POST(
 		const std::string & fileName, 
 		const std::string & post, 
+		std::function<void(bool, std::string &&)> callback
+	);
+	void POST(
+		const std::string & fileName,
+		nlohmann::json & post,
+		std::function<void(bool, std::string &&)> callback
+	);
+	void GET(
+		const std::string & fileName,
 		std::function<void(bool, std::string &&)> callback
 	);
 

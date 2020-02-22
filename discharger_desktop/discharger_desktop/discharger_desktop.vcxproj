@@ -85,6 +85,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
+    <ClCompile Include="TestConfigData.cpp" />
     <ClCompile Include="User.cpp" />
     <ClCompile Include="WebApi.cpp" />
   </ItemGroup>
@@ -107,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectFactory.h" />
+    <QtMoc Include="TestConfigData.h" />
     <QtMoc Include="User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
