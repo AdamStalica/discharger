@@ -5,19 +5,20 @@
 #include <QMessageBox>
 #include <QTreeWidget>
 #include <QMovie>
+#include <QScrollBar>
 
 MainWin::MainWin(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	setDockedWidgetsVisibility(false);
-	setTestToolBarVisibility(false);
+	//setTestToolBarVisibility(false);
 
 	ObjectFactory::createInstance(new WebApi(this));
 	ObjectFactory::createInstance(new User(this));
 	ObjectFactory::createInstance(new TestConfigData(this));
 
-	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
+	//ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
 
 
 	setupMainToolBar();
@@ -209,10 +210,20 @@ void MainWin::loaderStop() {
 
 
 void MainWin::testStart() {
-	ui.toolBarTest->actions()[TestActions::START]->setVisible(false);
-	ui.toolBarTest->actions()[TestActions::STOP]->setVisible(true);
+	//ui.toolBarTest->actions()[TestActions::START]->setVisible(false);
+	//ui.toolBarTest->actions()[TestActions::STOP]->setVisible(true);
 	// TODO: Test start
 
+	static QPushButton * btn = nullptr;
+	if (btn == nullptr) {
+		btn = new QPushButton("Hi");
+		setChart(btn);
+	}
+	else {
+		removeChart(btn);
+		delete btn;
+		btn = nullptr;
+	}
 }
 
 void MainWin::testStop() {
@@ -237,4 +248,96 @@ void MainWin::showWarning(const QString & msg) {
 
 void MainWin::showError(const QString & msg) {
 	QMessageBox::critical(this, "Error", msg);
+}
+
+void MainWin::testFinised() {
+	testStop();
+}
+
+void MainWin::clearParameters() {
+	clearChildrens<QLineEdit>(ui.dockWgtParams);
+	clearChildrens<QProgressBar>(ui.dockWgtParams);
+	clearChildrens<QLabel>(ui.dockWgtParams, ".*Lbl.*");
+}
+
+void MainWin::setTestPatametersData(const TestParametersData & data) {
+	ui.parLblName->setText(data.getTestName());
+	ui.parLblStatus->setText(data.getTestStatus());
+	ui.parProgBar->setValue(data.getProgress());
+	if (!ui.parVarEdtCurr->isEnabled())
+		ui.parVarEdtCurr->setText(data.getTestCurrent());
+	ui.parTimeLblBeg->setText(data.getTestBeginedAt());
+	ui.parTimeLblEstEnd->setText(data.getTestEstimatedEnd());
+	ui.parTimeLblTestTime->setText(data.getTestTime());
+	ui.parTimeLblEstEnd->setText(data.getTestEstimatedEnd());
+	ui.parCalcLblCapa->setText(data.getCapacity());
+	ui.parCalcLblEnergy->setText(data.getConsumedEnergy());
+	if (data.isSingleBatteryMode()) {
+		ui.parMeasure1BLblHeatSilkTemp->setText(data.getHeatSilkTemp());
+		ui.parMeasure1BLblCurr->setText(data.getCurrent());
+		ui.parMeasure1BLblId->setText(data.getBattLeftId());
+		ui.parMeasure1BLblVolt->setText(data.getBattLeftVolt());
+		ui.parMeasure1BLblTemp->setText(data.getBattLeftTemp());
+		ui.parMeasureStackedWgt->setCurrentIndex(MeasureSchem::SINGLE_BATT);
+	}
+	else {
+		ui.parMeasure2BLblHeatSilkTemp->setText(data.getHeatSilkTemp());
+		ui.parMeasure2BLblCurr->setText(data.getCurrent());
+		ui.parMeasure2BLblLeftId->setText(data.getBattLeftId());
+		ui.parMeasure2BLblLeftVolt->setText(data.getBattLeftVolt());
+		ui.parMeasure2BLblLeftTemp->setText(data.getBattLeftTemp());
+		ui.parMeasure2BLblRightId->setText(data.getBattRightId());
+		ui.parMeasure2BLblRightVolt->setText(data.getBattRightVolt());
+		ui.parMeasure2BLblRightTemp->setText(data.getBattRightTemp());
+		ui.parMeasureStackedWgt->setCurrentIndex(MeasureSchem::DOUBLE_BATT);
+	}
+}
+
+void MainWin::setTestCurrentLineEditEnabled(bool enabled) {
+	ui.parVarEdtCurr->setEnabled(enabled);
+}
+
+void MainWin::appendTestDataLine(const QString & line) {
+	appendLineToTextBrowser(
+		ui.commFlowTabTestDataTxtBrow,
+		line,
+		ui.commFlowTabTestDataChckScroll->isChecked()
+	);
+}
+
+void MainWin::appendEventsLine(const QString & line) {
+	appendLineToTextBrowser(
+		ui.commFlowTabEventsTxtBrow,
+		line,
+		ui.commFlowTabEventsChckScroll->isChecked()
+	);
+}
+
+void MainWin::appendRawDataLine(const QString & line) {
+	appendLineToTextBrowser(
+		ui.commFlowTabRawDataTxtBrow,
+		line,
+		ui.commFlowTabRawDataChckScroll->isChecked()
+	);
+}
+
+void MainWin::setChart(QWidget * chart) {
+	ui.testFrameConfChart->hide();
+	ui.testPageLayout->addWidget(chart);
+}
+
+void MainWin::removeChart(QWidget * chart) {
+	ui.testPageLayout->removeWidget(chart);
+	ui.testFrameConfChart->show();
+}
+
+void MainWin::appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown) {
+	brow->setHtml(
+		brow->toHtml() +
+		line + "<br>"
+	);
+	if (scrollDown) {
+		QScrollBar *sb = brow->verticalScrollBar();
+		sb->setValue(sb->maximum());
+	}
 }

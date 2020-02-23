@@ -99,6 +99,7 @@ void TestConfigData::createStandardItemModel() {
 						log["car_name"].get<std::string>().c_str(),
 						log["time_begin"].get<std::string>().c_str(),
 						log["duration"].get<std::string>().c_str(),
+						QString::number(log["avg_main_curr"].get<float>()),
 						QString::number(log["avg_motor_curr"].get<float>())
 					}
 				};

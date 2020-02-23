@@ -17,7 +17,7 @@ uint16_t SimulationData::measuredBLV = 0;
 uint16_t SimulationData::measuredBRV = 0;
 uint16_t SimulationData::measuredBLT = 0;
 uint16_t SimulationData::measuredBRT = 0;
-uint16_t SimulationData::measuredRT = 0;
+uint16_t SimulationData::measuredHST = 0;
 uint8_t SimulationData::inProgress = 0;
 
 void SimulationData::processNewData() {
@@ -72,14 +72,14 @@ void SimulationData::sendResponse() {
 	
 	aboutToSendNewData();	
 	printP(
-		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"RT\":%d}"),
+		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"HST\":%d}"),
 		currentId,
 		measuredCurrent,
 		measuredBLV,
 		measuredBRV,
 		measuredBLT,
 		measuredBRT,
-		measuredRT
+		measuredHST
 	);
 	endl();
 }

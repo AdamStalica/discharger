@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include "TestGUI.h"
 #include "ui_MainWin.h"
 #include "WebApi.h"
 
 #include <functional>
 
-class MainWin : public QMainWindow
+class MainWin : public QMainWindow, public TestGUI
 {
 	Q_OBJECT
 
@@ -36,6 +37,11 @@ private:
 		SIMULATION,
 		BASIC_TEST,
 		DEV_TERMINAL
+	};
+
+	enum MeasureSchem {
+		DOUBLE_BATT,
+		SINGLE_BATT
 	};
 
 	const unsigned int TREE_ID_LOG_INFO_COL_NUM = 2;
@@ -72,6 +78,17 @@ private:
 	void showWarning(const QString & msg);
 	void showError(const QString & msg);
 
+	void testFinised() override;
+	void clearParameters() override;
+	void setTestPatametersData(const TestParametersData & data) override;
+	void setTestCurrentLineEditEnabled(bool enabled) override;
+	void appendTestDataLine(const QString & line) override;
+	void appendEventsLine(const QString & line) override;
+	void appendRawDataLine(const QString & line) override;
+	void setChart(QWidget * chart) override;
+	void removeChart(QWidget * chart) override;
+
+	void appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown = false);
 };
 
 template<class T>

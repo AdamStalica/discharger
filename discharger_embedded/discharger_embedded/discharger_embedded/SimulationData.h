@@ -23,7 +23,7 @@ class SimulationData : public UsartHolder
 					measuredBRV,
 					measuredBLT,
 					measuredBRT,
-					measuredRT;
+					measuredHST;
 					
 	static uint8_t inProgress;
 	
@@ -47,7 +47,7 @@ public:
 	void setBattRightVolt(uint16_t bRV) { measuredBRV = bRV; }
 	void setBattLeftTemp(uint16_t bLT) { measuredBLT = bLT; }
 	void setBattRightTemp(uint16_t bRT) { measuredBRT = bRT; }
-	void setHeatSinkTemp(uint16_t RT) { measuredRT = RT; }
+	void setHeatSinkTemp(uint16_t RT) { measuredHST = RT; }
 	void setDeviceHasStopped();
 	
 	void sendDeviceHasStopped();
@@ -63,7 +63,7 @@ public:
 	static uint16_t getBattRightVolt()		{ return measuredBRV; }
 	static uint16_t getBattLeftTemp()		{ return measuredBLT; }
 	static uint16_t getBattRightTemp()		{ return measuredBRT; }
-	static uint16_t getHeatSinkTemp()		{ return measuredRT; }
+	static uint16_t getHeatSinkTemp()		{ return measuredHST; }
 		
 	static uint8_t isSimulationInProgress() { return inProgress; };
 

@@ -43,6 +43,9 @@
     <ClCompile Include="TestConfigData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -55,6 +58,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="TestConfigData.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TestDriver.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -73,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestParametersData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

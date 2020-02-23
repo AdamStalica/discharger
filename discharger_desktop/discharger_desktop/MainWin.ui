@@ -22,7 +22,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="authPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -306,7 +306,7 @@
             <rect>
              <x>0</x>
              <y>-186</y>
-             <width>660</width>
+             <width>662</width>
              <height>851</height>
             </rect>
            </property>
@@ -546,7 +546,7 @@
                   </size>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>2</number>
                  </property>
                  <widget class="QWidget" name="page_5">
                   <property name="geometry">
@@ -674,10 +674,49 @@
                      </column>
                      <column>
                       <property name="text">
+                       <string>Avg. main curr</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
                        <string>Avg. motor curr</string>
                       </property>
                      </column>
                     </widget>
+                   </item>
+                   <item>
+                    <layout class="QGridLayout" name="gridLayout_14">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_39">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="text">
+                        <string>Select current source to simulate:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QRadioButton" name="CTSimRadioCurrSourceMain">
+                       <property name="text">
+                        <string>Main current</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QRadioButton" name="CTSimRadioCurrSourceMotor">
+                       <property name="text">
+                        <string>Motor current</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
                  </widget>
@@ -1214,7 +1253,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QScrollArea" name="scrollArea_4">
+         <widget class="QScrollArea" name="testPageArea">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -1226,86 +1265,105 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>198</width>
-             <height>82</height>
+             <width>679</width>
+             <height>670</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_26">
-            <item alignment="Qt::AlignHCenter">
-             <widget class="QFrame" name="testFrameContChart">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-               </font>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
-               <item alignment="Qt::AlignVCenter">
-                <widget class="QLabel" name="label_26">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Configure the chart</string>
-                 </property>
-                </widget>
-               </item>
-               <item alignment="Qt::AlignVCenter">
-                <widget class="QPushButton" name="testBtnConfChart">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>44</width>
-                   <height>44</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>44</width>
-                   <height>44</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="MainWin.qrc">
-                   <normaloff>:/icons/media/icons/chart.ico</normaloff>:/icons/media/icons/chart.ico</iconset>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>32</width>
-                   <height>32</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_27">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="testPageLayout">
+              <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+               <widget class="QFrame" name="testFrameConfChart">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                 </font>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item alignment="Qt::AlignVCenter">
+                  <widget class="QLabel" name="label_26">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>10</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Configure the chart</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item alignment="Qt::AlignVCenter">
+                  <widget class="QPushButton" name="testBtnConfChart">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>44</width>
+                     <height>44</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>44</width>
+                     <height>44</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="MainWin.qrc">
+                     <normaloff>:/icons/media/icons/chart.ico</normaloff>:/icons/media/icons/chart.ico</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>32</width>
+                     <height>32</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -1385,7 +1443,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-117</y>
+          <y>0</y>
           <width>350</width>
           <height>761</height>
          </rect>
@@ -1470,14 +1528,14 @@
            <layout class="QVBoxLayout" name="verticalLayout_14">
             <item>
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="1" column="0">
+              <item row="1" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_32">
                 <property name="text">
                  <string>Voltage limit:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
+              <item row="0" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_30">
                 <property name="text">
                  <string>Test current:</string>
@@ -1536,7 +1594,7 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="2" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_34">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -1658,7 +1716,7 @@
                 </property>
                </spacer>
               </item>
-              <item row="4" column="0">
+              <item row="4" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_37">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -1792,7 +1850,7 @@
            <layout class="QVBoxLayout" name="verticalLayout_16">
             <item>
              <layout class="QGridLayout" name="gridLayout_8">
-              <item row="0" column="0">
+              <item row="0" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_38">
                 <property name="minimumSize">
                  <size>
@@ -1801,7 +1859,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Capacity</string>
+                 <string>Capacity:</string>
                 </property>
                </widget>
               </item>
@@ -1846,7 +1904,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Consumed energy</string>
+                 <string>Consumed energy:</string>
                 </property>
                </widget>
               </item>
@@ -1908,7 +1966,7 @@
                </size>
               </property>
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="page_3">
                <widget class="QLabel" name="label_46">
@@ -1940,7 +1998,7 @@
                  </rect>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
+                 <item alignment="Qt::AlignRight|Qt::AlignBottom">
                   <widget class="QLabel" name="label_47">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -1950,11 +2008,11 @@
                    </property>
                    <property name="text">
                     <string>Heat silk
-temperature</string>
+temperature:</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item alignment="Qt::AlignBottom">
                   <widget class="QLabel" name="parMeasure2BLblHeatSilkTemp">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -1976,7 +2034,7 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item alignment="Qt::AlignBottom">
                   <widget class="QLabel" name="label_49">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1999,15 +2057,15 @@ temperature</string>
                  <rect>
                   <x>150</x>
                   <y>10</y>
-                  <width>98</width>
+                  <width>102</width>
                   <height>31</height>
                  </rect>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
-                 <item>
+                 <item alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_50">
                    <property name="text">
-                    <string>Current</string>
+                    <string>Current:</string>
                    </property>
                   </widget>
                  </item>
@@ -2058,7 +2116,7 @@ temperature</string>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
-                 <item row="1" column="0">
+                 <item row="1" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_54">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2067,7 +2125,7 @@ temperature</string>
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Voltage</string>
+                    <string>Voltage:</string>
                    </property>
                   </widget>
                  </item>
@@ -2103,7 +2161,7 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="2" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_57">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2112,7 +2170,7 @@ temperature</string>
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Temperature</string>
+                    <string>Temperature:</string>
                    </property>
                   </widget>
                  </item>
@@ -2174,7 +2232,7 @@ temperature</string>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_10">
-                 <item row="1" column="0">
+                 <item row="1" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_60">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2183,7 +2241,7 @@ temperature</string>
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Voltage</string>
+                    <string>Voltage:</string>
                    </property>
                   </widget>
                  </item>
@@ -2219,7 +2277,7 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="2" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_64">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2228,7 +2286,7 @@ temperature</string>
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Temperature</string>
+                    <string>Temperature:</string>
                    </property>
                   </widget>
                  </item>
@@ -2294,7 +2352,7 @@ temperature</string>
                  <rect>
                   <x>20</x>
                   <y>190</y>
-                  <width>131</width>
+                  <width>132</width>
                   <height>61</height>
                  </rect>
                 </property>
@@ -2345,17 +2403,17 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
+                 <item row="1" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_67">
                    <property name="text">
-                    <string>Voltage</string>
+                    <string>Voltage:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="2" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_71">
                    <property name="text">
-                    <string>Temperature</string>
+                    <string>Temperature:</string>
                    </property>
                   </widget>
                  </item>
@@ -2381,7 +2439,7 @@ temperature</string>
                  </rect>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_12">
-                 <item row="0" column="0">
+                 <item row="0" column="0" alignment="Qt::AlignRight|Qt::AlignBottom">
                   <widget class="QLabel" name="label_68">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2391,11 +2449,11 @@ temperature</string>
                    </property>
                    <property name="text">
                     <string>Heat silk
-temperature</string>
+temperature:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
+                 <item row="0" column="1" alignment="Qt::AlignBottom">
                   <widget class="QLabel" name="parMeasure1BLblHeatSilkTemp">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -2417,7 +2475,7 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="2">
+                 <item row="0" column="2" alignment="Qt::AlignBottom">
                   <widget class="QLabel" name="label_75">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -2433,10 +2491,10 @@ temperature</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
+                 <item row="1" column="0" alignment="Qt::AlignRight">
                   <widget class="QLabel" name="label_76">
                    <property name="text">
-                    <string>Current</string>
+                    <string>Current:</string>
                    </property>
                   </widget>
                  </item>
@@ -2513,6 +2571,15 @@ temperature</string>
          <string>Test data</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_22">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>9</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
@@ -2535,6 +2602,22 @@ temperature</string>
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QCheckBox" name="commFlowTabTestDataChckScroll">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Auto scroll down</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -2547,6 +2630,22 @@ temperature</string>
          <string>Events</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_23">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignRight">
+          <widget class="QCheckBox" name="commFlowTabEventsChckScroll">
+           <property name="text">
+            <string>Auto scroll down</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QTextBrowser" name="commFlowTabEventsTxtBrow"/>
          </item>
@@ -2557,6 +2656,22 @@ temperature</string>
          <string>Raw data</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_24">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignRight">
+          <widget class="QCheckBox" name="commFlowTabRawDataChckScroll">
+           <property name="text">
+            <string>Auto scroll down</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QTextBrowser" name="commFlowTabRawDataTxtBrow"/>
          </item>
