@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "TestGUI.h"
+#include "TestDriver.h"
 #include "ui_MainWin.h"
 #include "WebApi.h"
 
@@ -19,6 +20,7 @@ public:
 
 private:
 	Ui::MainWinClass ui;
+	TestDriver * testDriver;
 
 	enum PagesEnum {
 		LOG_IN,

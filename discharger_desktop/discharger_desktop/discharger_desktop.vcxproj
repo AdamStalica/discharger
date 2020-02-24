@@ -59,7 +59,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>C:\Users\domin\source\libs\json\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\domin\source\repos\discharger\device_events\include;C:\Users\domin\source\libs\json\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -73,7 +74,7 @@
       <DebugInformationFormat />
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <AdditionalIncludeDirectories>C:\Users\domin\source\libs\json\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\domin\source\repos\discharger\device_events\include;C:\Users\domin\source\libs\json\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -82,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DischargerDevice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
@@ -108,6 +110,8 @@
     <QtMoc Include="WebApi.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DeviceInterface.h" />
+    <QtMoc Include="DischargerDevice.h" />
     <ClInclude Include="ObjectFactory.h" />
     <ClInclude Include="TestGUI.h" />
     <ClInclude Include="TestParametersData.h" />

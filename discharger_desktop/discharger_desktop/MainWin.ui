@@ -18,11 +18,11 @@
     <normaloff>:/icons/media/icons/discharger.ico</normaloff>:/icons/media/icons/discharger.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_10">
+   <layout class="QHBoxLayout" name="horizontalLayout_11">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="authPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -57,8 +57,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>294</width>
-             <height>128</height>
+             <width>679</width>
+             <height>679</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -305,7 +305,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-186</y>
+             <y>0</y>
              <width>662</width>
              <height>851</height>
             </rect>
@@ -546,7 +546,7 @@
                   </size>
                  </property>
                  <property name="currentIndex">
-                  <number>2</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="page_5">
                   <property name="geometry">
@@ -596,20 +596,50 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QRadioButton" name="CTSimRadioExpand">
-                       <property name="text">
-                        <string>Expand all</string>
+                      <widget class="QFrame" name="frame_4">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
                        </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QRadioButton" name="CTSimRadioCollapse">
-                       <property name="text">
-                        <string>Collapse all</string>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
                        </property>
-                       <property name="checked">
-                        <bool>true</bool>
+                       <property name="lineWidth">
+                        <number>0</number>
                        </property>
+                       <layout class="QHBoxLayout" name="horizontalLayout_10">
+                        <property name="spacing">
+                         <number>6</number>
+                        </property>
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QRadioButton" name="CTSimRadioExpand">
+                          <property name="text">
+                           <string>Expand all</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QRadioButton" name="CTSimRadioCollapse">
+                          <property name="text">
+                           <string>Collapse all</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </widget>
                      </item>
                     </layout>
@@ -700,20 +730,47 @@
                       </widget>
                      </item>
                      <item row="0" column="1">
-                      <widget class="QRadioButton" name="CTSimRadioCurrSourceMain">
-                       <property name="text">
-                        <string>Main current</string>
+                      <widget class="QFrame" name="frame_5">
+                       <property name="frameShape">
+                        <enum>QFrame::StyledPanel</enum>
                        </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QRadioButton" name="CTSimRadioCurrSourceMotor">
-                       <property name="text">
-                        <string>Motor current</string>
+                       <property name="frameShadow">
+                        <enum>QFrame::Raised</enum>
                        </property>
-                       <property name="checked">
-                        <bool>true</bool>
+                       <property name="lineWidth">
+                        <number>0</number>
                        </property>
+                       <layout class="QVBoxLayout" name="verticalLayout_10">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QRadioButton" name="CTSimRadioCurrSourceMain">
+                          <property name="text">
+                           <string>Main current</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QRadioButton" name="CTSimRadioCurrSourceMotor">
+                          <property name="text">
+                           <string>Motor current</string>
+                          </property>
+                          <property name="checked">
+                           <bool>true</bool>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </widget>
                      </item>
                     </layout>
@@ -2007,13 +2064,13 @@
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Heat silk
+                    <string>Heat sink
 temperature:</string>
                    </property>
                   </widget>
                  </item>
                  <item alignment="Qt::AlignBottom">
-                  <widget class="QLabel" name="parMeasure2BLblHeatSilkTemp">
+                  <widget class="QLabel" name="parMeasure2BLblHeatSinkTemp">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2448,13 +2505,13 @@ temperature:</string>
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Heat silk
+                    <string>Heat sink
 temperature:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1" alignment="Qt::AlignBottom">
-                  <widget class="QLabel" name="parMeasure1BLblHeatSilkTemp">
+                  <widget class="QLabel" name="parMeasure1BLblHeatSinkTemp">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                      <horstretch>0</horstretch>

@@ -1,7 +1,9 @@
 #include "MainWin.h"
 #include "ObjectFactory.h"
+#include "DischargerDevice.h"
 #include "User.h"
 #include "TestConfigData.h"
+#include "TestDriver.h"
 #include <QMessageBox>
 #include <QTreeWidget>
 #include <QMovie>
@@ -17,8 +19,13 @@ MainWin::MainWin(QWidget *parent)
 	ObjectFactory::createInstance(new WebApi(this));
 	ObjectFactory::createInstance(new User(this));
 	ObjectFactory::createInstance(new TestConfigData(this));
+	ObjectFactory::createInstance(new TestDriver(this));
 
-	//ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
+	testDriver = ObjectFactory::getInstance<TestDriver>();
+
+	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
+
+//	DischargerDevice<DeviceInterface::CurrentSource::NO_CURR_SOURCE> de;
 
 
 	setupMainToolBar();
@@ -27,13 +34,13 @@ MainWin::MainWin(QWidget *parent)
 
 	connect(ui.authBtnLogIn, &QPushButton::clicked, this, &MainWin::login);
 	connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
+	connect(ui.testBtnConfChart, &QPushButton::clicked, testDriver, &TestDriver::confChart);
 
 	//connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &MainWin::currentPageChannged);
 
 }
 
-void MainWin::setDockedWidgetsVisibility(bool visible)
-{
+void MainWin::setDockedWidgetsVisibility(bool visible) {
 	ui.dockWgtParams->setVisible(visible);
 	ui.dockWgtCommFlow->setVisible(visible);
 }
@@ -75,8 +82,7 @@ void MainWin::login() {
 	user->logIn(email, pass);
 }
 
-void MainWin::setupMainToolBar()
-{
+void MainWin::setupMainToolBar() {
 	ui.mainToolBar->addAction(QIcon("media/icons/logout.ico"), "Logout", this, &MainWin::logout);
 	ui.mainToolBar->addAction(QIcon("media/icons/help.ico"), "Help", [] {
 		// TODO: help 
@@ -90,9 +96,7 @@ void MainWin::setupTestToolBar() {
 	ui.toolBarTest->addSeparator();
 	ui.toolBarTest->addAction(QIcon("media/icons/parameters.ico"), "Parameters", ui.dockWgtParams, &QDockWidget::show);
 	ui.toolBarTest->addAction(QIcon("media/icons/comm_flow.ico"), "Communication flow", ui.dockWgtCommFlow, &QDockWidget::show);
-	ui.toolBarTest->addAction(QIcon("media/icons/chart.ico"), "Chart", [] {
-		// TODO: Chart settings
-	});
+	ui.toolBarTest->addAction(QIcon("media/icons/chart.ico"), "Chart", testDriver, &TestDriver::confChart);
 	ui.toolBarTest->addSeparator();
 	ui.toolBarTest->addAction(QIcon("media/icons/web.ico"), "Results on-line", [] {
 		// TODO: Reference to results on-line
@@ -134,7 +138,7 @@ void MainWin::loadTestConfPage() {
 
 void MainWin::clearTestConfPage() {
 	clearChildrens<QLineEdit>(ui.confTestPage);
-	clearChildrens<QComboBox>(ui.confTestPage, "CTCombo*");
+	clearChildrens<QComboBox>(ui.confTestPage, "CTCombo.*");
 	clearChildrens<QTreeWidget>(ui.confTestPage);
 	ui.CTSimRadioCollapse->setChecked(true);
 }
@@ -143,7 +147,7 @@ void MainWin::prepareNewTest() {
 	QString name				{ ui.CTEdtTestName->text() };
 	QString com					{ ui.CTComboSerialPort->currentText() };
 	QString voltageLimit		{ ui.CTEdtVoltLim->text() };
-	QString heatSilkTempLimit	{ ui.CTEdtTempLim->text() };
+	QString heatSinkTempLimit	{ ui.CTEdtTempLim->text() };
 	QString idBattLeft			{ ui.CTComboBattLeft->currentText() };
 	QString idBattRight			{ ui.CTComboBattRight->currentText() };
 	QString fileToLogPath		{ ui.CTEdtFileName->text() };
@@ -151,27 +155,58 @@ void MainWin::prepareNewTest() {
 	if (ifEmptyShowWarning(name, "Test name")) return;
 	//if (ifEmptyShowWarning(com, "Com port")) return;
 	if (ifEmptyShowWarning(voltageLimit, "Voltage limit")) return;
-	if (ifEmptyShowWarning(heatSilkTempLimit, "Heat silk temperature limit")) return;
+	if (ifEmptyShowWarning(heatSinkTempLimit, "Heat Sink temperature limit")) return;
 	if (ifEmptyShowWarning(idBattLeft, "Id battery left")) return;
 
 	switch (ui.CTToolBoxTestType->currentIndex()) {
 	case TestType::SIMULATION: {
-
+			/*
+				Data to DischargerDevice:
+					com, voltLim, tempLim, currSource, idLogInfo
+			*/
+			
 			auto selected = ui.CTSimTreeRaces->selectedItems();
 			if (selected.size() != 1) {
-				showWarning("You must select one log session from the tree view!");
+				showWarning("A log session must be selected from the tree view!");
 				return;
 			}
 			QString idLogInfo{ selected.front()->text(TREE_ID_LOG_INFO_COL_NUM) };
+
+			DischargerDevice * dev = new DischargerDevice{
+				testDriver,
+				com,
+				DeviceInterface::CurrentSource::MOTOR
+			};
+
+			// tmp...
+			dev->setVoltageLimit(voltageLimit.toFloat());
+			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
+
+			dev->fetchCurrentToTest(idLogInfo.toInt(), [this](bool success, const QString & comment) {
+				if (success) {
+					int i = 0;
+				}
+				else {
+					showError(comment);
+				}
+			});	
 
 					   
 			break;
 		}
 		case TestType::BASIC_TEST: {
+			/*
+				Data to DischargerDevice:
+					com, voltLim, tempLim, currSource, testCurr
+			*/
 
 			break;
 		}
 		case TestType::DEV_TERMINAL: {
+			/*
+				Data to DischargerDevice:
+					com, voltLim, tempLim, buadrate, parity, data bits, stop bits, mask, currentRatio
+			*/
 
 			break;
 		}
@@ -273,7 +308,7 @@ void MainWin::setTestPatametersData(const TestParametersData & data) {
 	ui.parCalcLblCapa->setText(data.getCapacity());
 	ui.parCalcLblEnergy->setText(data.getConsumedEnergy());
 	if (data.isSingleBatteryMode()) {
-		ui.parMeasure1BLblHeatSilkTemp->setText(data.getHeatSilkTemp());
+		ui.parMeasure1BLblHeatSinkTemp->setText(data.getHeatSinkTemp());
 		ui.parMeasure1BLblCurr->setText(data.getCurrent());
 		ui.parMeasure1BLblId->setText(data.getBattLeftId());
 		ui.parMeasure1BLblVolt->setText(data.getBattLeftVolt());
@@ -281,7 +316,7 @@ void MainWin::setTestPatametersData(const TestParametersData & data) {
 		ui.parMeasureStackedWgt->setCurrentIndex(MeasureSchem::SINGLE_BATT);
 	}
 	else {
-		ui.parMeasure2BLblHeatSilkTemp->setText(data.getHeatSilkTemp());
+		ui.parMeasure2BLblHeatSinkTemp->setText(data.getHeatSinkTemp());
 		ui.parMeasure2BLblCurr->setText(data.getCurrent());
 		ui.parMeasure2BLblLeftId->setText(data.getBattLeftId());
 		ui.parMeasure2BLblLeftVolt->setText(data.getBattLeftVolt());

@@ -14,6 +14,8 @@ class WebApi : public QObject
 	Q_OBJECT
 
 public:
+	const std::string SELECT_FILE = "select.php";
+
 	WebApi(QObject *parent);
 	~WebApi();
 

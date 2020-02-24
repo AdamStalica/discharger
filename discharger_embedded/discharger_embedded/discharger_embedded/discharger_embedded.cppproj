@@ -105,7 +105,7 @@
   </avrgcccpp.compiler.symbols.DefSymbols>
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>../../../../device_errors/include</Value>
+      <Value>../../../../device_events/include</Value>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.3.300\include</Value>
     </ListValues>
   </avrgcccpp.compiler.directories.IncludePaths>
@@ -166,7 +166,7 @@ if %Connected% == 1  (
   </avrgcccpp.compiler.symbols.DefSymbols>
   <avrgcccpp.compiler.directories.IncludePaths>
     <ListValues>
-      <Value>../../../../device_errors/include</Value>
+      <Value>../../../../device_events/include</Value>
       <Value>%24(PackRepoDir)\atmel\ATmega_DFP\1.3.300\include</Value>
     </ListValues>
   </avrgcccpp.compiler.directories.IncludePaths>

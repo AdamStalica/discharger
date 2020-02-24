@@ -34,7 +34,7 @@ void WebApi::POST(
 void WebApi::POST(const std::string & fileName, nlohmann::json & post, std::function<void(bool, std::string&&)> callback) {
 	auto user = ObjectFactory::getInstance<User>();
 	if(user)
-		post["usr_id"] = ObjectFactory::getInstance<User>()->getId();
+		post["id_usr"] = ObjectFactory::getInstance<User>()->getId();
 	POST(fileName, post.dump(), callback);
 }
 
@@ -51,7 +51,7 @@ void WebApi::processNetworkReply(QNetworkReply * repl) {
 		nlohmann::json resp{
 			{"status", "ERROR"},
 			{"no", errNo},
-			{"comment", ("Http error code: " + std::to_string(errNo) + " " + typeid(repl->error()).name())}
+			{"comment", ("Http error code: " + std::to_string(errNo))}
 		};
 		apiCallback(false, std::move(resp.dump()));
 	}

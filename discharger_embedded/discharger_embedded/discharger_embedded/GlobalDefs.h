@@ -10,7 +10,7 @@
 #define GLOBALDEFS_H_
 
 #include <avr/io.h>
-#include <DeviceErrorEnum.h>
+#include <DeviceEventsDef.h>
 
 
 /****************************************************************************************************/

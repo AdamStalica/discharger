@@ -46,6 +46,9 @@
     <ClCompile Include="TestDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DischargerDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -61,6 +64,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="TestDriver.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DischargerDevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -85,6 +91,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestParametersData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

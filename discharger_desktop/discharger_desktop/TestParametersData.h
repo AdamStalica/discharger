@@ -12,7 +12,7 @@ class TestParametersData
 		estTime = "-",
 		capacity = "-",
 		consumedEnergy = "-",
-		heatSilkTemp = "-",
+		heatSinkTemp = "-",
 		current = "-",
 		battLeftId = "-",
 		battLeftVolt = "-",
@@ -36,7 +36,7 @@ public:
 	void setEstimatedTime(const QString & estTime) { this->estTime = estTime; };
 	void setCapacity(float capacity) { this->capacity = QString::number(capacity); };
 	void setConsumedEnergy(float energy) { this->consumedEnergy = QString::number(energy); };
-	void setHeatSilkTemp(float temp) { heatSilkTemp = QString::number(temp); };
+	void setHeatSinkTemp(float temp) { heatSinkTemp = QString::number(temp); };
 	void setCurrent(float curr) { current = QString::number(curr); };
 	void setBattLeftId(unsigned int id) { battLeftId = QString::number(id); }
 	void setBattLeftVolt(float volt) { battLeftVolt = QString::number(volt); };
@@ -57,7 +57,7 @@ public:
 	QString getEstimatedTime() const { return estTime; };
 	QString getCapacity() const { return capacity; };
 	QString getConsumedEnergy() const { return consumedEnergy; };
-	QString getHeatSilkTemp() const { return heatSilkTemp; };
+	QString getHeatSinkTemp() const { return heatSinkTemp; };
 	QString getCurrent() const { return current; };
 	QString getBattLeftId() const { return battLeftId; }
 	QString getBattLeftVolt() const { return battLeftVolt; };
