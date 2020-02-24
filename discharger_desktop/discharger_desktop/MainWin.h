@@ -60,14 +60,17 @@ private:
 	void setupMainToolBar();
 	void setupTestToolBar();
 
+	void showPage(PagesEnum page);
+
 	void setupTestConfPage();
 	void loadTestConfPage();
 	void clearTestConfPage();
 	void prepareNewTest();
+	bool setupDevice();
+	void setupTestDriver();
 
-
-	void showTestConfPage();
 	void showTestPage();
+	void showTestConfPage();
 	
 	void loader(const QString & msg);
 	void loaderStop();
@@ -84,6 +87,9 @@ private:
 	void clearParameters() override;
 	void setTestPatametersData(const TestParametersData & data) override;
 	void setTestCurrentLineEditEnabled(bool enabled) override;
+	void setVarTestCurrent(const QString & curr) override;
+	void setVarVoltLimit(const QString & volt) override;
+	void setVarHeatSinkTempLimit(const QString & temp) override;
 	void appendTestDataLine(const QString & line) override;
 	void appendEventsLine(const QString & line) override;
 	void appendRawDataLine(const QString & line) override;

@@ -107,6 +107,11 @@ void MainWin::setupTestToolBar() {
 	ui.toolBarTest->addSeparator();
 }
 
+void MainWin::showPage(PagesEnum page) {
+	loaderStop();
+	ui.stackedWidget->setCurrentIndex(page);
+}
+
 void MainWin::setupTestConfPage() {
 	loader("Fetching test configure data");
 	auto confData = ObjectFactory::getInstance<TestConfigData>();
@@ -144,54 +149,59 @@ void MainWin::clearTestConfPage() {
 }
 
 void MainWin::prepareNewTest() {
-	QString name				{ ui.CTEdtTestName->text() };
+	loader("Setting up a device");
+	if (!setupDevice())
+		showPage(PagesEnum::CONF_TEST);
+}
+
+bool MainWin::setupDevice() {
 	QString com					{ ui.CTComboSerialPort->currentText() };
 	QString voltageLimit		{ ui.CTEdtVoltLim->text() };
-	QString heatSinkTempLimit	{ ui.CTEdtTempLim->text() };
-	QString idBattLeft			{ ui.CTComboBattLeft->currentText() };
-	QString idBattRight			{ ui.CTComboBattRight->currentText() };
-	QString fileToLogPath		{ ui.CTEdtFileName->text() };
-
-	if (ifEmptyShowWarning(name, "Test name")) return;
-	//if (ifEmptyShowWarning(com, "Com port")) return;
-	if (ifEmptyShowWarning(voltageLimit, "Voltage limit")) return;
-	if (ifEmptyShowWarning(heatSinkTempLimit, "Heat Sink temperature limit")) return;
-	if (ifEmptyShowWarning(idBattLeft, "Id battery left")) return;
+	QString heatSinkTempLimit	{ ui.CTEdtTempLim->text().isEmpty() ? "0" : ui.CTEdtTempLim->text() };
+	int numOfBatt{
+		ui.CTComboBattRight->currentText() == "-1" ? 1 : 2
+	};
+	//if (ifEmptyShowWarning(com, "Com port")) return false;
+	if (ifEmptyShowWarning(voltageLimit, "Voltage limit")) return false;
+	if (ifEmptyShowWarning(heatSinkTempLimit, "Heat Sink temperature limit")) return false;
 
 	switch (ui.CTToolBoxTestType->currentIndex()) {
-	case TestType::SIMULATION: {
+		case TestType::SIMULATION: {
 			/*
 				Data to DischargerDevice:
 					com, voltLim, tempLim, currSource, idLogInfo
 			*/
-			
 			auto selected = ui.CTSimTreeRaces->selectedItems();
 			if (selected.size() != 1) {
 				showWarning("A log session must be selected from the tree view!");
-				return;
+				return false;
 			}
 			QString idLogInfo{ selected.front()->text(TREE_ID_LOG_INFO_COL_NUM) };
-
-			DischargerDevice * dev = new DischargerDevice{
-				testDriver,
-				com,
-				DeviceInterface::CurrentSource::MOTOR
-			};
-
-			// tmp...
+			DeviceInterface::CurrentSource currSource{ (
+				ui.CTSimRadioCurrSourceMotor->isChecked() ?
+				DeviceInterface::CurrentSource::MOTOR :
+				DeviceInterface::CurrentSource::MAIN
+			) };
+			auto dev = new DischargerDevice{ testDriver, com, currSource };
 			dev->setVoltageLimit(voltageLimit.toFloat());
 			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
-
+			testDriver->setDevice(dev);
+			if (!dev->checkBatteryNumber(numOfBatt)) {
+				showError("Invalid number of batteries");
+				testDriver->removeDevice();
+				showPage(PagesEnum::CONF_TEST);
+				return false;
+			}
 			dev->fetchCurrentToTest(idLogInfo.toInt(), [this](bool success, const QString & comment) {
 				if (success) {
-					int i = 0;
+					setupTestDriver();
 				}
 				else {
 					showError(comment);
+					testDriver->removeDevice();
+					showPage(PagesEnum::CONF_TEST);
 				}
-			});	
-
-					   
+			});
 			break;
 		}
 		case TestType::BASIC_TEST: {
@@ -199,30 +209,72 @@ void MainWin::prepareNewTest() {
 				Data to DischargerDevice:
 					com, voltLim, tempLim, currSource, testCurr
 			*/
-
+			auto testCurrStr{ ui.CTBasicEdtTestCurr->text() };
+			if (ifEmptyShowWarning(testCurrStr, "Test current")) return false;
+			auto dev = new DischargerDevice{ testDriver, com, DeviceInterface::CurrentSource::NO_CURR_SOURCE };
+			dev->setTestCurrent(testCurrStr.toFloat());
+			dev->setVoltageLimit(voltageLimit.toFloat());
+			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
+			testDriver->setDevice(dev);
+			if (!dev->checkBatteryNumber(numOfBatt)) {
+				showError("Invalid number of batteries");
+				testDriver->removeDevice();
+				showPage(PagesEnum::CONF_TEST);
+				return false;
+			}
+			setupTestDriver();
 			break;
 		}
 		case TestType::DEV_TERMINAL: {
+			// TODO: Other devices
 			/*
 				Data to DischargerDevice:
 					com, voltLim, tempLim, buadrate, parity, data bits, stop bits, mask, currentRatio
 			*/
-
 			break;
 		}
 		default:
 			break;
 	}
+	return true;
 }
 
+void MainWin::setupTestDriver() {
+	loader("Setting up the test driver");
 
-void MainWin::showTestConfPage() {
+	QString name			{ ui.CTEdtTestName->text() };
+	int idBattLeft			{ ui.CTComboBattLeft->currentText().toInt() };
+	int idBattRight			{ ui.CTComboBattRight->currentText().toInt() };
+	QString filepathToLog	{ ui.CTEdtFileName->text() };
 
+	if (ifEmptyShowWarning(name, "Test name")) {}
+	else if (idBattLeft == idBattRight) {
+		showError("Id of battery left and right can not be equal");
+	}
+	else {
+		// TODO: Setup db record
+
+
+		testDriver->setTestName(name);
+		testDriver->setIdBattLeft(idBattLeft);
+		testDriver->setIdBattRight(idBattRight);
+		testDriver->setFilepathToLog(filepathToLog);
+		showTestPage();
+
+		return;
+	}
+	testDriver->removeDevice();
+	showPage(PagesEnum::CONF_TEST);
 }
 
 void MainWin::showTestPage() {
-
+	testDriver->loadPageData();
+	showPage(PagesEnum::TEST);
 }
+
+void MainWin::showTestConfPage() {
+}
+
 
 void MainWin::loader(const QString & msg) {
 	QMovie * mv = ui.loaderLblMovie->movie();
@@ -245,20 +297,9 @@ void MainWin::loaderStop() {
 
 
 void MainWin::testStart() {
-	//ui.toolBarTest->actions()[TestActions::START]->setVisible(false);
-	//ui.toolBarTest->actions()[TestActions::STOP]->setVisible(true);
+	ui.toolBarTest->actions()[TestActions::START]->setVisible(false);
+	ui.toolBarTest->actions()[TestActions::STOP]->setVisible(true);
 	// TODO: Test start
-
-	static QPushButton * btn = nullptr;
-	if (btn == nullptr) {
-		btn = new QPushButton("Hi");
-		setChart(btn);
-	}
-	else {
-		removeChart(btn);
-		delete btn;
-		btn = nullptr;
-	}
 }
 
 void MainWin::testStop() {
@@ -301,10 +342,10 @@ void MainWin::setTestPatametersData(const TestParametersData & data) {
 	ui.parProgBar->setValue(data.getProgress());
 	if (!ui.parVarEdtCurr->isEnabled())
 		ui.parVarEdtCurr->setText(data.getTestCurrent());
-	ui.parTimeLblBeg->setText(data.getTestBeginedAt());
+	ui.parTimeLblBeg->setText(data.getTestBeganAt());
 	ui.parTimeLblEstEnd->setText(data.getTestEstimatedEnd());
 	ui.parTimeLblTestTime->setText(data.getTestTime());
-	ui.parTimeLblEstEnd->setText(data.getTestEstimatedEnd());
+	ui.parTimeLblEstTime->setText(data.getEstimatedTime());
 	ui.parCalcLblCapa->setText(data.getCapacity());
 	ui.parCalcLblEnergy->setText(data.getConsumedEnergy());
 	if (data.isSingleBatteryMode()) {
@@ -330,6 +371,18 @@ void MainWin::setTestPatametersData(const TestParametersData & data) {
 
 void MainWin::setTestCurrentLineEditEnabled(bool enabled) {
 	ui.parVarEdtCurr->setEnabled(enabled);
+}
+
+void MainWin::setVarTestCurrent(const QString & curr) {
+	ui.parVarEdtCurr->setText(curr);
+}
+
+void MainWin::setVarVoltLimit(const QString & volt) {
+	ui.parVarEdtVolLim->setText(volt);
+}
+
+void MainWin::setVarHeatSinkTempLimit(const QString & temp) {
+	ui.parVarEdtTempLim->setText(temp);
 }
 
 void MainWin::appendTestDataLine(const QString & line) {

@@ -112,13 +112,6 @@ unsigned int DischargerDevice::getProgress() {
 	}
 }
 
-float DischargerDevice::getTestCurrent() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		throw std::exception("This current source not support such a functionality");
-	}
-	return testCurrent;
-}
-
 void DischargerDevice::setTestCurrent(float current) {
 	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
 		throw std::exception("This current source not support such a functionality");

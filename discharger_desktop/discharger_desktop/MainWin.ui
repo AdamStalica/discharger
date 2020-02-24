@@ -57,8 +57,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>679</width>
-             <height>679</height>
+             <width>294</width>
+             <height>128</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1322,8 +1322,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>679</width>
-             <height>670</height>
+             <width>182</width>
+             <height>66</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -1500,7 +1500,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>-103</y>
           <width>350</width>
           <height>761</height>
          </rect>
@@ -1804,7 +1804,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Begined at: </string>
+                 <string>Began at: </string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2166,7 +2166,7 @@ temperature:</string>
                <widget class="QWidget" name="gridLayoutWidget_2">
                 <property name="geometry">
                  <rect>
-                  <x>20</x>
+                  <x>10</x>
                   <y>190</y>
                   <width>135</width>
                   <height>80</height>

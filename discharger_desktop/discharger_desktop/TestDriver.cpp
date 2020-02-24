@@ -51,6 +51,14 @@ void TestDriver::removeDevice() {
 	devicePtr.reset();
 }
 
+void TestDriver::loadPageData() {
+	ui.setTestPatametersData(prepareTestParametersData());
+	if (devicePtr->getCurrentSource() == DeviceInterface::CurrentSource::NO_CURR_SOURCE)
+		ui.setVarTestCurrent(QString::number(devicePtr->getTestCurrent()));
+	ui.setVarVoltLimit(QString::number(devicePtr->getVoltageLimit()));
+	ui.setVarHeatSinkTempLimit(QString::number(devicePtr->getHeatSinkTempLimit()));
+}
+
 void TestDriver::deviceNewData() {
 
 }
@@ -61,4 +69,50 @@ void TestDriver::deviceErrorOccured(Device::Error error) {
 
 void TestDriver::deviceWarningOccured(Device::Warning warning) {
 
+}
+
+TestParametersData TestDriver::prepareTestParametersData() {
+	TestParametersData data;
+	data.setTestName(testName);
+	data.setTestStatus(TEST_STATES.at(testState));
+	data.setProgress(devicePtr->getProgress());
+	bool noCurrSource = (devicePtr->getCurrentSource() == DeviceInterface::CurrentSource::NO_CURR_SOURCE);
+	if (!noCurrSource) {
+		data.setTestCurrent(devicePtr->getTestCurrent());
+	}
+
+	ui.setTestCurrentLineEditEnabled(noCurrSource);
+	// time began at
+	// est end
+	// test time
+	// est time
+	if (devicePtr->hasCapacity()) {
+		data.setCapacity(devicePtr->getCapacity());
+	}
+	else {
+		// TODO: Calc 
+	}
+	if (devicePtr->hasConsumedEnergy()) {
+		data.setConsumedEnergy(devicePtr->getConsumedEnergy());
+	}
+	else {
+
+	}
+	if (devicePtr->hasHeatSinkTemp())
+		data.setHeatSinkTemp(devicePtr->getHeatSinkTemp());
+	data.setCurrent(devicePtr->getCurrent());
+	data.setBattLeftId(idBattLeft);
+	if (devicePtr->hasBattLeftVolt())
+		data.setBattLeftVolt(devicePtr->getBattLeftVolt());
+	if (devicePtr->hasBattLeftTemp())
+		data.setBattLeftTemp(devicePtr->getBattLeftTemp());
+	if(!isSingleBattery()) {
+		data.setSingleBatteryMode(false);
+		data.setBattRightId(idBattRight);
+		if (devicePtr->hasBattRightVolt())
+			data.setBattRightVolt(devicePtr->getBattRightVolt());
+		if (devicePtr->hasBattRightTemp())
+			data.setBattRightTemp(devicePtr->getBattRightTemp());
+	}
+	return data;
 }

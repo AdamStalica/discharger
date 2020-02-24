@@ -13,6 +13,9 @@ public:
 	virtual void clearParameters() = 0;
 	virtual void setTestPatametersData(const TestParametersData & data) = 0;
 	virtual void setTestCurrentLineEditEnabled(bool enabled) = 0;
+	virtual void setVarTestCurrent(const QString & curr) = 0;
+	virtual void setVarVoltLimit(const QString & volt) = 0;
+	virtual void setVarHeatSinkTempLimit(const QString & temp) = 0;
 	virtual void appendTestDataLine(const QString & line) = 0;
 	virtual void appendEventsLine(const QString & line) = 0;
 	virtual void appendRawDataLine(const QString & line) = 0;

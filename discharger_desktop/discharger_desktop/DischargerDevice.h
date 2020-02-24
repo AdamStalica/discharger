@@ -52,13 +52,13 @@ private:
 	unsigned int dataId = 0;
 
 	// Current params
-	float testCurrent,
-		current,
-		battLeftVolt,
-		battRightVolt,
-		battLeftTemp,
-		battRightTemp,
-		heatSinkTemp;
+	float testCurrent = 0,
+		current = 0,
+		battLeftVolt = 0,
+		battRightVolt = 0,
+		battLeftTemp = 0,
+		battRightTemp = 0,
+		heatSinkTemp = 0;
 
  	unsigned int idLogInfo,
 		idLogData;
@@ -88,7 +88,10 @@ public:
 	unsigned int getLogInfoId() override;
 	unsigned int getLogDataId() override;
 	unsigned int getProgress() override;
-	float getTestCurrent() override;
+
+	float getTestCurrent() override { return testCurrent; };
+	float getVoltageLimit() override { return voltLimit; };
+	float getHeatSinkTempLimit() override { return heatSinkTempLimit; };
 	void setTestCurrent(float current) override;
 	void setVoltageLimit(float volt) override;
 	void setHeatSinkTempLimit(float tempLimit) override;
@@ -102,7 +105,7 @@ public:
 	bool hasBattRightTemp() override { return true; };
 	bool hasHeatSinkTemp() override { return true; };
 
-	float getCurrent() override { return current; };
+	float getCurrent() override { return current; }; 
 	float getBattLeftVolt() override { return battLeftVolt; };
 	float getBattLeftTemp() override { return battLeftTemp; };
 	float getBattRightVolt() override { return battRightVolt; };

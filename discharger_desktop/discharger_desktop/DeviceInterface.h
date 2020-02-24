@@ -37,15 +37,13 @@ public:
 
 	//virtual bool hasTestCurrent() { return false; }
 
-	virtual float getTestCurrent() { return 0.0; };
+	virtual float getTestCurrent() { return 0.0; }; 
+	virtual float getVoltageLimit() = 0;
+	virtual float getHeatSinkTempLimit() { return 0.0; };
 
 	virtual void setTestCurrent(float current) = 0;
 	virtual void setVoltageLimit(float volt) = 0;
 	virtual void setHeatSinkTempLimit(float tempLimit) = 0;
-
-	//virtual float getVoltageLimit() = 0;
-	//virtual bool hasHeatSinkTempLimit() { return false; };
-	//virtual float getHeatSinkTempLimit() { return 0.0; };
 
 	virtual bool hasEstimatedTestTime() { return false; };
 	virtual QTime getEstimatedTestTime() { return QTime(); };

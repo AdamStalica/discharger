@@ -20,7 +20,7 @@ class TestParametersData
 		battRightId = "-",
 		battRightVolt = "-",
 		battRightTemp = "-";
-	bool singleBattMode = false;
+	bool singleBattMode = true;
 	unsigned int progress = 0;
 
 public:
@@ -30,7 +30,7 @@ public:
 	void setTestName(const QString & name) { this->name = name; };
 	void setTestStatus(const QString & status) { this->status = status; };
 	void setTestCurrent(float current) { testCurrent = QString::number(current); };
-	void setTestBeginedAt(const QString & begin) { this->begin = begin; };
+	void setTestBeganAt(const QString & begin) { this->begin = begin; };
 	void setTestEstimatedEnd(const QString & end) { this->end = end; };
 	void setTestTime(const QString & testTime) { this->testTime = testTime; };
 	void setEstimatedTime(const QString & estTime) { this->estTime = estTime; };
@@ -51,7 +51,7 @@ public:
 	QString getTestName() const { return name; };
 	QString getTestStatus() const { return status; };
 	QString getTestCurrent() const { return testCurrent; };
-	QString getTestBeginedAt() const { return begin; };
+	QString getTestBeganAt() const { return begin; };
 	QString getTestEstimatedEnd() const { return end; };
 	QString getTestTime() const { return testTime; };
 	QString getEstimatedTime() const { return estTime; };
