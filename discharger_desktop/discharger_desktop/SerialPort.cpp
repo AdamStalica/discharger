@@ -47,7 +47,12 @@ void SerialPort::close() {
 }
 
 void SerialPort::println(const std::string & line) {
-	emit emitPrint((line + "\r\n").c_str());
+	println(QString::fromStdString(line));
+}
+
+void SerialPort::println(const QString & line) {
+	emit emitPrint((line + "\r\n"));
+	emit transmitedLine(line);
 }
 
 void SerialPort::setPort(const std::string & port) {
@@ -69,7 +74,7 @@ void SerialPort::setStopBits(stopbits_t stopbits) {
 void SerialPort::setParity(parity_t parity) {
 	_parity = parity;
 }
-
+/*
 void SerialPort::setOnPortOpenedCallback(std::function<void(void)> callback) {
 	_portOpenedCallback = callback;
 }
@@ -81,18 +86,21 @@ void SerialPort::setOnPortClosedCallback(std::function<void(void)> callback) {
 void SerialPort::setOnNewLineCallback(std::function<void(const std::string&)> callback) {
 	_portNewLineCallback = callback;
 }
-
+*/
 void SerialPort::handleNewLine(const QString & line) {
-	_portNewLineCallback(line.toStdString());
+	//_portNewLineCallback(line.toStdString());
+	emit receivedLine(line);
 }
 
 void SerialPort::handleSerialClosed() {
 	_opened = false;
-	_portClosedCallback();
+	//_portClosedCallback();
+	emit closed();
 }
 
 void SerialPort::handleSerialOpened() {
 	_opened = true;
-	_portOpenedCallback();
+	//_portOpenedCallback();
+	emit opened();
 }
 

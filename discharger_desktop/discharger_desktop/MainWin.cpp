@@ -27,17 +27,7 @@ MainWin::MainWin(QWidget *parent)
 	
 	auto serial_ = ObjectFactory::getInstance<SerialPort>();	
 
-	/*
-	auto Dcoms = ObjectFactory::getInstance<TestConfigData>();
-	Dcoms->refreshComs();
-	auto coms = Dcoms->getComsList();
-	serial_->setPort(coms.at(0).toStdString());
-	serial_->setBaudrate(9600);
-	serial_->open();
-	serial_->println("Hello World!");
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	serial_->close();
-	*/
+
 
 	testDriver = ObjectFactory::getInstance<TestDriver>();
 
@@ -54,8 +44,22 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
 	connect(ui.testBtnConfChart, &QPushButton::clicked, testDriver, &TestDriver::confChart);
 
+	connect(serial_, &SerialPort::opened, this, &MainWin::serialOpened);
+	connect(serial_, &SerialPort::closed, this, &MainWin::serialClosed);
+	connect(serial_, &SerialPort::receivedLine, this, &MainWin::serialReceivedLine);
+	connect(serial_, &SerialPort::transmitedLine, this, &MainWin::serialTransmitedLine);
 	//connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &MainWin::currentPageChannged);
 
+
+	
+	auto Dcoms = ObjectFactory::getInstance<TestConfigData>();
+	Dcoms->refreshComs();
+	auto coms = Dcoms->getComsList();
+	serial_->setPort(coms.at(0).toStdString());
+	serial_->setBaudrate(57600);
+	serial_->open();
+	serial_->println(QString("{\"handshake\":\"PC\"}"));
+	
 }
 
 void MainWin::setDockedWidgetsVisibility(bool visible) {
@@ -446,4 +450,36 @@ void MainWin::appendLineToTextBrowser(QTextBrowser * brow, const QString & line,
 		QScrollBar *sb = brow->verticalScrollBar();
 		sb->setValue(sb->maximum());
 	}
+}
+
+void MainWin::serialOpened() {
+	appendLineToTextBrowser(
+		ui.commFlowTabRawDataTxtBrow,
+		"<div style=\"text-align: center;\">Port opened<div>",
+		ui.commFlowTabRawDataChckScroll->isChecked()
+	);
+}
+
+void MainWin::serialClosed() {
+	appendLineToTextBrowser(
+		ui.commFlowTabRawDataTxtBrow,
+		"<div style=\"text-align: center;\">Port closed<div>",
+		ui.commFlowTabRawDataChckScroll->isChecked()
+	);
+}
+
+void MainWin::serialReceivedLine(const QString & line) {
+	appendLineToTextBrowser(
+		ui.commFlowTabRawDataTxtBrow,
+		"<div style=\"text-align: left;\">" + line +"<div>",
+		ui.commFlowTabRawDataChckScroll->isChecked()
+	);
+}
+
+void MainWin::serialTransmitedLine(const QString & line) {
+	appendLineToTextBrowser(
+		ui.commFlowTabRawDataTxtBrow,
+		"<div style=\"text-align: right;\">" + line + "<div>",
+		ui.commFlowTabRawDataChckScroll->isChecked()
+	);
 }

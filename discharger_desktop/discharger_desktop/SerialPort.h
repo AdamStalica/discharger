@@ -3,10 +3,7 @@
 #include <QObject>
 #include <queue>
 #include <serial/serial.h>
-#include <chrono>
-#include <thread>
 #include <QThread>
-#include <functional>
 #include <QDebug>
 #include <QTimer>
 
@@ -87,7 +84,7 @@ namespace serialPort {
 		datasize_t _datasize{ datasize_t::eightbits };
 		stopbits_t _stopbits{ stopbits_t::stopbits_one };
 		parity_t _parity	{ parity_t::parity_none };
-
+		/*
 		std::function<void(void)> _portOpenedCallback{
 			[this] {
 				qDebug() << "Port " << _port.c_str() << " opened.";
@@ -103,7 +100,7 @@ namespace serialPort {
 				qDebug() << "Line: " << line.c_str();
 			}
 		};
-
+		*/
 	public:
 		SerialPort(QObject *parent);
 		~SerialPort();
@@ -112,6 +109,7 @@ namespace serialPort {
 		void close();
 
 		void println(const std::string & line);
+		void println(const QString & line);
 
 		void setPort(const std::string & port);
 		void setBaudrate(uint32_t baudrate);
@@ -119,9 +117,9 @@ namespace serialPort {
 		void setStopBits(stopbits_t stopbits);
 		void setParity(parity_t parity);
 
-		void setOnPortOpenedCallback(std::function<void(void)> callback);
-		void setOnPortClosedCallback(std::function<void(void)> callback);
-		void setOnNewLineCallback(std::function<void(const std::string &)> callback);
+		//void setOnPortOpenedCallback(std::function<void(void)> callback);
+		//void setOnPortClosedCallback(std::function<void(void)> callback);
+		//void setOnNewLineCallback(std::function<void(const std::string &)> callback);
 
 	private slots:
 		void handleNewLine(const QString & line);
@@ -132,6 +130,9 @@ namespace serialPort {
 		void emitOpen(serial::Serial * serial_);
 		void emitPrint(const QString & line);
 		void emitClose();
+		void opened();
+		void closed();
+		void receivedLine(const QString & line);
+		void transmitedLine(const QString & line);
 	};
-
 }

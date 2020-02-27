@@ -97,6 +97,12 @@ private:
 	void removeChart(QWidget * chart) override;
 
 	void appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown = false);
+
+private slots:
+	void serialOpened();
+	void serialClosed();
+	void serialReceivedLine(const QString & line);
+	void serialTransmitedLine(const QString & line);
 };
 
 template<class T>

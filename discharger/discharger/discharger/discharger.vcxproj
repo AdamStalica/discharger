@@ -88,8 +88,7 @@
       <QTDIR>$(QTDIR)</QTDIR>
     </QtRcc>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y "F:\Source\libs\QtQrCode\bin\debug\QtQrCodeWidget.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -128,7 +127,7 @@
       <QTDIR>$(QTDIR)</QTDIR>
     </QtRcc>
     <PostBuildEvent>
-      <Command>xcopy /y "C:\Users\domin\source\libs\QtQrCode\bin\release\QtQrCodeWidget.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y "F:\Source\libs\QtQrCode\bin\release\QtQrCodeWidget.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
