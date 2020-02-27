@@ -119,6 +119,10 @@ void TestConfigData::setOnDataReadyCallback(std::function<void(bool, const QStri
 void TestConfigData::refreshComs() {
 	coms.clear();
 	auto ports = QSerialPortInfo::availablePorts();
+	for (auto & port : ports)
+		coms.push_back(port.portName());
+	return;
+
 	coms.reserve(ports.size());
 	std::transform(ports.begin(), ports.end(), coms.begin(),
 		[](const QSerialPortInfo & com)->QString {

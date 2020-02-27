@@ -55,7 +55,7 @@
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CHARTS_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALBUS_LIB;QT_SERIALPORT_LIB;QT_SQL_LIB;QT_WEBCHANNEL_LIB;QT_WEBSOCKETS_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\domin\source\libs\QtQrCode\include;C:\Users\domin\source\libs\wjwwood-serial-lib\include;C:\Users\domin\source\libs\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Source\libs\QtQrCode\include;F:\Source\libs\wjwwood-serial-lib\include;F:\Source\libs\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -66,26 +66,30 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>C:\Users\domin\source\libs\QtQrCode\lib;C:\Users\domin\source\libs\wjwwood-serial-lib\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>F:\Source\libs\QtQrCode\lib;F:\Source\libs\wjwwood-serial-lib\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>QtQrCodeWidgetd.lib;seriald.lib;qtmaind.lib;Qt5Chartsd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5SerialBusd.lib;Qt5SerialPortd.lib;Qt5Sqld.lib;Qt5WebChanneld.lib;Qt5WebSocketsd.lib;Qt5WebEngined.lib;Qt5WebEngineCored.lib;Qt5WebEngineWidgetsd.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>C:\Users\domin\source\libs\QtQrCode\include;C:\Users\domin\source\libs\wjwwood-serial-lib\include;C:\Users\domin\source\libs\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
+      <IncludePath>F:\Source\libs\QtQrCode\include;F:\Source\libs\wjwwood-serial-lib\include;F:\Source\libs\json\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
       <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CHARTS_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALBUS_LIB;QT_SERIALPORT_LIB;QT_SQL_LIB;QT_WEBCHANNEL_LIB;QT_WEBSOCKETS_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</Define>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtMoc>
     <QtUic>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
       <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtUic>
     <QtRcc>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtRcc>
     <PostBuildEvent>
-      <Command>xcopy /y "C:\Users\domin\source\libs\QtQrCode\bin\debug\QtQrCodeWidget.dll" "$(OutDir)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,14 +115,17 @@
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
       <IncludePath>C:\Users\domin\source\libs\QtQrCode\include;C:\Users\domin\source\libs\json\include;C:\Users\domin\source\libs\wjwwood-serial-lib\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCharts;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialBus;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebChannel;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWebEngine;$(QTDIR)\include\QtWebEngineCore;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
       <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CHARTS_LIB;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALBUS_LIB;QT_SERIALPORT_LIB;QT_SQL_LIB;QT_WEBCHANNEL_LIB;QT_WEBSOCKETS_LIB;QT_WEBENGINE_LIB;QT_WEBENGINECORE_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</Define>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtMoc>
     <QtUic>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
       <OutputFile>.\GeneratedFiles\ui_%(Filename).h</OutputFile>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtUic>
     <QtRcc>
       <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
       <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <QTDIR>$(QTDIR)</QTDIR>
     </QtRcc>
     <PostBuildEvent>
       <Command>xcopy /y "C:\Users\domin\source\libs\QtQrCode\bin\release\QtQrCodeWidget.dll" "$(OutDir)"</Command>
@@ -143,7 +150,10 @@
     <ClCompile Include="win_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="win_main.h" />
+    <QtMoc Include="win_main.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\domin\source\libs\QtQrCode\include;C:\Users\domin\source\libs\wjwwood-serial-lib\include;C:\Users\domin\source\libs\json\include;.\GeneratedFiles;.;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include;.\GeneratedFiles\$(ConfigurationName);D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtCharts;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtCore;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtGui;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtANGLE;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtNetwork;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSerialBus;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSerialPort;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSql;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebChannel;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebSockets;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngine;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngineCore;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngineWidgets;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\domin\source\libs\QtQrCode\include;C:\Users\domin\source\libs\json\include;C:\Users\domin\source\libs\wjwwood-serial-lib\include;.\GeneratedFiles;.;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include;.\GeneratedFiles\$(ConfigurationName);D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtCharts;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtCore;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtGui;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtANGLE;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtNetwork;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSerialBus;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSerialPort;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtSql;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebChannel;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebSockets;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngine;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngineCore;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWebEngineWidgets;D:\Qt\Qt5.13.1\5.13.1\msvc2017\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="WgtChart.ui" />

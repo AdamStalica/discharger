@@ -1,6 +1,7 @@
 #include "MainWin.h"
 #include "ObjectFactory.h"
 #include "DischargerDevice.h"
+#include "SerialPort.h"
 #include "User.h"
 #include "TestConfigData.h"
 #include "TestDriver.h"
@@ -8,6 +9,8 @@
 #include <QTreeWidget>
 #include <QMovie>
 #include <QScrollBar>
+
+using namespace serialPort;
 
 MainWin::MainWin(QWidget *parent)
 	: QMainWindow(parent)
@@ -20,6 +23,21 @@ MainWin::MainWin(QWidget *parent)
 	ObjectFactory::createInstance(new User(this));
 	ObjectFactory::createInstance(new TestConfigData(this));
 	ObjectFactory::createInstance(new TestDriver(this));
+	ObjectFactory::createInstance(new SerialPort(this));
+	
+	auto serial_ = ObjectFactory::getInstance<SerialPort>();	
+
+	/*
+	auto Dcoms = ObjectFactory::getInstance<TestConfigData>();
+	Dcoms->refreshComs();
+	auto coms = Dcoms->getComsList();
+	serial_->setPort(coms.at(0).toStdString());
+	serial_->setBaudrate(9600);
+	serial_->open();
+	serial_->println("Hello World!");
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	serial_->close();
+	*/
 
 	testDriver = ObjectFactory::getInstance<TestDriver>();
 
