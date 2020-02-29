@@ -9,7 +9,7 @@
 #ifndef __MCP4725_H__
 #define __MCP4725_H__
 
-#define MCP4725_MAX_DAC (1 << 11)
+#define MCP4725_MAX_DAC (1 << 12)
 #define MCP4725_VREF 5000
 
 #define DEVICE_CODE 0xC0

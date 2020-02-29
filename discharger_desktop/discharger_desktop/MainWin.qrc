@@ -11,6 +11,7 @@
   </qresource>
   <qresource prefix="icons">
     <file>media/icons/chart.ico</file>
+    <file>media/icons/new_test.ico</file>
     <file>media/icons/comm_flow.ico</file>
     <file>media/icons/discharger.ico</file>
     <file>media/icons/error.ico</file>

@@ -20,7 +20,7 @@ public:
 	virtual void setOnNewDataCallback(std::function<void(void)> dataCallback) = 0;
 
 	virtual bool isStartable() { return true; };
-	virtual bool isStopable() { return true; };
+	//virtual bool isStopable() { return true; };
 
 	virtual void connect() = 0;
 	virtual void start() = 0;

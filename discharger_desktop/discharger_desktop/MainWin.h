@@ -29,12 +29,6 @@ private:
 		TEST
 	};
 
-	enum TestActions {
-		START,
-		STOP,
-		NEW_TEST
-	};
-
 	enum TestType {
 		SIMULATION,
 		BASIC_TEST,
@@ -59,18 +53,24 @@ private:
 
 	void setupMainToolBar();
 	void setupTestToolBar();
+	void testToolBarAboutToStart();
+	void testToolBarAboutToStop();
+	void testToolBarAboutToNewTest();
 
 	void showPage(PagesEnum page);
 
 	void setupTestConfPage();
-	void loadTestConfPage();
+	void showTestConfPage();
 	void clearTestConfPage();
+
 	void prepareNewTest();
 	bool setupDevice();
 	void setupTestDriver();
-
 	void showTestPage();
-	void showTestConfPage();
+	void clearTestPage();
+
+
+	//void showTestConfPage();
 	
 	void loader(const QString & msg);
 	void loaderStop();
@@ -82,6 +82,7 @@ private:
 	bool ifEmptyShowWarning(const QString & toCheck, const QString & name);
 	void showWarning(const QString & msg);
 	void showError(const QString & msg);
+	int showQuestionBox(const QString & text);
 
 	void testFinised() override;
 	void clearParameters() override;

@@ -17,14 +17,6 @@ private:
 		"Removed",
 		"Error"
 	};
-	enum TestStates {
-		READY,
-		PROGRESS,
-		COMPLETED,
-		CONFIRMED,
-		REMOVED,
-		ERROR
-	} testState = READY;
 
 	TestGUI & ui;
 	QLabel * chart;
@@ -34,11 +26,21 @@ private:
 	int idBattLeft, idBattRight;
 
 public:
+	enum TestStates {
+		READY,
+		PROGRESS,
+		COMPLETED,
+		CONFIRMED,
+		REMOVED,
+		ERROR
+	};
+
 	TestDriver(QObject *parent);
 	~TestDriver();
 
 	void confChart();
 	void setDevice(DeviceInterface * dev);
+	std::shared_ptr<DeviceInterface> getDevice() { return devicePtr; };
 	void removeDevice();
 
 	void setTestName(const QString & name) { testName = name; };
@@ -46,8 +48,15 @@ public:
 	void setIdBattRight(int id) { idBattRight = id; };
 	void setFilepathToLog(const QString &filepath) { this->filepath = filepath; };
 	void loadPageData();
+	void startTest();
+	void stopTest();
+	void clear();
+
+	TestStates getTestState() { return testState; };
 
 private:
+	TestStates testState = READY;
+
 	void deviceNewData();
 	void deviceErrorOccured(Device::Error error);
 	void deviceWarningOccured(Device::Warning warning);

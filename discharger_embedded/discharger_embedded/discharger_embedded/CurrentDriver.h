@@ -31,7 +31,7 @@ class CurrentDriver {
 	CurrentDriver();
 	~CurrentDriver() {};
 
-	static uint16_t getCurrentFormADC(int16_t adcCurrent);
+	static int16_t getCurrentFormADC(int16_t adcCurrent);
 
 	void setSimulatedCurrent(int16_t current);
 	uint16_t getEstimatedMillivolts(int16_t requestedCurrent);

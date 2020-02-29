@@ -7,7 +7,7 @@ TestConfigData::TestConfigData(QObject *parent)
 {}
 
 TestConfigData::~TestConfigData() {
-	qDeleteAll(logsTreeItems);
+//	qDeleteAll(logsTreeItems);
 }
 
 void TestConfigData::perpareData() {
@@ -34,9 +34,6 @@ void TestConfigData::proccessResponse() {
 	for (auto & val : jsonData["batteries"]) {
 		batteries.append(QString::number(val.get<int>()));
 	}
-
-	createStandardItemModel();
-
 	dataReadyCallback(true, "Ok");
 }
 
@@ -69,6 +66,7 @@ void TestConfigData::proccessResponse() {
 	batteries: [ 1, 2, 3, ...]
 }
 */
+/*
 void TestConfigData::createStandardItemModel() {
 	qDeleteAll(logsTreeItems);
 	logsTreeItems.clear();
@@ -111,7 +109,7 @@ void TestConfigData::createStandardItemModel() {
 		logsTreeItems.append(speedwayItem);
 	}
 }
-
+*/
 void TestConfigData::setOnDataReadyCallback(std::function<void(bool, const QString&)> callback) {
 	dataReadyCallback = callback;
 }
@@ -133,4 +131,47 @@ void TestConfigData::refreshComs() {
 QStringList TestConfigData::getBatteriesRightList()
 {
 	return (QStringList() << "-1" << batteries);
+}
+
+QList<QTreeWidgetItem*> TestConfigData::getLogsTreeItems() {
+	QList<QTreeWidgetItem *> logsTreeItems;
+
+	for (auto speedway : jsonData["speedways"]) {
+		QTreeWidgetItem * speedwayItem = new QTreeWidgetItem{
+			QStringList {
+				speedway["speedway_name"].get<std::string>().c_str()
+			}
+		};
+		speedwayItem->setFlags(Qt::ItemIsEnabled);
+
+		for (auto race : speedway["races"]) {
+			QTreeWidgetItem * raceItem = new QTreeWidgetItem{
+				QStringList{
+					race["race_name"].get<std::string>().c_str(),
+					race["race_date"].get<std::string>().c_str()
+				}
+			};
+			raceItem->setFlags(Qt::ItemIsEnabled);
+
+			for (auto log : race["logs"]) {
+				QTreeWidgetItem * logItem = new QTreeWidgetItem{
+					QStringList{
+						"", "",
+						QString::number(log["id_log_info"].get<int>()),
+						log["log_type"].get<std::string>().c_str(),
+						log["car_name"].get<std::string>().c_str(),
+						log["time_begin"].get<std::string>().c_str(),
+						log["duration"].get<std::string>().c_str(),
+						QString::number(log["avg_main_curr"].get<float>()),
+						QString::number(log["avg_motor_curr"].get<float>())
+					}
+				};
+				logItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+				raceItem->addChild(logItem);
+			}
+			speedwayItem->addChild(raceItem);
+		}
+		logsTreeItems.append(speedwayItem);
+	}
+	return logsTreeItems;
 }

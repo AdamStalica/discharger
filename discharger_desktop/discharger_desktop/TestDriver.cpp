@@ -59,6 +59,20 @@ void TestDriver::loadPageData() {
 	ui.setVarHeatSinkTempLimit(QString::number(devicePtr->getHeatSinkTempLimit()));
 }
 
+void TestDriver::startTest() {
+	// TODO: start test
+	ui.appendEventsLine("Starting test");
+}
+
+void TestDriver::stopTest() {
+	// TODO: stop test
+	ui.appendEventsLine("Stopping test");
+}
+
+void TestDriver::clear() {
+	removeDevice();
+}
+
 void TestDriver::deviceNewData() {
 
 }

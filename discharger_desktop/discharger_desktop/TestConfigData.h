@@ -17,7 +17,7 @@ private:
 
 	QStringList batteries;
 	QStringList coms;
-	QList<QTreeWidgetItem *> logsTreeItems;
+	//QList<QTreeWidgetItem *> logsTreeItems;
 
 
 	std::function<void(bool, const QString &)> dataReadyCallback{
@@ -25,7 +25,7 @@ private:
 	};
 
 	void proccessResponse();
-	void createStandardItemModel();
+	//void createStandardItemModel();
 
 public:
 	TestConfigData(QObject *parent);
@@ -38,5 +38,5 @@ public:
 	QStringList getBatteriesLeftList() { return batteries; }
 	QStringList getBatteriesRightList();
 	QStringList getComsList() { return coms; }
-	QList<QTreeWidgetItem *> & getLogsTreeItems() { return logsTreeItems; }
+	QList<QTreeWidgetItem *> getLogsTreeItems();// { return logsTreeItems; }
 };

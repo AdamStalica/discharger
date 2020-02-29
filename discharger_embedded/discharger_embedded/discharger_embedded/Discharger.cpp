@@ -18,7 +18,7 @@ Discharger::Discharger()
 		therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
 		therm2(THERMOMETER_2_PIN),
 		therm3(THERMOMETER_1_PIN),
-		simDelay(SIMULATION_INTERVAL)
+		simDelay(SIMULATION_INTERVAL *5)
 {
 	wdt_enable(WDTO_1S);
 	wdt_interrput_enable();
@@ -56,7 +56,7 @@ void Discharger::run() {
 	therm3.run();
 	led.run();
 	
-	if(SimulationData::isSimulationInProgress()) {
+	if(SimulationData::isSimulationInProgress() || 1) {
 		simulationDriver();	
 	}
 }
@@ -86,6 +86,33 @@ void Discharger::aboutToSendNewData() {
 void Discharger::simulationDriver() {
 	
 	if(simDelay.skipThisTime()) return;
+	/*
+	static uint16_t i = 0;
+	dac.writeMillivolts(i);
+	i += 50;
+	i %= 5000;
+	debugLog("I ", i);
+	return;
+	*/
+	
+	
+	//dac.writeMillivolts(1000);
+	
+	uint16_t newCurrent1 = getCurrentCurrent();
+	dac.writeMillivolts(newCurrent1);
+	
+	
+	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
+		adc.countAverages();
+		uint16_t currAdc = adc.getAvgADC(AnalogMeasurement::LEM);
+		
+		debugLog(
+			"I =", 
+			(driver.getCurrentFormADC(currAdc) * -1)
+		);
+	}
+	return;
+	
 	
 	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				

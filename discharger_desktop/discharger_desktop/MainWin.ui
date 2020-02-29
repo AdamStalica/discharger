@@ -1500,7 +1500,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-103</y>
+          <y>0</y>
           <width>350</width>
           <height>761</height>
          </rect>
@@ -2621,22 +2621,13 @@ temperature:</string>
      <item>
       <widget class="QTabWidget" name="commFlowTabWgt">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="commFlowTabTestData">
         <attribute name="title">
          <string>Test data</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_22">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>9</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
@@ -2660,6 +2651,19 @@ temperature:</string>
             </widget>
            </item>
            <item>
+            <spacer name="horizontalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QCheckBox" name="commFlowTabTestDataChckScroll">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -2675,6 +2679,19 @@ temperature:</string>
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="commFlowTabTestDataBtnClr">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
@@ -2687,21 +2704,51 @@ temperature:</string>
          <string>Events</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_23">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item alignment="Qt::AlignRight">
-          <widget class="QCheckBox" name="commFlowTabEventsChckScroll">
-           <property name="text">
-            <string>Auto scroll down</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_14">
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="commFlowTabEventsChckScroll">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Auto scroll down</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="commFlowTabEventsBtnClr">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QTextBrowser" name="commFlowTabEventsTxtBrow"/>
@@ -2713,24 +2760,62 @@ temperature:</string>
          <string>Raw data</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_24">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item alignment="Qt::AlignRight">
-          <widget class="QCheckBox" name="commFlowTabRawDataChckScroll">
-           <property name="text">
-            <string>Auto scroll down</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_13">
+           <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="commFlowTabRawDataChckScroll">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Auto scroll down</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="commFlowTabRawDataBtnClr">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QTextBrowser" name="commFlowTabRawDataTxtBrow"/>
+          <widget class="QTextBrowser" name="commFlowTabRawDataTxtBrow">
+           <property name="html">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -2750,6 +2835,126 @@ temperature:</string>
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionHelp">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/help.ico</normaloff>:/icons/media/icons/help.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/start.ico</normaloff>:/icons/media/icons/start.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Start test</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/stop.ico</normaloff>:/icons/media/icons/stop.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop test</string>
+   </property>
+  </action>
+  <action name="actionConfNewTest">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/new_test.ico</normaloff>:/icons/media/icons/new_test.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Configure new test</string>
+   </property>
+   <property name="toolTip">
+    <string>Configure new test</string>
+   </property>
+  </action>
+  <action name="actionLogout">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/logout.ico</normaloff>:/icons/media/icons/logout.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Logout</string>
+   </property>
+   <property name="toolTip">
+    <string>Logout</string>
+   </property>
+  </action>
+  <action name="actionShowCommFlow">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/comm_flow.ico</normaloff>:/icons/media/icons/comm_flow.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Communication flow</string>
+   </property>
+   <property name="toolTip">
+    <string>Show communication flow</string>
+   </property>
+  </action>
+  <action name="actionConfChart">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/chart.ico</normaloff>:/icons/media/icons/chart.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Configure chart</string>
+   </property>
+   <property name="toolTip">
+    <string>Configure test chart</string>
+   </property>
+  </action>
+  <action name="actionShowTestParams">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/parameters.ico</normaloff>:/icons/media/icons/parameters.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Test parameters</string>
+   </property>
+   <property name="toolTip">
+    <string>Show test parameters</string>
+   </property>
+  </action>
+  <action name="actionResultsOnline">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/web.ico</normaloff>:/icons/media/icons/web.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Results online</string>
+   </property>
+   <property name="toolTip">
+    <string>Open results online</string>
+   </property>
+  </action>
+  <action name="actionQrCode">
+   <property name="icon">
+    <iconset resource="MainWin.qrc">
+     <normaloff>:/icons/media/icons/qr_code.ico</normaloff>:/icons/media/icons/qr_code.ico</iconset>
+   </property>
+   <property name="text">
+    <string>QR code</string>
+   </property>
+   <property name="toolTip">
+    <string>Show QR code</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -2945,6 +3150,54 @@ temperature:</string>
     <hint type="destinationlabel">
      <x>694</x>
      <y>480</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commFlowTabRawDataBtnClr</sender>
+   <signal>clicked()</signal>
+   <receiver>commFlowTabRawDataTxtBrow</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>524</x>
+     <y>767</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>524</x>
+     <y>904</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commFlowTabEventsBtnClr</sender>
+   <signal>clicked()</signal>
+   <receiver>commFlowTabEventsTxtBrow</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>994</x>
+     <y>780</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>524</x>
+     <y>895</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commFlowTabTestDataBtnClr</sender>
+   <signal>clicked()</signal>
+   <receiver>commFlowTabTestDataTxtBrow</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>994</x>
+     <y>780</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>524</x>
+     <y>895</y>
     </hint>
    </hints>
   </connection>

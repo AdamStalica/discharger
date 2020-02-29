@@ -13,7 +13,7 @@
 *	adcVolt 0..1023
 *	I = adcVolt*2 + 7 [E2mA]
 */
-uint16_t CurrentDriver::getCurrentFormADC(int16_t adcVolt) {
+int16_t CurrentDriver::getCurrentFormADC(int16_t adcVolt) {
 	return (adcVolt ? (adcVolt * 2 + 7) : 0);
 }
 
