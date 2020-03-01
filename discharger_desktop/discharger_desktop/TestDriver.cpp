@@ -45,6 +45,7 @@ void TestDriver::setDevice(DeviceInterface * dev) {
 	devicePtr->setOnWarningCallback([this](Device::Warning warn) {
 		deviceWarningOccured(warn);
 	});
+	devicePtr->connectToDevice();
 }
 
 void TestDriver::removeDevice() {
@@ -62,11 +63,16 @@ void TestDriver::loadPageData() {
 void TestDriver::startTest() {
 	// TODO: start test
 	ui.appendEventsLine("Starting test");
+	testState = TestStates::PROGRESS;
+	devicePtr->start();
 }
 
 void TestDriver::stopTest() {
 	// TODO: stop test
 	ui.appendEventsLine("Stopping test");
+	testState = TestStates::REMOVED;
+	devicePtr->stop();
+	ui.setTestPatametersData(prepareTestParametersData());
 }
 
 void TestDriver::clear() {
@@ -74,7 +80,7 @@ void TestDriver::clear() {
 }
 
 void TestDriver::deviceNewData() {
-
+	ui.setTestPatametersData(prepareTestParametersData());
 }
 
 void TestDriver::deviceErrorOccured(Device::Error error) {

@@ -1,4 +1,5 @@
 #pragma once
+#include <QTimer>
 #include <queue>
 #include "DeviceInterface.h"
 #include "ObjectFactory.h"
@@ -25,7 +26,7 @@ temp heat sink
 
 
 class DischargerDevice :
-	public QObject,
+	//public QObject,
 	public DeviceInterface
 {
 	Q_OBJECT
@@ -38,6 +39,8 @@ private:
 	const std::string DB_MOTOR_CURR = "motor_curr";
 	const std::string DB_MAIN_CURR = "main_curr";
 	std::string currSourceName = DB_MAIN_CURR;
+
+	QTimer timer;
 
 	QString comPortName;
 	unsigned int sendingNewDataPeriod = 1000;
@@ -76,7 +79,7 @@ public:
 	void fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback);
 
 	//DeviceInterface
-	void connect() override;
+	void connectToDevice() override;
 	void start() override;
 	void stop() override;
 
@@ -113,4 +116,7 @@ public:
 	float getHeatSinkTemp() override { return heatSinkTemp; };
 
 	bool checkBatteryNumber(int numebrOfBatteries) override;
+
+private slots:
+	void timerTimeout();
 };

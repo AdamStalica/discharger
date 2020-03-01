@@ -76,12 +76,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeviceInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <QtMoc Include="DischargerDevice.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="MainWin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -104,6 +98,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WebApi.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DeviceInterface.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DischargerDevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

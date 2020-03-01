@@ -11,10 +11,11 @@ DischargerDevice::DischargerDevice()
 */
 
 DischargerDevice::DischargerDevice(QObject * parent, const QString & com, DeviceInterface::CurrentSource currSource) :
-	QObject(parent),
+	DeviceInterface(parent),
 	CURRENT_SOURCE(currSource)
 {
 	comPortName = com;
+	connect(&timer, &QTimer::timeout, this, &DischargerDevice::timerTimeout);
 }
 
 DischargerDevice::~DischargerDevice() {
@@ -57,16 +58,19 @@ void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool
 	});
 }
 
-void DischargerDevice::connect()
-{
+void DischargerDevice::connectToDevice() {
+
 }
 
-void DischargerDevice::start()
-{
+void DischargerDevice::start() {
+	estSimTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * dataSize);// (QTime::currentTime().msecsSinceStartOfDay() + sendingNewDataPeriod * dataSize);
+	timer.setInterval(sendingNewDataPeriod);
+	timer.start();
 }
 
-void DischargerDevice::stop()
-{
+void DischargerDevice::stop() {
+
+	timer.stop();
 }
 
 void DischargerDevice::setOnErrorCallback(std::function<void(Device::Error)> errCallback) {
@@ -108,7 +112,7 @@ unsigned int DischargerDevice::getProgress() {
 		return (b1 > b2 ? b1 : b2);
 	}
 	else {
-		return (dataId / dataSize * 100);
+		return (dataId * 100.0) / dataSize + 0.5;
 	}
 }
 
@@ -141,4 +145,24 @@ QTime DischargerDevice::getEstimatedTestTime() {
 bool DischargerDevice::checkBatteryNumber(int numebrOfBatteries)
 {
 	return (numebrOfBatteries == BATT_NUM);
+}
+
+void DischargerDevice::timerTimeout() {
+
+	current = testCurrent ? testCurrent - 0.5 : 0.0;
+	
+	idLogData = queueOfLogData.front().first;
+	testCurrent = queueOfLogData.front().second;
+	queueOfLogData.pop();
+
+	battLeftVolt = 12.0 - (rand() % 100) / 100.0;
+	battRightVolt = 12.9 - (rand() % 100) / 100.0;
+
+	battLeftTemp = 21.0 - (rand() % 100) / 30.0;
+	battRightTemp = 23.0 - (rand() % 100) / 50.0;
+
+	heatSinkTemp = 60.0 - (rand() % 100) / 10.0;
+	++dataId;
+
+	newDataCallback();
 }

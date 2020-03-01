@@ -125,7 +125,7 @@
     <QtMoc Include="WebApi.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeviceInterface.h" />
+    <QtMoc Include="DeviceInterface.h" />
     <QtMoc Include="DischargerDevice.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />
