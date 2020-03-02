@@ -125,4 +125,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Param.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DbSimData.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

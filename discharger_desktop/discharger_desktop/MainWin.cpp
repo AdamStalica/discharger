@@ -40,6 +40,11 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
 	connect(ui.testBtnConfChart, &QPushButton::clicked, testDriver, &TestDriver::confChart);
 
+	connect(ui.parVarEdtCurr, &QLineEdit::editingFinished, this, &MainWin::handleTestCurrEdited);
+	connect(ui.parVarEdtVolLim, &QLineEdit::editingFinished, this, &MainWin::handleVoltLimitEdited);
+	connect(ui.parVarEdtTempLim, &QLineEdit::editingFinished, this, &MainWin::handleHeatSinkTempLimitEdited);
+
+
 	connect(serial_, &SerialPort::opened, this, &MainWin::serialOpened);
 	connect(serial_, &SerialPort::closed, this, &MainWin::serialClosed);
 	connect(serial_, &SerialPort::receivedLine, this, &MainWin::serialReceivedLine);
@@ -523,4 +528,22 @@ void MainWin::serialTransmitedLine(const QString & line) {
 		"<div style=\"text-align: right;\">" + line + "<div>",
 		ui.commFlowTabRawDataChckScroll->isChecked()
 	);
+}
+
+void MainWin::handleTestCurrEdited() {
+	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+		testDriver->getDevice()->setTestCurrent(ui.parVarEdtCurr->text().toFloat());
+	}
+}
+
+void MainWin::handleVoltLimitEdited() {
+	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+		testDriver->getDevice()->setVoltageLimit(ui.parVarEdtVolLim->text().toFloat());
+	}
+}
+
+void MainWin::handleHeatSinkTempLimitEdited() {
+	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+		testDriver->getDevice()->setHeatSinkTempLimit(ui.parVarEdtTempLim->text().toFloat());
+	}
 }

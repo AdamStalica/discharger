@@ -10,7 +10,7 @@ namespace Device {
 		STOPPED_HEAT_SINK_THERM_NOT_AVALIABLE,
 		CURRENT_IS_REQUIRED,
 		
-		NO_ERROR = 0xFF
+		NO_DEV_ERROR = 0xFF
     };
 	
 	enum Warning {

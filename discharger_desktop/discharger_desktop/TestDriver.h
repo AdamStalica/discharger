@@ -2,8 +2,12 @@
 
 #include <QObject>
 #include <QLabel>
+#include <QCustomPlot.h>
 #include "TestGUI.h"
 #include "DeviceInterface.h"
+#include "DbSimData.h"
+
+auto constexpr TIME_FORMAT = "hh:mm:ss.zzz";
 
 class TestDriver : public QObject
 {
@@ -19,8 +23,12 @@ private:
 	};
 
 	TestGUI & ui;
-	QLabel * chart;
-	std::shared_ptr<DeviceInterface> devicePtr;
+	QCustomPlot * plot;
+	QSharedPointer<DeviceInterface> devicePtr;
+
+	QTime testStartTime;
+
+	std::vector<db::SimData> dbSimDataVec;
 
 	QString testName, filepath;
 	int idBattLeft, idBattRight;
@@ -32,7 +40,7 @@ public:
 		COMPLETED,
 		CONFIRMED,
 		REMOVED,
-		ERROR
+		DEV_ERROR
 	};
 
 	TestDriver(QObject *parent);
@@ -40,13 +48,14 @@ public:
 
 	void confChart();
 	void setDevice(DeviceInterface * dev);
-	std::shared_ptr<DeviceInterface> getDevice() { return devicePtr; };
+	QSharedPointer<DeviceInterface> getDevice() { return devicePtr; };
 	void removeDevice();
 
 	void setTestName(const QString & name) { testName = name; };
 	void setIdBattLeft(int id) { idBattLeft = id; };
 	void setIdBattRight(int id) { idBattRight = id; };
 	void setFilepathToLog(const QString &filepath) { this->filepath = filepath; };
+
 	void loadPageData();
 	void startTest();
 	void stopTest();
@@ -57,10 +66,12 @@ public:
 private:
 	TestStates testState = READY;
 
+	void deviceFinished();
 	void deviceNewData();
 	void deviceErrorOccured(Device::Error error);
 	void deviceWarningOccured(Device::Warning warning);
 
+	void prepareSimData(db::SimData & sd);
 	TestParametersData prepareTestParametersData();
 	bool isSingleBattery() { return idBattRight == -1; };
 };

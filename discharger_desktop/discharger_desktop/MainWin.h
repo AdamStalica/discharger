@@ -82,8 +82,8 @@ private:
 	bool ifEmptyShowWarning(const QString & toCheck, const QString & name);
 	void showWarning(const QString & msg);
 	void showError(const QString & msg);
-	int showQuestionBox(const QString & text);
 
+	int showQuestionBox(const QString & text) override;
 	void testFinised() override;
 	void clearParameters() override;
 	void setTestPatametersData(const TestParametersData & data) override;
@@ -104,6 +104,10 @@ private slots:
 	void serialClosed();
 	void serialReceivedLine(const QString & line);
 	void serialTransmitedLine(const QString & line);
+	void handleTestCurrEdited();
+	void handleVoltLimitEdited();
+	void handleHeatSinkTempLimitEdited();
+
 };
 
 template<class T>
