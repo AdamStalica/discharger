@@ -10,7 +10,11 @@
 #include <QMovie>
 #include <QScrollBar>
 
+
+
 using namespace serialPort;
+
+// TODO: about to close, check if test is in progress
 
 MainWin::MainWin(QWidget *parent)
 	: QMainWindow(parent)
@@ -51,7 +55,18 @@ MainWin::MainWin(QWidget *parent)
 	connect(serial_, &SerialPort::transmitedLine, this, &MainWin::serialTransmitedLine);
 	
 	connect(ui.actionLogout, &QAction::triggered, this, &MainWin::logout);
+	
+	/*
+	ChartPropertiesDialog * ch = new ChartPropertiesDialog(this);
 
+	ch->show();
+	ch->setSeries({ 
+		{ true, "Current", QColor("red") },
+		{ false, "Test current", QColor("blue") },
+		{ false, "Battery left voltage", QColor("yellow") },
+		{ true, "Battery right voltage", QColor("green") },
+		{ false, "Heat sink temp", QColor("black") }
+	});
 	//connect(ui.stackedWidget, &QStackedWidget::currentChanged, this, &MainWin::currentPageChannged);
 
 
@@ -306,8 +321,11 @@ void MainWin::setupTestDriver() {
 		testDriver->setIdBattLeft(idBattLeft);
 		testDriver->setIdBattRight(idBattRight);
 		testDriver->setFilepathToLog(filepathToLog);
-		showTestPage();
 
+		loader("Establishing connection to the device");
+		auto device = testDriver->getDevice();
+		connect(device.get(), &DeviceInterface::signalConnectionEstablished, this, &MainWin::showTestPage);
+		device->connectToDevice();
 		return;
 	}
 	testDriver->removeDevice();
@@ -357,7 +375,7 @@ void MainWin::testStart() {
 
 void MainWin::testStop() {
 	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
-		if (showQuestionBox("Do you really want to stop test?") == QMessageBox::No) return;
+		if (showQuestionBox("Do you really want to stop test?") == false) return;
 	}
 	testToolBarAboutToNewTest();
 	testDriver->stopTest();
@@ -365,7 +383,7 @@ void MainWin::testStop() {
 
 void MainWin::configureNewTest() {
 	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
-		if (showQuestionBox("Do you really want to discard this configuration?") == QMessageBox::No) return;
+		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
 
 	setTestToolBarVisibility(false);
@@ -389,13 +407,12 @@ void MainWin::showError(const QString & msg) {
 	QMessageBox::critical(this, "Error", msg);
 }
 
-int MainWin::showQuestionBox(const QString & text)
-{
-	return QMessageBox::question(this, "One question", text, QMessageBox::Yes, QMessageBox::No);
+bool MainWin::showQuestionBox(const QString & text) {
+	return QMessageBox::question(this, "One question", text, QMessageBox::Yes, QMessageBox::No) == QMessageBox::Yes;
 }
 
 void MainWin::testFinised() {
-	testStop();
+	testToolBarAboutToNewTest();
 }
 
 void MainWin::clearParameters() {
@@ -488,10 +505,7 @@ void MainWin::removeChart(QWidget * chart) {
 }
 
 void MainWin::appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown) {
-	brow->setHtml(
-		brow->toHtml() +
-		line + "<br>"
-	);
+	brow->append(line);
 	if (scrollDown) {
 		QScrollBar *sb = brow->verticalScrollBar();
 		sb->setValue(sb->maximum());

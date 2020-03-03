@@ -59,8 +59,12 @@ void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool
 	});
 }
 
-void DischargerDevice::connectToDevice() {
+bool DischargerDevice::isStopable() { 
+	return CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE; 
+}
 
+void DischargerDevice::connectToDevice() {
+	emit signalConnectionEstablished();
 }
 
 void DischargerDevice::start() {

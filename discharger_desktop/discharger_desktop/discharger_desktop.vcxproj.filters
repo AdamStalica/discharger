@@ -74,6 +74,9 @@
     <ClCompile Include="SerialPort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChartPropertiesDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -106,6 +109,9 @@
     <QtMoc Include="DischargerDevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ChartPropertiesDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWin.qrc">
@@ -117,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="MainWin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ChartPropertiesDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

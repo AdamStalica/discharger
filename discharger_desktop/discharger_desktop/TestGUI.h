@@ -21,5 +21,7 @@ public:
 	virtual void appendRawDataLine(const QString & line) = 0;
 	virtual void setChart(QWidget * chart) = 0;
 	virtual void removeChart(QWidget * chart) = 0;
-	virtual int showQuestionBox(const QString & text) = 0;
+	virtual bool showQuestionBox(const QString & text) = 0;
+	virtual void showWarning(const QString & msg) = 0;
+	virtual void showError(const QString & msg) = 0;
 };

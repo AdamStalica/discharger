@@ -42,8 +42,9 @@ namespace db {
 		Param<float> heatSinkTemp;
 
 		QString getColumnsNames() {
-			QTextStream cols;
-			cols << idCurrSim.qName() << ";"
+			QString cols;
+			QTextStream(&cols)
+				<< idCurrSim.qName() << ";"
 				<< idSimInfo.qName() << ";"
 				<< idLogData.qName() << ";"
 				<< currTimestamp.qName() << ";"
@@ -55,12 +56,13 @@ namespace db {
 				<< battRightVolt.qName() << ";"
 				<< battLeftTemp.qName() << ";"
 				<< battRightTemp.qName() << ";"
-				<< heatSinkTemp.qName();			;
-			return *cols.string();
+				<< heatSinkTemp.qName();			
+			return cols;
 		}
 		QString toCSV() {
-			QTextStream vals;
-			vals << idCurrSim.val() << ";"
+			QString vals;
+			QTextStream(&vals)
+				<< idCurrSim.val() << ";"
 				<< idSimInfo.val() << ";"
 				<< idLogData.val() << ";"
 				<< currTimestamp.val().toString(DB_DATETIME_FORMAT) << ";"
@@ -73,7 +75,7 @@ namespace db {
 				<< battLeftTemp.val() << ";"
 				<< battRightTemp.val() << ";"
 				<< heatSinkTemp.val(); ;
-			return *vals.string();
+			return vals;
 		}
 	};
 

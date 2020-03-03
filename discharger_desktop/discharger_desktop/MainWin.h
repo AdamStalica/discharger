@@ -66,7 +66,6 @@ private:
 	void prepareNewTest();
 	bool setupDevice();
 	void setupTestDriver();
-	void showTestPage();
 	void clearTestPage();
 
 
@@ -80,10 +79,10 @@ private:
 	void configureNewTest();
 
 	bool ifEmptyShowWarning(const QString & toCheck, const QString & name);
-	void showWarning(const QString & msg);
-	void showError(const QString & msg);
 
-	int showQuestionBox(const QString & text) override;
+	void showWarning(const QString & msg) override;
+	void showError(const QString & msg) override;
+	bool showQuestionBox(const QString & text) override;
 	void testFinised() override;
 	void clearParameters() override;
 	void setTestPatametersData(const TestParametersData & data) override;
@@ -100,6 +99,7 @@ private:
 	void appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown = false);
 
 private slots:
+	void showTestPage();
 	void serialOpened();
 	void serialClosed();
 	void serialReceivedLine(const QString & line);

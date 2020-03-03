@@ -3,6 +3,7 @@
 
 class TestParametersData
 {
+	// TODO: precision of numbers
 	QString name = "-",
 		status = "-",
 		testCurrent = "-",

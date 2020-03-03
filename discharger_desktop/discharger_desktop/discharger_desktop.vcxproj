@@ -97,6 +97,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChartPropertiesDialog.cpp" />
     <ClCompile Include="DischargerDevice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
@@ -111,6 +112,7 @@
     <QtMoc Include="MainWin.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="ChartPropertiesDialog.ui" />
     <QtUic Include="MainWin.ui">
       <SubType>Designer</SubType>
     </QtUic>
@@ -127,6 +129,7 @@
   <ItemGroup>
     <QtMoc Include="DeviceInterface.h" />
     <QtMoc Include="DischargerDevice.h" />
+    <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="DbSimData.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />

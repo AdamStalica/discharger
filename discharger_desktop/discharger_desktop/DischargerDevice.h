@@ -53,6 +53,7 @@ public:
 
 	void fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback);
 
+	bool isStopable() override;
 	//DeviceInterface
 	void connectToDevice() override;
 	void start() override;

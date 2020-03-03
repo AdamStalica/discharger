@@ -1,7 +1,6 @@
 #pragma once
 #include <QDateTime>
 
-
 template<class T>
 class Param {
 private:
@@ -26,7 +25,7 @@ public:
 	std::string name() const {
 		return NAME;
 	}
-	QString qName() {
+	QString qName() const {
 		return NAME.c_str();
 	}
 };
