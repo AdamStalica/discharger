@@ -141,7 +141,7 @@ unsigned int DischargerDevice::countProgress() {
 			battRight1stVolt = battRightVolt.val();
 		}
 		float b1 = (battLeft1stVolt - battLeftVolt.val()) / (battLeft1stVolt - voltageLimit.val()) * 100 + 0.5;
-		float b2 = (battRight1stVolt - battRightVolt.val()) / (battRight1stVolt - heatSinkTempLimit.val()) * 100 + 0.5;
+		float b2 = (battRight1stVolt - battRightVolt.val()) / (battRight1stVolt - voltageLimit.val()) * 100 + 0.5;
 		return (b1 > b2 ? b1 : b2);
 	}
 	else {

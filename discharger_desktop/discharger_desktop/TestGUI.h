@@ -23,5 +23,5 @@ public:
 	virtual void removeChart(QWidget * chart) = 0;
 	virtual bool showQuestionBox(const QString & text) = 0;
 	virtual void showWarning(const QString & msg) = 0;
-	virtual void showError(const QString & msg) = 0;
+	virtual void showDeviceError(const QString & msg) = 0;
 };

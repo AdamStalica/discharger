@@ -403,8 +403,13 @@ void MainWin::showWarning(const QString & msg) {
 	QMessageBox::warning(this, "Warning", msg);
 }
 
+void MainWin::showDeviceError(const QString & msg) {
+	testToolBarAboutToNewTest();
+	QMessageBox::critical(this, "Device error", msg);
+}
+
 void MainWin::showError(const QString & msg) {
-	QMessageBox::critical(this, "Error", msg);
+	QMessageBox::critical(this, "Error", msg);	testToolBarAboutToNewTest();
 }
 
 bool MainWin::showQuestionBox(const QString & text) {

@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include "ui_ChartPropertiesDialog.h"
+#include <array>
 
 class QCheckBox;
 class QLabel;
@@ -42,11 +43,16 @@ private:
 	QColorDialog * colorDialog;
 	int currentyEditedColor = 0;
 
+	std::array<int, 4> PLOT_PERIOD{
+		60, 120, 180, -1
+	};
+	int currentPeriod = PLOT_PERIOD.at(0);
+
 	struct SerieItemInner : SerieItem {
 		SerieItemInner(const SerieItem & si) : SerieItem(si) {}
 		SerieItemInner() {}
 		QCheckBox * visibleChckBox;
-		QLabel * nameLbl;
+		//QLabel * nameLbl;
 		QPushButton * colorBtn;
 	};
 	std::vector<SerieItemInner> seriesItems;
@@ -56,4 +62,5 @@ private:
 private slots:
 	void colorBtnClicked(int id);
 	void colorPicked();
+	void dialogAccepted();
 };

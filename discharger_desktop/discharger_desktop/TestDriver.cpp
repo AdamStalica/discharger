@@ -1,4 +1,5 @@
 #include "TestDriver.h"
+#include "DeviceEventsDecriptions.h"
 #include "QMessageBox"
 #include <QDialog>
 
@@ -60,7 +61,17 @@ void TestDriver::clear() {
 	removeDevice();
 	testState = TestStates::READY;
 	testStartTime = QTime();
+	testEstimEndTime = QTime();
+	testName.clear();
+	filepath.clear();
+	idBattLeft = int();
+	idBattRight = int();
+	graphsUsage.clear();
+	chartPorps.clear();
+	dbSimDataVec.clear();
 	plot->clearGraphs();
+	plot->hide();
+	ui.removeChart(plot);
 }
 
 void TestDriver::deviceFinished() {
@@ -111,14 +122,16 @@ void TestDriver::deviceNewData() {
 void TestDriver::deviceErrorOccured(Device::Error error) {
 	testState = TestStates::DEV_ERROR;
 	updateUI();
-	QString errorStr = "Error no. " + QString::number(error);
-	// TODO: append an error to event box
-	//ui.appendEventsLine("<img src=\"media/icons/error.ico\">" + errorStr);
-	ui.showError(errorStr);
+	QString errorStr = QString::fromStdString(Device::getErrorDescription(error));
+	ui.appendEventsLine("<div style=\"color: red\">" + errorStr + "</div>");
+	ui.showDeviceError(errorStr);
 }
 
 void TestDriver::deviceWarningOccured(Device::Warning warning) {
-	// TODO: append a warning to event box
+	ui.appendEventsLine("<div style=\"color: orange\">" + 
+		QString::fromStdString(Device::getWarningDescription(warning)) + 
+		"</div>"
+	);
 }
 
 void TestDriver::updateUI(const db::SimData & sd) {
@@ -185,19 +198,18 @@ void TestDriver::appendChartData(const db::SimData & sd) {
 	if (sd.battLeftTemp)	plot->graph(Graphs::BATT_LEFT_TEMP)->addData(secs, sd.battLeftTemp.val());
 	if (sd.battRightTemp)	plot->graph(Graphs::BATT_RIGHT_TEMP)->addData(secs, sd.battRightTemp.val());
 	
-	plot->rescaleAxes(true);
-	int secsInRange = chartPorps.getSecsInRange();
-	int beginOfRange = ((secs - secsInRange) < offset || secsInRange == -1) ? offset : (secs - secsInRange);
-	plot->xAxis->setRange(beginOfRange, secs);
-	plot->replot();
+	chartRescaleAxes(secs);
 }
 
 void TestDriver::setupChart() {
-	for (auto & name : GRAPHS_NAMES) {
+	for (auto & nameColor : GRAPHS_NAMES_COLORS) {
 		plot->addGraph();
-		plot->graph()->setName(name);
+		plot->graph()->setName(nameColor.first);
 		plot->graph()->setVisible(false);
 		plot->graph()->removeFromLegend();
+		auto pen = plot->graph()->pen();
+		pen.setColor(nameColor.second);
+		plot->graph()->setPen(pen);
 	}
 	auto pen = plot->graph(Graphs::TEST_CURRENT)->pen();
 	pen.setStyle(Qt::DotLine);
@@ -208,6 +220,22 @@ void TestDriver::setupChart() {
 	plot->xAxis->setTicker(dateTicker);
 	plot->legend->setVisible(true);
 	plot->legend->setBrush(QColor(255, 255, 255, 150));
+}
+
+void TestDriver::chartRescaleAxes(int max) {
+	static int lastMax = 1;
+	if (max == -1) {
+		max = lastMax;
+	}
+	else {
+		lastMax = max;
+	}
+	plot->rescaleAxes(true);
+	int offset = 23 * 60 * 60;
+	int secsInRange = chartPorps.getSecsInRange();
+	int beginOfRange = ((max - secsInRange) < offset || secsInRange == -1) ? offset : (max - secsInRange);
+	plot->xAxis->setRange(beginOfRange, max);
+	plot->replot();
 }
 
 void TestDriver::confChart() {
@@ -249,6 +277,5 @@ void TestDriver::chartPortpertiesAccepted() {
 		ui.setChart(plot);
 		plot->show();
 	}
-	plot->rescaleAxes(true);
-	plot->replot();
+	chartRescaleAxes();
 }

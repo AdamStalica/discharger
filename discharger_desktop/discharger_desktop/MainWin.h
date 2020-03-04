@@ -79,9 +79,10 @@ private:
 	void configureNewTest();
 
 	bool ifEmptyShowWarning(const QString & toCheck, const QString & name);
+	void showError(const QString & msg);
 
 	void showWarning(const QString & msg) override;
-	void showError(const QString & msg) override;
+	void showDeviceError(const QString & msg) override;
 	bool showQuestionBox(const QString & text) override;
 	void testFinised() override;
 	void clearParameters() override;

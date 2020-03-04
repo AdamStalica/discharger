@@ -1,3 +1,4 @@
+#define DEVICE_DEF
 
 namespace Device {
     enum Error {

@@ -34,26 +34,24 @@ private:
 		BATT_LEFT_TEMP,
 		BATT_RIGHT_TEMP
 	};
-	const QStringList GRAPHS_NAMES{
-		"Current [A]",
-		"Test current [A]",
-		"Capacity [Ah]",
-		"Used energy [Wh]",
-		QString("Heat sink temp. [%1C]").arg(QChar(0260)),
-		"Battery left volt. [V]",
-		"Battery right volt. [V]",
-		QString("Battery left temp. [%1C]").arg(QChar(0260)),
-		QString("Battery right temp. [%1C]").arg(QChar(0260))
-	};
+	const std::array<std::pair<QString, QColor>, 9> GRAPHS_NAMES_COLORS { {
+		{ QString("Current [A]"),								QColor("blue") },
+		{"Test current [A]",									QColor("red") },
+		{"Capacity [Ah]",										QColor("green") },
+		{"Used energy [Wh]",									QColor("yellow") },
+		{QString("Heat sink temp. [%1C]").arg(QChar(0260)),		QColor("orange") },
+		{"Battery left volt. [V]",								QColor("pink") },
+		{"Battery right volt. [V]",								QColor("violet") },
+		{QString("Battery left temp. [%1C]").arg(QChar(0260)),	QColor("grey") },
+		{QString("Battery right temp. [%1C]").arg(QChar(0260)), QColor("brown") }
+	}};
 	std::vector<bool> graphsUsage;
 	QCustomPlot * plot;
 	ChartPropertiesDialog chartPorps;
 
 	TestGUI & ui;
 	QSharedPointer<DeviceInterface> devicePtr;
-
-	std::map<QString, unsigned int> plotDraphId;
-
+	
 	QTime testStartTime, testEstimEndTime;
 
 	std::vector<db::SimData> dbSimDataVec;
@@ -108,6 +106,7 @@ private:
 	void setUsageGraphsFlags(const db::SimData & sd);
 	void appendChartData(const db::SimData & sd);
 	void setupChart();
+	void chartRescaleAxes(int max = -1);
 
 private slots:
 	void chartPortpertiesAccepted();
