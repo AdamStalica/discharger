@@ -57,8 +57,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>294</width>
-             <height>128</height>
+             <width>679</width>
+             <height>655</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -511,7 +511,11 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLineEdit" name="CTEdtFileName"/>
+                     <widget class="QLineEdit" name="CTEdtFileName">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="CTBtnSelectFile">
@@ -1322,8 +1326,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>182</width>
-             <height>66</height>
+             <width>679</width>
+             <height>646</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -1500,7 +1504,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>-127</y>
           <width>350</width>
           <height>761</height>
          </rect>

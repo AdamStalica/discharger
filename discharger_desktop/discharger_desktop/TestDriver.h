@@ -56,8 +56,11 @@ private:
 
 	std::vector<db::SimData> dbSimDataVec;
 
-	QString testName, filepath;
-	int idBattLeft, idBattRight;
+	QString testName, 
+		filepath;
+	bool jsonLogFile = false;
+	int idBattLeft, 
+		idBattRight;
 
 public:
 	enum TestStates {
@@ -66,7 +69,8 @@ public:
 		COMPLETED,
 		CONFIRMED,
 		REMOVED,
-		DEV_ERROR
+		DEV_ERROR,
+		NONE
 	};
 
 	TestDriver(QObject *parent);
@@ -79,7 +83,7 @@ public:
 	void setTestName(const QString & name) { testName = name; };
 	void setIdBattLeft(int id) { idBattLeft = id; };
 	void setIdBattRight(int id) { idBattRight = id; };
-	void setFilepathToLog(const QString &filepath) { this->filepath = filepath; };
+	void setFilepathToLog(const QString &filepath, bool jsonFile = false);
 
 	void loadPageData();
 	void startTest();
@@ -91,7 +95,7 @@ public:
 	void confChart();
 
 private:
-	TestStates testState = READY;
+	TestStates testState = NONE;
 
 	void deviceFinished();
 	void deviceNewData();
@@ -102,6 +106,9 @@ private:
 
 	TestParametersData prepareTestParametersData(const db::SimData & sd);
 	bool isSingleBattery() { return idBattRight == -1; };
+
+	void setupLogFile(const db::SimData & sd);
+	void logToFile(const db::SimData & sd);
 
 	void setUsageGraphsFlags(const db::SimData & sd);
 	void appendChartData(const db::SimData & sd);

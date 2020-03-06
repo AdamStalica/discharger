@@ -48,6 +48,7 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.parVarEdtVolLim, &QLineEdit::editingFinished, this, &MainWin::handleVoltLimitEdited);
 	connect(ui.parVarEdtTempLim, &QLineEdit::editingFinished, this, &MainWin::handleHeatSinkTempLimitEdited);
 
+	connect(ui.CTBtnSelectFile, &QPushButton::clicked, this, &MainWin::selectFile);
 
 	connect(serial_, &SerialPort::opened, this, &MainWin::serialOpened);
 	connect(serial_, &SerialPort::closed, this, &MainWin::serialClosed);
@@ -91,9 +92,19 @@ void MainWin::setTestToolBarVisibility(bool visible) {
 }
 
 void MainWin::logout() {
-	// TODO: checking if test is in progress
+	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
+		if (showQuestionBox("Do you really want to stop test?") == false) return;
+	}
+	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
+		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
+	}
 	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
 	ObjectFactory::getInstance<User>()->logOut();
+	setTestToolBarVisibility(false);
+	setDockedWidgetsVisibility(false);
+	clearTestConfPage();
+	clearTestPage();
+	testDriver->clear();
 }
 
 void MainWin::login() {
@@ -308,6 +319,7 @@ void MainWin::setupTestDriver() {
 	int idBattLeft			{ ui.CTComboBattLeft->currentText().toInt() };
 	int idBattRight			{ ui.CTComboBattRight->currentText().toInt() };
 	QString filepathToLog	{ ui.CTEdtFileName->text() };
+	bool jsonLogFile		{ ui.CTEdtFileName->property("JSON_FILE").value<bool>() };
 
 	if (ifEmptyShowWarning(name, "Test name")) {}
 	else if (idBattLeft == idBattRight) {
@@ -320,7 +332,8 @@ void MainWin::setupTestDriver() {
 		testDriver->setTestName(name);
 		testDriver->setIdBattLeft(idBattLeft);
 		testDriver->setIdBattRight(idBattRight);
-		testDriver->setFilepathToLog(filepathToLog);
+		if(!filepathToLog.isEmpty())
+			testDriver->setFilepathToLog(filepathToLog, jsonLogFile);
 
 		loader("Establishing connection to the device");
 		auto device = testDriver->getDevice();
@@ -386,10 +399,10 @@ void MainWin::configureNewTest() {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
 
-	setTestToolBarVisibility(false);
-	setDockedWidgetsVisibility(false);
 	clearTestPage();
 	testDriver->clear();
+	setTestToolBarVisibility(false);
+	setDockedWidgetsVisibility(false);
 	showTestConfPage();
 }
 
@@ -565,4 +578,15 @@ void MainWin::handleHeatSinkTempLimitEdited() {
 	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
 		testDriver->getDevice()->setHeatSinkTempLimit(ui.parVarEdtTempLim->text().toFloat());
 	}
+}
+
+void MainWin::selectFile() {
+	QString filter = "";
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Log to file"),
+		QStandardPaths::writableLocation(QStandardPaths::DesktopLocation),
+		tr("Text file (*.txt);;Comma separated file (*.csv);;JSON file (*.json)"), &filter);
+
+	bool jsonFile = filter.indexOf("json") != -1;
+	ui.CTEdtFileName->setText(fileName);
+	ui.CTEdtFileName->setProperty("JSON_FILE", jsonFile);
 }

@@ -33,7 +33,13 @@ void TestDriver::removeDevice() {
 	devicePtr.reset();
 }
 
+void TestDriver::setFilepathToLog(const QString & filepath, bool jsonFile) {
+	this->filepath = filepath;
+	jsonLogFile = jsonFile;
+}
+
 void TestDriver::loadPageData() {
+	testState = READY;
 	if (devicePtr->getCurrentSource() == DeviceInterface::CurrentSource::NO_CURR_SOURCE)
 		ui.setVarTestCurrent(QString::number(devicePtr->getTestCurrent().val()));
 	ui.setVarVoltLimit(QString::number(devicePtr->getVoltageLimit().val()));
@@ -59,7 +65,7 @@ void TestDriver::stopTest() {
 void TestDriver::clear() {
 	devicePtr->disconnect();
 	removeDevice();
-	testState = TestStates::READY;
+	testState = TestStates::NONE;
 	testStartTime = QTime();
 	testEstimEndTime = QTime();
 	testName.clear();
@@ -111,11 +117,13 @@ void TestDriver::deviceNewData() {
 		}
 		ui.appendTestDataLine(dbSimData.getColumnsNames());
 		setUsageGraphsFlags(dbSimData);
+		setupLogFile(dbSimData);
 	}
 	dbSimData.timeSinceBeg = QTime::fromMSecsSinceStartOfDay(testStartTime.elapsed());
 	appendChartData(dbSimData);
 	updateUI(dbSimData);
 	ui.appendTestDataLine(dbSimData.toCSV());
+	logToFile(dbSimData);
 	dbSimDataVec.push_back(std::move(dbSimData));
 }
 
@@ -169,6 +177,35 @@ TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd)
 		if (sd.battRightTemp)	data.setBattRightTemp(sd.battRightTemp.val());
 	}
 	return data;
+}
+
+void TestDriver::setupLogFile(const db::SimData & sd) {
+	if (!filepath.isEmpty() && !jsonLogFile) {
+		QFile f(filepath);
+		if (f.open(QIODevice::WriteOnly | QIODevice::Append)) {
+			QTextStream out(&f);
+			out << sd.getColumnsNames() << "\n";
+		}
+		f.close();
+	}
+}
+
+void TestDriver::logToFile(const db::SimData & sd) {
+	if (!filepath.isEmpty()) {
+		QFile f(filepath);
+		if (f.open(QIODevice::WriteOnly | QIODevice::Append)) {
+			QString data;
+			if (jsonLogFile) {
+				data = nlohmann::json(sd).dump().c_str();
+			}
+			else {
+				data = sd.toCSV();
+			}
+			QTextStream out(&f);
+			out << data << "\n";
+		}
+		f.close();
+	}
 }
 
 void TestDriver::setUsageGraphsFlags(const db::SimData & sd) {

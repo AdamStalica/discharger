@@ -41,7 +41,7 @@ namespace db {
 		Param<float> battRightTemp;
 		Param<float> heatSinkTemp;
 
-		QString getColumnsNames() {
+		QString getColumnsNames() const {
 			QString cols;
 			QTextStream(&cols)
 				<< idCurrSim.qName() << ";"
@@ -59,7 +59,7 @@ namespace db {
 				<< heatSinkTemp.qName();			
 			return cols;
 		}
-		QString toCSV() {
+		QString toCSV() const {
 			QString vals;
 			QTextStream(&vals)
 				<< idCurrSim.val() << ";"

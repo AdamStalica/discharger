@@ -108,7 +108,7 @@ private slots:
 	void handleTestCurrEdited();
 	void handleVoltLimitEdited();
 	void handleHeatSinkTempLimitEdited();
-
+	void selectFile();
 };
 
 template<class T>
