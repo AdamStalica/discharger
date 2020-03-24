@@ -10,7 +10,7 @@
 #include "Millis.h"
 #include "Led.h"
 
-Device::Error SafetyGuard::error = Device::Error::NO_ERROR;
+Device::Error SafetyGuard::error = Device::Error::NO_DEV_ERROR;
 
 void SafetyGuard::init()
 {
@@ -22,10 +22,10 @@ void SafetyGuard::init()
 
 void SafetyGuard::run() {
 	
-	if(error != Device::Error::NO_ERROR) {
+	if(error != Device::Error::NO_DEV_ERROR) {
 		SimulationData::logError(error);
 		safetyEventTimeout();
-		error = Device::Error::NO_ERROR;
+		error = Device::Error::NO_DEV_ERROR;
 		return;
 	}
 	
@@ -71,7 +71,7 @@ void SafetyGuard::run() {
 			Device::Warning::CURRENT_TOO_HIGH, 
 			Device::Error::STOPPED_CURRENT_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
-			(SimulationData::getMeasuredCurrent() > SAFETY_MAX_CURRENT)
+			(abs(SimulationData::getMeasuredCurrent()) > SAFETY_MAX_CURRENT)
 		)
 	) return;
 

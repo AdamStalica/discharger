@@ -57,8 +57,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>679</width>
-             <height>655</height>
+             <width>294</width>
+             <height>128</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -786,7 +786,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>600</width>
+                    <width>381</width>
                     <height>58</height>
                    </rect>
                   </property>
@@ -890,8 +890,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>600</width>
-                    <height>383</height>
+                    <width>381</width>
+                    <height>330</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -1326,8 +1326,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>679</width>
-             <height>646</height>
+             <width>182</width>
+             <height>66</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -1445,6 +1445,13 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionClose"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -1453,6 +1460,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionLogout"/>
+   <addaction name="actionHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWgtParams">
@@ -1504,7 +1513,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-127</y>
+          <y>0</y>
           <width>350</width>
           <height>761</height>
          </rect>
@@ -2838,6 +2847,16 @@ p, li { white-space: pre-wrap; }
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionStart"/>
+   <addaction name="actionStop"/>
+   <addaction name="actionConfNewTest"/>
+   <addaction name="separator"/>
+   <addaction name="actionShowTestParams"/>
+   <addaction name="actionShowCommFlow"/>
+   <addaction name="separator"/>
+   <addaction name="actionConfChart"/>
+   <addaction name="actionResultsOnline"/>
+   <addaction name="actionQrCode"/>
   </widget>
   <action name="actionHelp">
    <property name="icon">
@@ -2957,6 +2976,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="toolTip">
     <string>Show QR code</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
    </property>
   </action>
  </widget>
@@ -3202,6 +3229,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>524</x>
      <y>895</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWinClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>525</x>
+     <y>514</y>
     </hint>
    </hints>
   </connection>

@@ -97,3 +97,5 @@ namespace db {
 		if (sd.heatSinkTemp)	j[sd.heatSinkTemp.name()] = sd.heatSinkTemp.val();
 	}
 }
+
+Q_DECLARE_METATYPE(db::SimData)

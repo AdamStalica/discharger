@@ -26,7 +26,7 @@ public:
 private:
 	
 	volatile const uint8_t INPUT_CHANNELS[ADC_CH_NUM] = {
-		ADC_CH1_CONF,	// ADC0 Single ended input.
+		ADC_CH1_CONF,	// ADC0 Differential pair input.
 		ADC_CH2_CONF,	// ADC1 Single ended input.
 		ADC_CH3_CONF	// ADC1 Single ended input.
 	};

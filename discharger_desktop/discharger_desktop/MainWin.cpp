@@ -9,6 +9,7 @@
 #include <QTreeWidget>
 #include <QMovie>
 #include <QScrollBar>
+#include <QCloseEvent>
 
 
 
@@ -36,7 +37,6 @@ MainWin::MainWin(QWidget *parent)
 
 	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
 
-	setupMainToolBar();
 	setupTestToolBar();
 	setTestToolBarVisibility(false);
 
@@ -82,6 +82,21 @@ MainWin::MainWin(QWidget *parent)
 	*/
 }
 
+void MainWin::closeEvent(QCloseEvent * event) {
+	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
+		showWarning("Test in progress you can not log out");
+		event->ignore();
+		return;
+	}
+	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
+		if (showQuestionBox("Do you really want to discard this configuration?") == false) {
+			event->ignore();
+			return;
+		}
+	}
+	event->accept();
+}
+
 void MainWin::setDockedWidgetsVisibility(bool visible) {
 	ui.dockWgtParams->setVisible(visible);
 	ui.dockWgtCommFlow->setVisible(visible);
@@ -93,7 +108,8 @@ void MainWin::setTestToolBarVisibility(bool visible) {
 
 void MainWin::logout() {
 	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
-		if (showQuestionBox("Do you really want to stop test?") == false) return;
+		showWarning("Test in progress you can not log out"); 
+		return;
 	}
 	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
@@ -134,21 +150,8 @@ void MainWin::login() {
 	user->logIn(email, pass);
 }
 
-void MainWin::setupMainToolBar() {
-	ui.mainToolBar->addAction(ui.actionLogout);
-	ui.mainToolBar->addAction(ui.actionHelp);
-}
 
 void MainWin::setupTestToolBar() {
-	ui.toolBarTest->addAction(ui.actionStart);
-	ui.toolBarTest->addAction(ui.actionStop);
-	ui.toolBarTest->addAction(ui.actionConfNewTest);
-	ui.toolBarTest->addAction(ui.actionShowTestParams);
-	ui.toolBarTest->addAction(ui.actionShowCommFlow);
-	ui.toolBarTest->addAction(ui.actionConfChart);
-	ui.toolBarTest->addAction(ui.actionResultsOnline);
-	ui.toolBarTest->addAction(ui.actionQrCode);
-
 	connect(ui.actionStart, &QAction::triggered, this, &MainWin::testStart);
 	connect(ui.actionStop, &QAction::triggered, this, &MainWin::testStop);
 	connect(ui.actionConfNewTest, &QAction::triggered, this, &MainWin::configureNewTest);
@@ -338,6 +341,11 @@ void MainWin::setupTestDriver() {
 		loader("Establishing connection to the device");
 		auto device = testDriver->getDevice();
 		connect(device.get(), &DeviceInterface::signalConnectionEstablished, this, &MainWin::showTestPage);
+		connect(device.get(), &DeviceInterface::signalCanNotEstablishConnection, [this] {
+			showError("Can not establish connection.");
+			testDriver->removeDevice();
+			showPage(PagesEnum::CONF_TEST);
+		});
 		device->connectToDevice();
 		return;
 	}
@@ -586,7 +594,7 @@ void MainWin::selectFile() {
 		QStandardPaths::writableLocation(QStandardPaths::DesktopLocation),
 		tr("Text file (*.txt);;Comma separated file (*.csv);;JSON file (*.json)"), &filter);
 
-	bool jsonFile = filter.indexOf("json") != -1;
+	bool jsonFile = filter.toLower().indexOf("json") != -1;
 	ui.CTEdtFileName->setText(fileName);
 	ui.CTEdtFileName->setProperty("JSON_FILE", jsonFile);
 }

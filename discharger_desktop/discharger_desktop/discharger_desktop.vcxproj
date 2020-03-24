@@ -130,6 +130,7 @@
     <QtMoc Include="DeviceInterface.h" />
     <QtMoc Include="DischargerDevice.h" />
     <QtMoc Include="ChartPropertiesDialog.h" />
+    <ClInclude Include="Calculations.h" />
     <ClInclude Include="DbSimData.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />

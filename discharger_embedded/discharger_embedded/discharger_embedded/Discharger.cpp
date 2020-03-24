@@ -56,7 +56,7 @@ void Discharger::run() {
 	therm3.run();
 	led.run();
 	
-	if(SimulationData::isSimulationInProgress() || 1) {
+	if(SimulationData::isSimulationInProgress()) {
 		simulationDriver();	
 	}
 }
@@ -97,7 +97,7 @@ void Discharger::simulationDriver() {
 	
 	
 	//dac.writeMillivolts(1000);
-	
+	/*
 	uint16_t newCurrent1 = getCurrentCurrent();
 	dac.writeMillivolts(newCurrent1);
 	
@@ -108,11 +108,13 @@ void Discharger::simulationDriver() {
 		
 		debugLog(
 			"I =", 
-			(driver.getCurrentFormADC(currAdc) * -1)
+			driver.getCurrentFormADC(currAdc)
 		);
 	}
 	return;
+	*/
 	
+	//debugLog("Hello World!");
 	
 	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
@@ -150,7 +152,7 @@ void Discharger::simulationDriver() {
 	uint16_t newCurrent = getCurrentCurrent();
 	uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
 			
-	dac.writeMillivolts(millivoltsToSet);
+	dac.writeMillivolts(newCurrent);
 }
 
 void Discharger::isrWDT() {

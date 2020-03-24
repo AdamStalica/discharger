@@ -141,5 +141,8 @@
     <ClInclude Include="DbSimData.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Calculations.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

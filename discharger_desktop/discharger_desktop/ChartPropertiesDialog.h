@@ -52,7 +52,6 @@ private:
 		SerieItemInner(const SerieItem & si) : SerieItem(si) {}
 		SerieItemInner() {}
 		QCheckBox * visibleChckBox;
-		//QLabel * nameLbl;
 		QPushButton * colorBtn;
 	};
 	std::vector<SerieItemInner> seriesItems;

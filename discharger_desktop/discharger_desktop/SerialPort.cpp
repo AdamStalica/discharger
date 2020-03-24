@@ -47,12 +47,16 @@ void SerialPort::close() {
 }
 
 void SerialPort::println(const std::string & line) {
-	println(QString::fromStdString(line));
+	printlnQ(QString::fromStdString(line));
 }
 
-void SerialPort::println(const QString & line) {
+void SerialPort::printlnQ(const QString & line) {
 	emit emitPrint((line + "\r\n"));
 	emit transmitedLine(line);
+}
+
+void SerialPort::setPortQ(const QString & port) {
+	setPort(port.toStdString());
 }
 
 void SerialPort::setPort(const std::string & port) {

@@ -21,8 +21,8 @@ class DS18B20 : private OneWireHolder
 {
 	ExecuteDelay runDelay;
 	Device::Warning _warnCrc = Device::Warning::NO_WARNING;
-	Device::Error _errorCrc = Device::Error::NO_ERROR;
-	Device::Error _errorNotAvaliable = Device::Error::NO_ERROR;
+	Device::Error _errorCrc = Device::Error::NO_DEV_ERROR;
+	Device::Error _errorNotAvaliable = Device::Error::NO_DEV_ERROR;
 	
 	uint8_t _crcNoMatchCounter = 0;
 	uint8_t _isNewValue = 0;

@@ -7,6 +7,7 @@
 #include "DeviceInterface.h"
 #include "DbSimData.h"
 #include "ChartPropertiesDialog.h"
+#include "Calculations.h"
 
 auto constexpr TIME_FORMAT = "hh:mm:ss.zzz";
 
@@ -35,19 +36,20 @@ private:
 		BATT_RIGHT_TEMP
 	};
 	const std::array<std::pair<QString, QColor>, 9> GRAPHS_NAMES_COLORS { {
-		{ QString("Current [A]"),								QColor("blue") },
-		{"Test current [A]",									QColor("red") },
-		{"Capacity [Ah]",										QColor("green") },
-		{"Used energy [Wh]",									QColor("yellow") },
-		{QString("Heat sink temp. [%1C]").arg(QChar(0260)),		QColor("orange") },
-		{"Battery left volt. [V]",								QColor("pink") },
-		{"Battery right volt. [V]",								QColor("violet") },
-		{QString("Battery left temp. [%1C]").arg(QChar(0260)),	QColor("grey") },
-		{QString("Battery right temp. [%1C]").arg(QChar(0260)), QColor("brown") }
+		{ tr("Current [A]"),								QColor("blue") },
+		{"Test current [A]",								QColor("red") },
+		{"Capacity [Ah]",									QColor("green") },
+		{"Used energy [Wh]",								QColor("yellow") },
+		{tr("Heat sink temp. [%1C]").arg(QChar(0260)),		QColor("orange") },
+		{"Battery left volt. [V]",							QColor("pink") },
+		{"Battery right volt. [V]",							QColor("violet") },
+		{tr("Battery left temp. [%1C]").arg(QChar(0260)),	QColor("grey") },
+		{tr("Battery right temp. [%1C]").arg(QChar(0260)),	QColor("brown") }
 	}};
 	std::vector<bool> graphsUsage;
 	QCustomPlot * plot;
 	ChartPropertiesDialog chartPorps;
+	Calculations calcs;
 
 	TestGUI & ui;
 	QSharedPointer<DeviceInterface> devicePtr;
@@ -98,9 +100,10 @@ private:
 	TestStates testState = NONE;
 
 	void deviceFinished();
-	void deviceNewData();
+	void deviceNewData(db::SimData dbSimData);
 	void deviceErrorOccured(Device::Error error);
 	void deviceWarningOccured(Device::Warning warning);
+	void deviceDebug(const QString & msg);
 
 	void updateUI(const db::SimData & sd = db::SimData());
 

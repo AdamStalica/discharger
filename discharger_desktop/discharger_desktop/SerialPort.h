@@ -62,8 +62,10 @@ namespace serialPort {
 			}
 			void close() {
 				timer.stop();
-				_serial->close();
-				emit serialClosed();
+				if (_serial->isOpen()) {
+					_serial->close();
+					emit serialClosed();
+				}
 			}
 		signals:
 			void receivedNewLine(const QString & line);
@@ -109,8 +111,9 @@ namespace serialPort {
 		void close();
 
 		void println(const std::string & line);
-		void println(const QString & line);
+		void printlnQ(const QString & line);
 
+		void setPortQ(const QString & port);
 		void setPort(const std::string & port);
 		void setBaudrate(uint32_t baudrate);
 		void setDataSize(datasize_t datasize);

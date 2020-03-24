@@ -22,6 +22,8 @@ private:
 	Ui::MainWinClass ui;
 	TestDriver * testDriver;
 
+	void closeEvent(QCloseEvent *event) override;
+
 	enum PagesEnum {
 		LOG_IN,
 		LOADER,
@@ -51,7 +53,6 @@ private:
 	void logout();
 	void login();
 
-	void setupMainToolBar();
 	void setupTestToolBar();
 	void testToolBarAboutToStart();
 	void testToolBarAboutToStop();

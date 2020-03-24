@@ -16,9 +16,9 @@ class SimulationData : public UsartHolder
 {
 	static Device::Error lastError;
 	static Device::Warning lastWarn;
+	static int16_t measuredCurrent;
 	static uint16_t voltLimit, 
 					radiatorTempLimit,
-					measuredCurrent,
 					measuredBLV,
 					measuredBRV,
 					measuredBLT,
@@ -42,7 +42,7 @@ public:
 	
 	uint16_t getCurrentCurrent() { return currentCurrent; }
 	
-	void setMeauredCurrent(uint16_t current) { measuredCurrent = current; }
+	void setMeauredCurrent(int16_t current) { measuredCurrent = current; }
 	void setBattLeftVolt(uint16_t bLV) { measuredBLV = bLV; }
 	void setBattRightVolt(uint16_t bRV) { measuredBRV = bRV; }
 	void setBattLeftTemp(uint16_t bLT) { measuredBLT = bLT; }
@@ -58,7 +58,7 @@ public:
 	
 	static uint16_t getVoltageLimit()		{ return voltLimit; }
 	static uint16_t getHeatSinkTempLimit()	{ return radiatorTempLimit; }
-	static uint16_t getMeasuredCurrent()	{ return measuredCurrent; }	
+	static int16_t getMeasuredCurrent()	{ return measuredCurrent; }	
 	static uint16_t getBattLeftVolt()		{ return measuredBLV; }
 	static uint16_t getBattRightVolt()		{ return measuredBRV; }
 	static uint16_t getBattLeftTemp()		{ return measuredBLT; }

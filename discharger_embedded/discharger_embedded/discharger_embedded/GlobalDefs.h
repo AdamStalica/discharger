@@ -23,10 +23,10 @@
 /****************************************************************************************************/
 /*											   IO USAGE												*/
 /*																									*/
-/*		PA0		LEM				POSITIVE INPUT					100nF CONNECTED TO THE PA1			*/
-/*		PA1		LEM				NEGATIVE INPUT														*/
-/*		PA2		BATTERY LEFT	SINGLE ENDED INPUT													*/
-/*		PA3		BATTERY RIGHT	SINGLE ENDED INPUT													*/
+/*		PA0		BATTERY LEFT	SINGLE ENDED INPUT													*/
+/*		PA1		BATTERY RIGHT	SINGLE ENDED INPUT													*/
+/*		PA2		LEM				NEGATIVE INPUT					100nF CONNECTED TO THE PA3			*/
+/*		PA3		LEM				POSITIVE INPUT														*/
 /*																									*/
 /*		PB0		LED BLUE		ACTIVE LOW															*/
 /*		PB1		LED GREEN		ACTIVE LOW															*/
@@ -42,7 +42,7 @@
 /*		PC1		SDA				I2C - MCP4725 					4.7k PULL UP						*/
 /*		PC5		1Wire			THERMOMETER	1 - HEAT SINK		4.7k PULL UP						*/
 /*		PC6		1Wire			THERMOMETER 2 - BATTERY LEFT	4.7k PULL UP						*/
-/*		PC7		!Wire			THERMOMETER 3 - BATTERY RIGHT	4.7k PULL UP						*/
+/*		PC7		1Wire			THERMOMETER 3 - BATTERY RIGHT	4.7k PULL UP						*/
 /*																									*/
 /*		PD0		RX0				INCOMING DATA FROM PC												*/
 /*		PD1		TX0				OUTGOING DATA TO PC													*/
@@ -70,7 +70,7 @@
 /****************************************************************************************************/
 //#define INTERPOLATION
 #define SIM_EPS			1		// 10^-1 A
-#define SIM_MAX_CURRENT 300		// 10^-1 A
+#define SIM_MAX_CURRENT 400		// 10^-1 A
 #define SIM_MIN_CURRENT 9		// 10^-1 A
 #define SIM_MAX_VOLT	5000	// mV
 
@@ -124,14 +124,15 @@
 /****************************************************************************************************/
 /*												  ADC												*/
 /****************************************************************************************************/
+#define ADC_DIFF_3_2_10X	1
 #define ADC_CH_NUM			3
 #define ADC_MEASURE_FREQ	200UL	// Hz
 // Channel 1, differential - PA0 positive, PA1 negative input
-#define ADC_CH1_CONF		((1 << MUX4) | (0 << MUX3) | (0 << MUX2) | (0 << MUX1) | (0 << MUX0))
+#define ADC_CH1_CONF		(((1 << MUX4) | (1 << MUX3) | (0 << MUX2) | (1 << MUX1) | (0 << MUX0)) >> ADC_DIFF_3_2_10X)
 // Channel 2, PA2 - single ended input
-#define ADC_CH2_CONF		((0 << MUX4) | (0 << MUX3) | (0 << MUX2) | (1 << MUX1) | (0 << MUX0))
+#define ADC_CH2_CONF		((0 << MUX4) | (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (0 << MUX0))
 // Channel 3, PA3 - single ended input
-#define ADC_CH3_CONF		((0 << MUX4) | (0 << MUX3) | (0 << MUX2) | (1 << MUX1) | (1 << MUX0))
+#define ADC_CH3_CONF		((0 << MUX4) | (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0))
 
 
 /****************************************************************************************************/

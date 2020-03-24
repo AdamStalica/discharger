@@ -26,6 +26,7 @@ void TestDriver::setDevice(DeviceInterface * dev) {
 	connect(dev, &DeviceInterface::signalFinished, this, &TestDriver::deviceFinished);
 	connect(dev, &DeviceInterface::signalError, this, &TestDriver::deviceErrorOccured);
 	connect(dev, &DeviceInterface::signalWarning, this, &TestDriver::deviceWarningOccured);
+	connect(dev, &DeviceInterface::signalDebugMsg, this, &TestDriver::deviceDebug);
 	connect(dev, &DeviceInterface::signalNewData, this, &TestDriver::deviceNewData);	
 }
 
@@ -78,9 +79,11 @@ void TestDriver::clear() {
 	plot->clearGraphs();
 	plot->hide();
 	ui.removeChart(plot);
+	calcs.clear();
 }
 
 void TestDriver::deviceFinished() {
+	if (testState >= TestStates::COMPLETED) return;
 	testState = TestStates::COMPLETED;
 	testEstimEndTime = QTime::currentTime();
 	updateUI();
@@ -100,9 +103,8 @@ void TestDriver::deviceFinished() {
 	updateUI();
 }
 
-void TestDriver::deviceNewData() {
+void TestDriver::deviceNewData(db::SimData dbSimData) {
 
-	auto dbSimData = devicePtr->getDbSimData();
 	dbSimData.currTimestamp = QDateTime::currentDateTime();
 
 	// TODO: calcs of capacity, used energy, etc.
@@ -120,6 +122,13 @@ void TestDriver::deviceNewData() {
 		setupLogFile(dbSimData);
 	}
 	dbSimData.timeSinceBeg = QTime::fromMSecsSinceStartOfDay(testStartTime.elapsed());
+	calcs.setValues(
+		testStartTime.elapsed(), 
+		dbSimData.current.val(), 
+		dbSimData.battLeftVolt.val(), 
+		dbSimData.battRightVolt.val()
+	);
+
 	appendChartData(dbSimData);
 	updateUI(dbSimData);
 	ui.appendTestDataLine(dbSimData.toCSV());
@@ -139,6 +148,12 @@ void TestDriver::deviceWarningOccured(Device::Warning warning) {
 	ui.appendEventsLine("<div style=\"color: orange\">" + 
 		QString::fromStdString(Device::getWarningDescription(warning)) + 
 		"</div>"
+	);
+}
+
+void TestDriver::deviceDebug(const QString & msg) {
+	ui.appendEventsLine(
+		"<div style=\"color: green\">" + msg + "</div>"
 	);
 }
 
@@ -164,6 +179,7 @@ TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd)
 	if (sd.timeSinceBeg)			data.setTestTime(sd.timeSinceBeg.val().toString(TIME_FORMAT));
 
 	if (sd.capacity)		data.setCapacity(sd.capacity.val());
+	else					data.setCapacity(calcs.computeCapacity());
 	if (sd.usedEnergy)		data.setConsumedEnergy(sd.usedEnergy.val());
 	if (sd.heatSinkTemp)	data.setHeatSinkTemp(sd.heatSinkTemp.val());
 	if (sd.current)			data.setCurrent(sd.current.val());

@@ -32,18 +32,15 @@ void ChartPropertiesDialog::setSeries(const std::vector<SerieItem>& series) {
 	for (int i = 0; i < series.size(); ++i) {
 		SerieItemInner item(series.at(i));
 		item.visibleChckBox = new QCheckBox(this);
-		//item.nameLbl = new QLabel(this);
 		item.colorBtn = new QPushButton(this);
 
 		ui.seriesLayout->addWidget(item.visibleChckBox, i + 1, 0, Qt::AlignLeft);
-		//ui.seriesLayout->addWidget(item.nameLbl, i + 1, 1);
 		ui.seriesLayout->addWidget(item.colorBtn, i + 1, 2, Qt::AlignLeft);
 
 		btnGr->addButton(item.colorBtn, i);
 		seriesItems[i] = item;
 
 		item.visibleChckBox->setChecked(item.visible);
-		//item.nameLbl->setText(item.name);
 		item.visibleChckBox->setText(item.name);
 		setBtnColor(i, item.color);
 		item.visibleChckBox->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -69,10 +66,8 @@ int ChartPropertiesDialog::getSecsInRange() {
 void ChartPropertiesDialog::clear() {
 	for (auto & item : seriesItems) {
 		ui.seriesLayout->removeWidget(item.visibleChckBox);
-		//ui.seriesLayout->removeWidget(item.nameLbl);
 		ui.seriesLayout->removeWidget(item.colorBtn);
 		delete item.visibleChckBox;
-		//delete item.nameLbl;
 		delete item.colorBtn;
 	}
 	seriesItems.clear();

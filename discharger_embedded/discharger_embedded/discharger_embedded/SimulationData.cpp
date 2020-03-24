@@ -8,11 +8,11 @@
 #include "SimulationData.h"
 #include "SafetyGuard.h"
 
-Device::Error SimulationData::lastError = Device::Error::NO_ERROR;
+Device::Error SimulationData::lastError = Device::Error::NO_DEV_ERROR;
 Device::Warning SimulationData::lastWarn = Device::Warning::NO_WARNING;
 uint16_t SimulationData::voltLimit = BATT_VOLT_LIMIT_DEFAULT;
 uint16_t SimulationData::radiatorTempLimit = HEAT_SINK_TEMP_LIMIT_DEFAULT;
-uint16_t SimulationData::measuredCurrent = 0;
+int16_t SimulationData::measuredCurrent = 0;
 uint16_t SimulationData::measuredBLV = 0;
 uint16_t SimulationData::measuredBRV = 0;
 uint16_t SimulationData::measuredBLT = 0;
@@ -106,9 +106,9 @@ void SimulationData::run() {
 		processNewData();
 	}
 	
-	if(lastError != Device::Error::NO_ERROR) {
+	if(lastError != Device::Error::NO_DEV_ERROR) {
 		sendError();
-		lastError = Device::Error::NO_ERROR;
+		lastError = Device::Error::NO_DEV_ERROR;
 	}
 	if(lastWarn != Device::Warning::NO_WARNING) {
 		sendWarning();

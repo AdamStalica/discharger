@@ -1,7 +1,9 @@
 #pragma once
 #include <QObject>
 #include <DeviceEventsDef.h>
+#include "ObjectFactory.h"
 #include "DbSimData.h"
+#include "SerialPort.h"
 
 class DeviceInterface : 
 	public QObject,
@@ -26,12 +28,16 @@ protected:
 	Param<QTime> estimetedTestTime;
 	Param<unsigned int> idLogInfo;
 
+	serialPort::SerialPort * serial;
+
 public:
 
 	DeviceInterface(QObject * parent, CurrentSource currSource) : 
 		QObject(parent),
 		CURRENT_SOURCE(currSource)
-	{};
+	{
+		serial = ObjectFactory::getInstance<serialPort::SerialPort>();
+	};
 	virtual ~DeviceInterface() {};
 	virtual void connectToDevice() = 0;
 	virtual void start() = 0;
@@ -42,14 +48,14 @@ public:
 	virtual bool isStartable() { return true; };
 	virtual bool isStopable() { return true; };
 	
-	const Param<unsigned int> & getLogInfoId() { return idLogInfo; };
-	const Param<unsigned int> & getProgress() { return progress; };
-	const Param<float> & getTestCurrent() { return testCurrent; };
-	const Param<float> & getVoltageLimit() { return voltageLimit; };
-	const Param<float> & getHeatSinkTempLimit() { return heatSinkTempLimit; };
-	const Param<QTime> & getEstimetedTestTime() { return estimetedTestTime; };
-	db::SimData getDbSimData() { return static_cast<db::SimData>(*this); }
-	CurrentSource getCurrentSource() { return CURRENT_SOURCE; };
+	const Param<unsigned int> & getLogInfoId() const { return idLogInfo; };
+	const Param<unsigned int> & getProgress() const { return progress; };
+	const Param<float> & getTestCurrent() const { return testCurrent; };
+	const Param<float> & getVoltageLimit() const { return voltageLimit; };
+	const Param<float> & getHeatSinkTempLimit() const { return heatSinkTempLimit; };
+	const Param<QTime> & getEstimetedTestTime() const { return estimetedTestTime; };
+	db::SimData getDbSimData() const { return static_cast<db::SimData>(*this); }
+	CurrentSource getCurrentSource() const { return CURRENT_SOURCE; };
 
 	void setTestCurrent(float current) {
 		if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
@@ -67,7 +73,9 @@ public:
 signals:
 	void signalError(Device::Error);
 	void signalWarning(Device::Warning);
-	void signalNewData();
+	void signalDebugMsg(const QString & msg);
+	void signalNewData(db::SimData simData);
 	void signalFinished();
 	void signalConnectionEstablished();
+	void signalCanNotEstablishConnection();
 };

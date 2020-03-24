@@ -57,7 +57,7 @@ void DS18B20::run() {
 		}
 		else {
 			if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_ERR) {
-				if(_errorCrc != Device::Error::NO_ERROR)
+				if(_errorCrc != Device::Error::NO_DEV_ERROR)
 					SafetyGuard::stopDevice(_errorCrc);
 				_crcNoMatchCounter = 0;
 			}
@@ -70,7 +70,7 @@ void DS18B20::run() {
 		
 		startConversion();
 	}	
-	else if(_errorNotAvaliable != Device::Error::NO_ERROR) {
+	else if(_errorNotAvaliable != Device::Error::NO_DEV_ERROR) {
 		SafetyGuard::stopDevice(_errorNotAvaliable);
 	}
 }

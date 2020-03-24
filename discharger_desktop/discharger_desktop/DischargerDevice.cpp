@@ -1,26 +1,19 @@
 #include "DischargerDevice.h"
 
-
-/*
-DischargerDevice::DischargerDevice()
-{
-}
-
-
-
-*/
-
 DischargerDevice::DischargerDevice(QObject * parent, const QString & com, DeviceInterface::CurrentSource currSource) :
 	DeviceInterface(parent, currSource)
 {
 	comPortName = com;
 	connect(&timer, &QTimer::timeout, this, &DischargerDevice::timerTimeout);
-	battLeftVolt = 12.5;
-	battRightVolt = 12.8;
+	connect(&connectionTimer, &QTimer::timeout, this, &DischargerDevice::connectionTimerTimeout);
+	connectionTimer.setInterval(DISCHARGER_CONN_TIMEOUT);
+	connectionTimer.setSingleShot(true);
+	connect(serial, &serialPort::SerialPort::receivedLine, this, &DischargerDevice::serialRecivedNewData);
 }
 
 DischargerDevice::~DischargerDevice() {
-
+	//serial->disconnect(this);
+	serial->close();
 }
 
 // TODO: log time
@@ -45,15 +38,16 @@ void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool
 	api->POST(API_GET_CURR, req, [this](bool success, std::string && resp) {
 		nlohmann::json response = nlohmann::json::parse(resp);
 		if (success) {
-
 			sendingNewDataPeriod = response["period"].get<int>();
-			dataSize = response["data"].size();
+			logDataVec.reserve(response["data"].size());
 			for (auto & log : response["data"]) {
-				queueOfLogData.emplace(
+				logDataVec.emplace_back(
 					log["id_log_data"].get<unsigned int>(),
-					log[currSourceName]
+					log[currSourceName].get<double>()
 				);
 			}
+			std::sort(logDataVec.begin(), logDataVec.end());
+			logDataVecIte = logDataVec.begin();
 		}
 		cb(success, response["comment"].get<std::string>().c_str());
 	});
@@ -64,72 +58,130 @@ bool DischargerDevice::isStopable() {
 }
 
 void DischargerDevice::connectToDevice() {
-	emit signalConnectionEstablished();
+	serial->setPortQ(comPortName);
+	serial->setBaudrate(DISCHARGER_BOUDRATE);
+	serial->setDataSize(DISCHARGER_DATA_SIZE);
+	serial->setStopBits(DISCHARGER_STOP_BITS);
+	serial->setParity(DISCHARGER_PARITY);
+	serial->open();
+	connectionTimer.start();
+
+	connect(serial, &serialPort::SerialPort::opened, [this] {
+		this->sendHandshake();
+	});
 }
 
 void DischargerDevice::start() {
-	estimetedTestTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * dataSize);// (QTime::currentTime().msecsSinceStartOfDay() + sendingNewDataPeriod * dataSize);
+	if(CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE)
+		estimetedTestTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * logDataVec.size());
 	timer.setInterval(sendingNewDataPeriod);
 	timer.start();
+	timerTimeout();
 }
 
 void DischargerDevice::stop() {
-
 	timer.stop();
+	sendStop();
 }
 
-bool DischargerDevice::checkBatteryNumber(int numebrOfBatteries)
-{
+bool DischargerDevice::checkBatteryNumber(int numebrOfBatteries) {
 	return (numebrOfBatteries == BATT_NUM);
 }
 
 void DischargerDevice::timerTimeout() {
+	float newCurrent = testCurrent.val();
 	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		if (queueOfLogData.empty()) {
-			testFinished();
-			return;
+		static bool isFirst = true;
+		if (isFirst)
+			newCurrent = (*logDataVecIte).current;
+		else if ((logDataVecIte + 1) != logDataVec.end())
+			newCurrent = (*(logDataVecIte + 1)).current;
+		else {
+			// TODO: handle out of ragne
+			throw std::exception("Out of range");
 		}
-		idLogData = queueOfLogData.front().first;
-		testCurrent = queueOfLogData.front().second;
-		queueOfLogData.pop();
+		isFirst = false;
 	}
+	sendDrivingData(idCurrSim, newCurrent, heatSinkTempLimit.val(), voltageLimit.val());
+}
 
-	current = testCurrent.val() ? testCurrent.val() - 0.5 : 0.0;
+void DischargerDevice::connectionTimerTimeout() {
+	if (gotHandshake) return;
+	serial->close();
+	emit signalCanNotEstablishConnection();
+}
 
-	battLeftVolt = battLeftVolt.val() - 0.025;
-	battRightVolt = battRightVolt.val() - 0.034;
-
-	battLeftTemp = 21.0 - (rand() % 100) / 30.0;
-	battRightTemp = 23.0 - (rand() % 100) / 50.0;
-
-	heatSinkTemp = 60.0 - (rand() % 100) / 10.0;
-
-
-	progress = countProgress();
-	// TMP!!!!
-	if (progress.val() > 100) {
-		handleError(Device::Error::STOPPED_VOLTAGE_TOO_LOW);
+void DischargerDevice::serialRecivedNewData(const QString & line) {
+	nlohmann::json data;
+	try {
+		data = nlohmann::json::parse(line.toStdString());
 	}
-
-	idCurrSim = idCurrSim.val() + 1;
-
-	//newDataCallback();
-	emit signalNewData();
+	catch (const std::exception & ex) {
+		qDebug() << ex.what();
+		return;
+	}
+	if (!data["handshake"].is_null()) {
+		// process handshake
+		gotHandshake = true;
+		emit signalConnectionEstablished();
+	}
+	else if (!data["id"].is_null()) {
+		// process new data
+		handleNewMesures(data);
+	}
+	else if (!data["warn"].is_null()) {
+		// process warning
+		handleWarning(static_cast<Device::Warning>(data["warn"].get<int>()));
+	}
+	else if (!data["error"].is_null()) {
+		// process error
+		handleError(static_cast<Device::Error>(data["error"].get<int>()));
+	}
+	else if (!data["stop"].is_null()) {
+		// process stop
+		ObjectFactory::getInstance<serialPort::SerialPort>()->close();
+		emit signalFinished();
+	}
+	else if (!data["debug"].is_null()) {
+		// process debug
+		emit signalDebugMsg(data["debug"].get<std::string>().c_str());
+	}
 }
 
 void DischargerDevice::handleWarning(Device::Warning warn) {
-
+	emit signalWarning(warn);
 }
 
 void DischargerDevice::handleError(Device::Error err) {
 	timer.stop();
+	serial->close();
 	emit signalError(err);
 }
 
+void DischargerDevice::handleNewMesures(const nlohmann::json & data) {
+	current = data["I"].get<float>() / 10.0;
+	battLeftVolt = data["bLV"].get<float>() / 1000.0;
+	battRightVolt = data["bRV"].get<float>() / 1000.0;
+	battLeftTemp = data["bLT"].get<float>() / 100.0;
+	battRightTemp = data["bRT"].get<float>() / 100.0;
+	heatSinkTemp = data["HST"].get<float>() / 100.0;
+	progress = countProgress();
+
+	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+		idLogData = (*logDataVecIte).idLogData;
+		testCurrent = (*logDataVecIte).current;
+		++logDataVecIte;
+		if (logDataVecIte == logDataVec.end())
+			testFinished();
+	}
+	idCurrSim = idCurrSim.val() + 1;
+
+	emit signalNewData(getDbSimData());
+}
+
 void DischargerDevice::testFinished() {
-	// TODO: send stop to device
+	sendStop();
 	timer.stop();
-	emit signalFinished();
 }
 
 unsigned int DischargerDevice::countProgress() {
@@ -145,78 +197,30 @@ unsigned int DischargerDevice::countProgress() {
 		return (b1 > b2 ? b1 : b2);
 	}
 	else {
-		return (idCurrSim.val() * 100.0) / dataSize + 0.5;
+		return (idCurrSim.val() * 100.0) / logDataVec.size() + 0.5;
 	}
 }
 
-
-/*
-void DischargerDevice::setOnErrorCallback(std::function<void(Device::Error)> errCallback) {
-	errorCallback = errCallback;
+void DischargerDevice::sendHandshake() {
+	serial->println(
+		"{\"handshake\":\"PC\"}"
+	);
 }
 
-void DischargerDevice::setOnWarningCallback(std::function<void(Device::Warning)> warnCallback) {
-	waraningCallback = warnCallback;
+void DischargerDevice::sendStop() {
+	serial->println(
+		"{\"stop\":\"now\"}"
+	);
 }
 
-void DischargerDevice::setOnNewDataCallback(std::function<void(void)> dataCallback) {
-	newDataCallback = dataCallback;
+void DischargerDevice::sendDrivingData(unsigned int id, double current, double temperatureLimit, double voltageLimit) {
+	nlohmann::json data;
+	data["id"] = id;
+	data["I"] = int(current * 100 + 0.5);
+	if (temperatureLimit != DBL_MAX)
+		data["TL"] = int(temperatureLimit * 100 + 0.5);
+	if (voltageLimit != DBL_MAX)
+		data["VL"] = int(voltageLimit * 1000 + 0.5);
+	
+	serial->println(data.dump());
 }
-
-unsigned int DischargerDevice::getLogInfoId() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		throw std::exception("This current source not support such a functionality");
-	}
-	return idLogInfo;
-}
-
-unsigned int DischargerDevice::getLogDataId() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		throw std::exception("This current source not support such a functionality");
-	}
-	return idLogData;
-}
-
-unsigned int DischargerDevice::getProgress() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		static float battLeft1stVolt = -1,
-			battRight1stVolt = -1;
-		if (battLeft1stVolt == -1 || battRight1stVolt == -1) {
-			battLeft1stVolt = battLeftVolt;
-			battRight1stVolt = battRightVolt;
-		}
-		float b1 = (battLeft1stVolt - battLeftVolt) / (battLeft1stVolt - voltLimit) * 100;
-		float b2 = (battRight1stVolt - battRightVolt) / (battRight1stVolt - voltLimit) * 100;
-		return (b1 > b2 ? b1 : b2);
-	}
-	else {
-		return (dataId * 100.0) / dataSize + 0.5;
-	}
-}
-
-void DischargerDevice::setTestCurrent(float current) {
-	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		throw std::exception("This current source not support such a functionality");
-	}
-	testCurrent = current;
-}
-
-void DischargerDevice::setVoltageLimit(float volt) {
-	voltLimit = volt;
-}
-
-void DischargerDevice::setHeatSinkTempLimit(float tempLimit) {
-	heatSinkTempLimit = tempLimit;
-}
-
-bool DischargerDevice::hasEstimatedTestTime() {
-	return (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE);
-}
-
-QTime DischargerDevice::getEstimatedTestTime() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
-		throw std::exception("This current source not support such a functionality");
-	}
-	return estSimTime;
-}
-*/

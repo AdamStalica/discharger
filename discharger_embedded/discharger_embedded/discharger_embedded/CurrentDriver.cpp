@@ -11,10 +11,16 @@
 
 /**
 *	adcVolt 0..1023
-*	I = adcVolt*2 + 7 [E2mA]
+*	I = adcVolt * 0.19 - 0.74 [A] -> adcVolt * 1.9 - 7.4 [E2mA]
 */
 int16_t CurrentDriver::getCurrentFormADC(int16_t adcVolt) {
-	return (adcVolt ? (adcVolt * 2 + 7) : 0);
+	if(adcVolt == 0) return 0;
+	int16_t current = adcVolt;
+	current *= 19;
+	current -= 74;
+	current += current < 0 ? -5 : 5;
+	current /= 10;
+	return current;
 }
 
 #ifdef INTERPOLATION
