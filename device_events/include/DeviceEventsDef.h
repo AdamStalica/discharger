@@ -1,3 +1,4 @@
+#ifndef DEVICE_DEF
 #define DEVICE_DEF
 
 namespace Device {
@@ -28,3 +29,4 @@ namespace Device {
 		NO_WARNING = 0xFF
 	};
 }
+#endif

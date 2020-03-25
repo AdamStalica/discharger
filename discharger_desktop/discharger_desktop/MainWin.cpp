@@ -5,12 +5,12 @@
 #include "User.h"
 #include "TestConfigData.h"
 #include "TestDriver.h"
+#include "DbTestData.h"
 #include <QMessageBox>
 #include <QTreeWidget>
 #include <QMovie>
 #include <QScrollBar>
 #include <QCloseEvent>
-
 
 
 using namespace serialPort;
@@ -22,12 +22,14 @@ MainWin::MainWin(QWidget *parent)
 {
 	ui.setupUi(this);
 	setDockedWidgetsVisibility(false);
+	this->showMaximized();
 
 	ObjectFactory::createInstance(new WebApi(this));
 	ObjectFactory::createInstance(new User(this));
 	ObjectFactory::createInstance(new TestConfigData(this));
 	ObjectFactory::createInstance(new TestDriver(this));
 	ObjectFactory::createInstance(new SerialPort(this));
+	ObjectFactory::createInstance(new db::TestData(this));
 	
 	auto serial_ = ObjectFactory::getInstance<SerialPort>();	
 
@@ -40,8 +42,12 @@ MainWin::MainWin(QWidget *parent)
 	setupTestToolBar();
 	setTestToolBarVisibility(false);
 
+	connect(ui.dockWgtCommFlow, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
+	connect(ui.dockWgtParams, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
+
 	connect(ui.authBtnLogIn, &QPushButton::clicked, this, &MainWin::login);
 	connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
+	connect(ui.CTBtnRefreshSerialPort, &QPushButton::clicked, this, &MainWin::refreshComPortsList);
 	connect(ui.testBtnConfChart, &QPushButton::clicked, testDriver, &TestDriver::confChart);
 
 	connect(ui.parVarEdtCurr, &QLineEdit::editingFinished, this, &MainWin::handleTestCurrEdited);
@@ -56,8 +62,38 @@ MainWin::MainWin(QWidget *parent)
 	connect(serial_, &SerialPort::transmitedLine, this, &MainWin::serialTransmitedLine);
 	
 	connect(ui.actionLogout, &QAction::triggered, this, &MainWin::logout);
-	
+
+
+
 	/*
+
+	connect(ui.dockWgtCommFlow, &QDockWidget::dockLocationChanged, [](Qt::DockWidgetArea area) {
+	
+		qDebug() << area;
+	
+	});
+
+	qDebug() << ui.dockWgtCommFlow->windowFlags();
+	
+
+	connect(ui.dockWgtCommFlow, &QDockWidget::topLevelChanged, [this](bool b) {
+
+		qDebug() << ui.dockWgtCommFlow->windowFlags();
+		if (b) {
+			ui.dockWgtCommFlow->setWindowFlags(Qt::CustomizeWindowHint |
+				Qt::Window | Qt::WindowMinimizeButtonHint |
+				Qt::WindowMaximizeButtonHint |
+				Qt::WindowCloseButtonHint);
+			ui.dockWgtCommFlow->show();
+
+		}
+		else {
+			ui.dockWgtCommFlow->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint | Qt::WindowFullscreenButtonHint);
+			ui.dockWgtCommFlow->show();
+		}
+		qDebug() << b;
+	});
+	
 	ChartPropertiesDialog * ch = new ChartPropertiesDialog(this);
 
 	ch->show();
@@ -83,12 +119,12 @@ MainWin::MainWin(QWidget *parent)
 }
 
 void MainWin::closeEvent(QCloseEvent * event) {
-	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
+	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
 		showWarning("Test in progress you can not log out");
 		event->ignore();
 		return;
 	}
-	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
+	if (testDriver->getTestState() == db::TestStates::READY) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) {
 			event->ignore();
 			return;
@@ -102,16 +138,35 @@ void MainWin::setDockedWidgetsVisibility(bool visible) {
 	ui.dockWgtCommFlow->setVisible(visible);
 }
 
+void MainWin::dockedWgtTopLevelChanged(bool) {
+	QDockWidget* dw = static_cast<QDockWidget*>(QObject::sender());
+	if (dw->isFloating()) {
+		dw->setWindowFlags(Qt::CustomizeWindowHint |
+			Qt::Window | Qt::WindowMinimizeButtonHint |
+			Qt::WindowMaximizeButtonHint |
+			Qt::WindowCloseButtonHint);
+		dw->show();
+	}
+	else {
+		dw->setWindowFlags(Qt::WindowTitleHint | 
+			Qt::WindowSystemMenuHint | 
+			Qt::WindowMinMaxButtonsHint | 
+			Qt::WindowCloseButtonHint | 
+			Qt::WindowFullscreenButtonHint);
+		dw->show();
+	}
+}
+
 void MainWin::setTestToolBarVisibility(bool visible) {
 	ui.toolBarTest->setVisible(visible);
 }
 
 void MainWin::logout() {
-	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
+	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
 		showWarning("Test in progress you can not log out"); 
 		return;
 	}
-	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
+	if (testDriver->getTestState() == db::TestStates::READY) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
 	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
@@ -209,12 +264,19 @@ void MainWin::setupTestConfPage() {
 void MainWin::showTestConfPage() {
 	clearTestConfPage();
 	auto confData = ObjectFactory::getInstance<TestConfigData>();
-	ui.CTComboSerialPort->addItems(confData->getComsList());
+	refreshComPortsList();
 	ui.CTComboBattLeft->addItems(confData->getBatteriesLeftList());
 	ui.CTComboBattRight->addItems(confData->getBatteriesRightList());
 	ui.CTSimTreeRaces->setAnimated(true);
 	ui.CTSimTreeRaces->addTopLevelItems(confData->getLogsTreeItems());
 	ui.stackedWidget->setCurrentIndex(PagesEnum::CONF_TEST);
+}
+
+void MainWin::refreshComPortsList() {
+	ui.CTComboSerialPort->clear();
+	auto confData = ObjectFactory::getInstance<TestConfigData>();
+	confData->refreshComs();
+	ui.CTComboSerialPort->addItems(confData->getComsList());
 }
 
 void MainWin::clearTestConfPage() {
@@ -226,23 +288,23 @@ void MainWin::clearTestConfPage() {
 
 void MainWin::prepareNewTest() {
 	loader("Setting up a device");
-	if (!setupDevice())
+	if (!setupDeviceInterface())
 		showPage(PagesEnum::CONF_TEST);
 }
 
-bool MainWin::setupDevice() {
+bool MainWin::setupDeviceInterface() {
 	QString com					{ ui.CTComboSerialPort->currentText() };
 	QString voltageLimit		{ ui.CTEdtVoltLim->text() };
 	QString heatSinkTempLimit	{ ui.CTEdtTempLim->text().isEmpty() ? "0" : ui.CTEdtTempLim->text() };
 	int numOfBatt{
 		ui.CTComboBattRight->currentText() == "-1" ? 1 : 2
 	};
-	//if (ifEmptyShowWarning(com, "Com port")) return false;
+	if (ifEmptyShowWarning(com, "Com port")) return false;
 	if (ifEmptyShowWarning(voltageLimit, "Voltage limit")) return false;
 	if (ifEmptyShowWarning(heatSinkTempLimit, "Heat Sink temperature limit")) return false;
 
 	switch (ui.CTToolBoxTestType->currentIndex()) {
-		case TestType::SIMULATION: {
+		case db::TestType::SIMULATION: {
 			/*
 				Data to DischargerDevice:
 					com, voltLim, tempLim, currSource, idLogInfo
@@ -253,19 +315,17 @@ bool MainWin::setupDevice() {
 				return false;
 			}
 			QString idLogInfo{ selected.front()->text(TREE_ID_LOG_INFO_COL_NUM) };
-			DeviceInterface::CurrentSource currSource{ (
+			db::CurrentSource currSource{ (
 				ui.CTSimRadioCurrSourceMotor->isChecked() ?
-				DeviceInterface::CurrentSource::MOTOR :
-				DeviceInterface::CurrentSource::MAIN
+				db::CurrentSource::MOTOR :
+				db::CurrentSource::MAIN
 			) };
-			auto dev = new DischargerDevice{ testDriver, com, currSource };
+			auto dev = new DischargerDevice{ testDriver, com, db::TestType::SIMULATION, currSource };
 			dev->setVoltageLimit(voltageLimit.toFloat());
 			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
 			testDriver->setDevice(dev);
 			if (!dev->checkBatteryNumber(numOfBatt)) {
-				showError("Invalid number of batteries");
-				testDriver->removeDevice();
-				showPage(PagesEnum::CONF_TEST);
+				rollbackTestConf("Invalid number of batteries");
 				return false;
 			}
 			dev->fetchCurrentToTest(idLogInfo.toInt(), [this](bool success, const QString & comment) {
@@ -273,35 +333,31 @@ bool MainWin::setupDevice() {
 					setupTestDriver();
 				}
 				else {
-					showError(comment);
-					testDriver->removeDevice();
-					showPage(PagesEnum::CONF_TEST);
+					rollbackTestConf(comment);
 				}
 			});
 			break;
 		}
-		case TestType::BASIC_TEST: {
+		case db::TestType::BASIC_TEST: {
 			/*
 				Data to DischargerDevice:
 					com, voltLim, tempLim, currSource, testCurr
 			*/
 			auto testCurrStr{ ui.CTBasicEdtTestCurr->text() };
 			if (ifEmptyShowWarning(testCurrStr, "Test current")) return false;
-			auto dev = new DischargerDevice{ testDriver, com, DeviceInterface::CurrentSource::NO_CURR_SOURCE };
+			auto dev = new DischargerDevice{ testDriver, com, db::TestType::BASIC_TEST, db::CurrentSource::NO_CURR_SOURCE };
 			dev->setTestCurrent(testCurrStr.toFloat());
 			dev->setVoltageLimit(voltageLimit.toFloat());
 			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
 			testDriver->setDevice(dev);
 			if (!dev->checkBatteryNumber(numOfBatt)) {
-				showError("Invalid number of batteries");
-				testDriver->removeDevice();
-				showPage(PagesEnum::CONF_TEST);
+				rollbackTestConf("Invalid number of batteries");
 				return false;
 			}
 			setupTestDriver();
 			break;
 		}
-		case TestType::DEV_TERMINAL: {
+		case db::TestType::DEV_TERM: {
 			// TODO: Other devices
 			/*
 				Data to DischargerDevice:
@@ -326,29 +382,42 @@ void MainWin::setupTestDriver() {
 
 	if (ifEmptyShowWarning(name, "Test name")) {}
 	else if (idBattLeft == idBattRight) {
-		showError("Id of battery left and right can not be equal");
-	}
-	else {
-		// TODO: Setup db record
-
-
-		testDriver->setTestName(name);
-		testDriver->setIdBattLeft(idBattLeft);
-		testDriver->setIdBattRight(idBattRight);
-		if(!filepathToLog.isEmpty())
-			testDriver->setFilepathToLog(filepathToLog, jsonLogFile);
-
-		loader("Establishing connection to the device");
-		auto device = testDriver->getDevice();
-		connect(device.get(), &DeviceInterface::signalConnectionEstablished, this, &MainWin::showTestPage);
-		connect(device.get(), &DeviceInterface::signalCanNotEstablishConnection, [this] {
-			showError("Can not establish connection.");
-			testDriver->removeDevice();
-			showPage(PagesEnum::CONF_TEST);
-		});
-		device->connectToDevice();
+		rollbackTestConf("Id of battery left and right can not be equal");
 		return;
 	}
+
+	testDriver->setTestName(name);
+	testDriver->setIdBattLeft(idBattLeft);
+	testDriver->setIdBattRight(idBattRight);
+	if(!filepathToLog.isEmpty())
+		testDriver->setFilepathToLog(filepathToLog, jsonLogFile);
+	establishConnectionToDevice();
+}
+
+void MainWin::establishConnectionToDevice() {
+	loader("Establishing connection to the device");
+	auto device = testDriver->getDevice();
+	connect(device.get(), &DeviceInterface::signalConnectionEstablished, [this] {
+		setupDbForTest();
+	});
+	connect(device.get(), &DeviceInterface::signalCanNotEstablishConnection, [this] {
+		rollbackTestConf("Can not establish connection.");
+	});
+	device->connectToDevice();
+}
+
+void MainWin::setupDbForTest() {
+	loader("Prepering database");
+	testDriver->setupTestInDb([this](bool success, const QString & comment) {
+		if (success)
+			showTestPage();
+		else
+			rollbackTestConf(comment);
+	});
+}
+
+void MainWin::rollbackTestConf(const QString & rollbackMsg){
+	showError(rollbackMsg);
 	testDriver->removeDevice();
 	showPage(PagesEnum::CONF_TEST);
 }
@@ -395,7 +464,7 @@ void MainWin::testStart() {
 }
 
 void MainWin::testStop() {
-	if (testDriver->getTestState() == TestDriver::TestStates::PROGRESS) {
+	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
 		if (showQuestionBox("Do you really want to stop test?") == false) return;
 	}
 	testToolBarAboutToNewTest();
@@ -403,7 +472,7 @@ void MainWin::testStop() {
 }
 
 void MainWin::configureNewTest() {
-	if (testDriver->getTestState() == TestDriver::TestStates::READY) {
+	if (testDriver->getTestState() == db::TestStates::READY) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
 
@@ -571,19 +640,19 @@ void MainWin::serialTransmitedLine(const QString & line) {
 }
 
 void MainWin::handleTestCurrEdited() {
-	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+	if (testDriver->getTestState() < db::TestStates::COMPLETED) {
 		testDriver->getDevice()->setTestCurrent(ui.parVarEdtCurr->text().toFloat());
 	}
 }
 
 void MainWin::handleVoltLimitEdited() {
-	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+	if (testDriver->getTestState() < db::TestStates::COMPLETED) {
 		testDriver->getDevice()->setVoltageLimit(ui.parVarEdtVolLim->text().toFloat());
 	}
 }
 
 void MainWin::handleHeatSinkTempLimitEdited() {
-	if (testDriver->getTestState() < TestDriver::TestStates::COMPLETED) {
+	if (testDriver->getTestState() < db::TestStates::COMPLETED) {
 		testDriver->getDevice()->setHeatSinkTempLimit(ui.parVarEdtTempLim->text().toFloat());
 	}
 }

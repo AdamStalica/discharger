@@ -23,7 +23,7 @@ void WebApi::POST(
 	std::function<void(bool, std::string &&)> callback) 
 {
 	apiCallback = callback;
-	QUrl url((API_URL + "/" + fileName).c_str());
+	QUrl url((API_URL + "/" + fileName + (API_DEBUG ? "?XDEBUG_SESSION_START=1" : "")).c_str());
 
 	QNetworkRequest req(url);
 	req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");

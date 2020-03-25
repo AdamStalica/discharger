@@ -98,6 +98,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChartPropertiesDialog.cpp" />
+    <ClCompile Include="DbTestData.cpp" />
     <ClCompile Include="DischargerDevice.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
@@ -132,6 +133,7 @@
     <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="Calculations.h" />
     <ClInclude Include="DbSimData.h" />
+    <QtMoc Include="DbTestData.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />
     <ClInclude Include="Param.h" />

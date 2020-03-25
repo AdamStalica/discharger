@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <functional>
 
+auto constexpr API_DEBUG = true;
+
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -35,7 +37,7 @@ public:
 	);
 
 private:
-	const std::string API_URL{ "http://api.sgp.slavek.webd.pro" };
+	const std::string API_URL{ "http://192.168.1.41/api" }; // { "http://api.sgp.slavek.webd.pro" };
 	
 	QNetworkAccessManager * mgr;
 	std::function<void(bool, std::string &&)> apiCallback{ 

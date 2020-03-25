@@ -3,6 +3,8 @@
 #include "QMessageBox"
 #include <QDialog>
 
+using namespace db;
+
 TestDriver::TestDriver(QObject *parent)
 	: QObject(parent),
 	ui(*dynamic_cast<TestGUI*>(parent))
@@ -31,6 +33,7 @@ void TestDriver::setDevice(DeviceInterface * dev) {
 }
 
 void TestDriver::removeDevice() {
+	ObjectFactory::getInstance<serialPort::SerialPort>()->close();
 	devicePtr.reset();
 }
 
@@ -39,9 +42,17 @@ void TestDriver::setFilepathToLog(const QString & filepath, bool jsonFile) {
 	jsonLogFile = jsonFile;
 }
 
+void TestDriver::setupTestInDb(std::function<void(bool, const QString&)> callback) {
+	ObjectFactory::getInstance<db::TestData>()->setupTestInDb(
+		callback, TestStates::READY, devicePtr->getCurrentSource(), 
+		devicePtr->getTestType(), testName, idBattLeft, idBattRight, 
+		devicePtr->getLogInfoId() ? devicePtr->getLogInfoId().val() : -1
+	);
+}
+
 void TestDriver::loadPageData() {
-	testState = READY;
-	if (devicePtr->getCurrentSource() == DeviceInterface::CurrentSource::NO_CURR_SOURCE)
+	testState = TestStates::READY;
+	if (devicePtr->getCurrentSource() == db::CurrentSource::NO_CURR_SOURCE)
 		ui.setVarTestCurrent(QString::number(devicePtr->getTestCurrent().val()));
 	ui.setVarVoltLimit(QString::number(devicePtr->getVoltageLimit().val()));
 	ui.setVarHeatSinkTempLimit(QString::number(devicePtr->getHeatSinkTempLimit().val()));
@@ -107,8 +118,18 @@ void TestDriver::deviceNewData(db::SimData dbSimData) {
 
 	dbSimData.currTimestamp = QDateTime::currentDateTime();
 
-	// TODO: calcs of capacity, used energy, etc.
-
+	// TODO: calcs of capacity, used energy, etc. - DONE
+	calcs.addValues(
+		testStartTime.elapsed(), 
+		dbSimData.current.val(), 
+		dbSimData.battLeftVolt.val(), 
+		dbSimData.battRightVolt.val()
+	);
+	if (!dbSimData.capacity)
+		dbSimData.capacity = calcs.computeCapacity();
+	if (!dbSimData.usedEnergy)
+		dbSimData.usedEnergy = calcs.computeUsedEnergy();
+	
 	if (testState == TestStates::READY) {
 		testState = TestStates::PROGRESS;
 		testStartTime.start();
@@ -122,12 +143,6 @@ void TestDriver::deviceNewData(db::SimData dbSimData) {
 		setupLogFile(dbSimData);
 	}
 	dbSimData.timeSinceBeg = QTime::fromMSecsSinceStartOfDay(testStartTime.elapsed());
-	calcs.setValues(
-		testStartTime.elapsed(), 
-		dbSimData.current.val(), 
-		dbSimData.battLeftVolt.val(), 
-		dbSimData.battRightVolt.val()
-	);
 
 	appendChartData(dbSimData);
 	updateUI(dbSimData);
@@ -167,7 +182,7 @@ TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd)
 	data.setTestName(testName);
 	data.setTestStatus(TEST_STATES.at(testState));
 	if(d->getProgress()) data.setProgress(d->getProgress().val());
-	bool noCurrSource = (d->getCurrentSource() == DeviceInterface::CurrentSource::NO_CURR_SOURCE);
+	bool noCurrSource = (d->getCurrentSource() == db::CurrentSource::NO_CURR_SOURCE);
 	if (!noCurrSource) {
 		if(d->getTestCurrent()) data.setTestCurrent(d->getTestCurrent().val());
 	}
@@ -179,7 +194,6 @@ TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd)
 	if (sd.timeSinceBeg)			data.setTestTime(sd.timeSinceBeg.val().toString(TIME_FORMAT));
 
 	if (sd.capacity)		data.setCapacity(sd.capacity.val());
-	else					data.setCapacity(calcs.computeCapacity());
 	if (sd.usedEnergy)		data.setConsumedEnergy(sd.usedEnergy.val());
 	if (sd.heatSinkTemp)	data.setHeatSinkTemp(sd.heatSinkTemp.val());
 	if (sd.current)			data.setCurrent(sd.current.val());

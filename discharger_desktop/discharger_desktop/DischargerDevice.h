@@ -70,7 +70,7 @@ private:
 
 public:
 
-	DischargerDevice(QObject * parent, const QString & com, DeviceInterface::CurrentSource currSource);
+	DischargerDevice(QObject * parent, const QString & com, db::TestType testType, db::CurrentSource currSource);
 	~DischargerDevice();
 
 	void fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback);

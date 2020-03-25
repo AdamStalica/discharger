@@ -10,6 +10,7 @@ private:
 public:
 	//Param(Param &&) = delete;
 	//Param(const Param &) = delete;
+	//Param() {}
 	Param(const std::string & name = "") : NAME(name) {};
 
 	T & operator=(T _val) {

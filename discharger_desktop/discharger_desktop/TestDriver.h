@@ -8,6 +8,7 @@
 #include "DbSimData.h"
 #include "ChartPropertiesDialog.h"
 #include "Calculations.h"
+#include "DbTestData.h"
 
 auto constexpr TIME_FORMAT = "hh:mm:ss.zzz";
 
@@ -61,19 +62,11 @@ private:
 	QString testName, 
 		filepath;
 	bool jsonLogFile = false;
-	int idBattLeft, 
-		idBattRight;
+	unsigned int idBattLeft, 
+				idBattRight;
 
 public:
-	enum TestStates {
-		READY,
-		PROGRESS,
-		COMPLETED,
-		CONFIRMED,
-		REMOVED,
-		DEV_ERROR,
-		NONE
-	};
+
 
 	TestDriver(QObject *parent);
 	~TestDriver();
@@ -87,17 +80,19 @@ public:
 	void setIdBattRight(int id) { idBattRight = id; };
 	void setFilepathToLog(const QString &filepath, bool jsonFile = false);
 
+	void setupTestInDb(std::function<void(bool, const QString &)> callback);
+
 	void loadPageData();
 	void startTest();
 	void stopTest();
 	void clear();
 
-	TestStates getTestState() { return testState; };
+	db::TestStates getTestState() { return testState; };
 
 	void confChart();
 
 private:
-	TestStates testState = NONE;
+	db::TestStates testState = db::TestStates::NONE;
 
 	void deviceFinished();
 	void deviceNewData(db::SimData dbSimData);

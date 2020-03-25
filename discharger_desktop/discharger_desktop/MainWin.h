@@ -30,13 +30,13 @@ private:
 		CONF_TEST,
 		TEST
 	};
-
+	/*
 	enum TestType {
 		SIMULATION,
 		BASIC_TEST,
 		DEV_TERMINAL
 	};
-
+	*/
 	enum MeasureSchem {
 		DOUBLE_BATT,
 		SINGLE_BATT
@@ -48,6 +48,7 @@ private:
 	void clearChildrens(QObject * parent, const QString & regex = QString());
 
 	void setDockedWidgetsVisibility(bool visible);
+	void dockedWgtTopLevelChanged(bool);
 	void setTestToolBarVisibility(bool visible);
 
 	void logout();
@@ -65,8 +66,11 @@ private:
 	void clearTestConfPage();
 
 	void prepareNewTest();
-	bool setupDevice();
+	bool setupDeviceInterface();
 	void setupTestDriver();
+	void establishConnectionToDevice();
+	void setupDbForTest();
+	void rollbackTestConf(const QString & rollbackMsg);
 	void clearTestPage();
 
 
@@ -101,6 +105,7 @@ private:
 	void appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown = false);
 
 private slots:
+	void refreshComPortsList();
 	void showTestPage();
 	void serialOpened();
 	void serialClosed();

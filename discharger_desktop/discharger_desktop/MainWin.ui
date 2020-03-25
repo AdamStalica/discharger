@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1051</width>
+    <width>1231</width>
     <height>1030</height>
    </rect>
   </property>
@@ -22,7 +22,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="authPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -57,8 +57,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>294</width>
-             <height>128</height>
+             <width>438</width>
+             <height>937</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -306,8 +306,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>662</width>
-             <height>851</height>
+             <width>638</width>
+             <height>920</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -786,7 +786,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>381</width>
+                    <width>600</width>
                     <height>58</height>
                    </rect>
                   </property>
@@ -890,8 +890,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>381</width>
-                    <height>330</height>
+                    <width>600</width>
+                    <height>383</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -1441,7 +1441,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1051</width>
+     <width>1231</width>
      <height>21</height>
     </rect>
    </property>
@@ -1515,7 +1515,7 @@
           <x>0</x>
           <y>0</y>
           <width>350</width>
-          <height>761</height>
+          <height>933</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_19">
@@ -1598,17 +1598,10 @@
            <layout class="QVBoxLayout" name="verticalLayout_14">
             <item>
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="1" column="0" alignment="Qt::AlignRight">
-               <widget class="QLabel" name="label_32">
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_33">
                 <property name="text">
-                 <string>Voltage limit:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0" alignment="Qt::AlignRight">
-               <widget class="QLabel" name="label_30">
-                <property name="text">
-                 <string>Test current:</string>
+                 <string>V</string>
                 </property>
                </widget>
               </item>
@@ -1631,13 +1624,6 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_31">
-                <property name="text">
-                 <string>A</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
                <widget class="QLineEdit" name="parVarEdtVolLim">
                 <property name="minimumSize">
@@ -1657,13 +1643,6 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_33">
-                <property name="text">
-                 <string>V</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="0" alignment="Qt::AlignRight">
                <widget class="QLabel" name="label_34">
                 <property name="sizePolicy">
@@ -1674,6 +1653,34 @@
                 </property>
                 <property name="text">
                  <string>Heat sink temperature limit:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_31">
+                <property name="text">
+                 <string>A</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_35">
+                <property name="text">
+                 <string>°C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" alignment="Qt::AlignRight">
+               <widget class="QLabel" name="label_30">
+                <property name="text">
+                 <string>Test current:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" alignment="Qt::AlignRight">
+               <widget class="QLabel" name="label_32">
+                <property name="text">
+                 <string>Voltage limit:</string>
                 </property>
                </widget>
               </item>
@@ -1696,12 +1703,18 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="label_35">
-                <property name="text">
-                 <string>°C</string>
+              <item row="0" column="3">
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-               </widget>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -2615,7 +2628,7 @@ temperature:</string>
     <string>Communication flow</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
     <layout class="QVBoxLayout" name="verticalLayout_25">

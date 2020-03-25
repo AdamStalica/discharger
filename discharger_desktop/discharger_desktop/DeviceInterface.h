@@ -2,7 +2,7 @@
 #include <QObject>
 #include <DeviceEventsDef.h>
 #include "ObjectFactory.h"
-#include "DbSimData.h"
+#include "DbTestData.h"
 #include "SerialPort.h"
 
 class DeviceInterface : 
@@ -12,14 +12,16 @@ class DeviceInterface :
 	Q_OBJECT
 
 public:
+	/*
 	enum CurrentSource {
 		MAIN,
 		MOTOR,
 		NO_CURR_SOURCE
 	};
-
+	*/
 protected:
-	const DeviceInterface::CurrentSource CURRENT_SOURCE;
+	const db::TestType TEST_TYPE;
+	const db::CurrentSource CURRENT_SOURCE;
 
 	Param<unsigned int> progress;
 	Param<float> testCurrent;
@@ -32,8 +34,9 @@ protected:
 
 public:
 
-	DeviceInterface(QObject * parent, CurrentSource currSource) : 
+	DeviceInterface(QObject * parent, db::TestType testType, db::CurrentSource currSource) : 
 		QObject(parent),
+		TEST_TYPE(testType),
 		CURRENT_SOURCE(currSource)
 	{
 		serial = ObjectFactory::getInstance<serialPort::SerialPort>();
@@ -55,10 +58,11 @@ public:
 	const Param<float> & getHeatSinkTempLimit() const { return heatSinkTempLimit; };
 	const Param<QTime> & getEstimetedTestTime() const { return estimetedTestTime; };
 	db::SimData getDbSimData() const { return static_cast<db::SimData>(*this); }
-	CurrentSource getCurrentSource() const { return CURRENT_SOURCE; };
+	db::TestType getTestType() const { return TEST_TYPE; }
+	db::CurrentSource getCurrentSource() const { return CURRENT_SOURCE; };
 
 	void setTestCurrent(float current) {
-		if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+		if (CURRENT_SOURCE != db::CurrentSource::NO_CURR_SOURCE) {
 			throw std::exception("This current source not support such a functionality");
 		}
 		testCurrent = current;

@@ -7,7 +7,15 @@ class Calculations
 	int n = 0;
 
 	double getMeanEnergy() {
-		return (currentSum_ * voltageSum_) / n;
+		return (currentSum_ / n * voltageSum_ / n);
+	}
+
+	double getMeanCurrent() {
+		return (currentSum_ / n);
+	}
+
+	double getMeanVoltage() {
+		return (voltageSum_ / n);
 	}
 
 public:
@@ -17,7 +25,7 @@ public:
 		currentSum_ = 0.0;
 	}
 
-	void setValues(long long elapsedMs, double current, double volt1, double volt2 = 0.0) {
+	void addValues(long long elapsedMs, double current, double volt1, double volt2 = 0.0) {
 		elapsedMs_ = elapsedMs;
 		currentSum_ += current;
 		voltageSum_ += volt1;
@@ -26,11 +34,11 @@ public:
 	}
 
 	double computeCapacity() {
-		return (getMeanEnergy() * elapsedMs_ / 3600000);
+		return (getMeanCurrent() * elapsedMs_ / 3600000);
 	}
 
 	double computeUsedEnergy() {
-		return (currentSum_ * voltageSum_);
+		return (getMeanEnergy() * elapsedMs_ / 3600000);
 	}
 };
 

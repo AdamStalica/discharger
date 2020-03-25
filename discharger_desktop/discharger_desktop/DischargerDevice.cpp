@@ -1,7 +1,7 @@
 #include "DischargerDevice.h"
 
-DischargerDevice::DischargerDevice(QObject * parent, const QString & com, DeviceInterface::CurrentSource currSource) :
-	DeviceInterface(parent, currSource)
+DischargerDevice::DischargerDevice(QObject * parent, const QString & com, db::TestType testType, db::CurrentSource currSource) :
+	DeviceInterface(parent, testType, currSource)
 {
 	comPortName = com;
 	connect(&timer, &QTimer::timeout, this, &DischargerDevice::timerTimeout);
@@ -12,13 +12,12 @@ DischargerDevice::DischargerDevice(QObject * parent, const QString & com, Device
 }
 
 DischargerDevice::~DischargerDevice() {
-	//serial->disconnect(this);
-	serial->close();
+
 }
 
 // TODO: log time
 void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback) {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+	if (TEST_TYPE != db::TestType::SIMULATION) {
 		throw std::exception("This current source not support such a functionality");
 	}
 
@@ -26,7 +25,7 @@ void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool
 	this->idLogInfo = idLogInfo;
 	static std::function<void(bool, const QString & comment)> cb = callback;
 
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::MOTOR) {
+	if (CURRENT_SOURCE == db::CurrentSource::MOTOR) {
 		currSourceName = DB_MOTOR_CURR;
 	}
 
@@ -54,7 +53,7 @@ void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool
 }
 
 bool DischargerDevice::isStopable() { 
-	return CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE; 
+	return TEST_TYPE != db::TestType::SIMULATION; 
 }
 
 void DischargerDevice::connectToDevice() {
@@ -72,7 +71,7 @@ void DischargerDevice::connectToDevice() {
 }
 
 void DischargerDevice::start() {
-	if(CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE)
+	if(TEST_TYPE == db::TestType::SIMULATION)
 		estimetedTestTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * logDataVec.size());
 	timer.setInterval(sendingNewDataPeriod);
 	timer.start();
@@ -90,7 +89,7 @@ bool DischargerDevice::checkBatteryNumber(int numebrOfBatteries) {
 
 void DischargerDevice::timerTimeout() {
 	float newCurrent = testCurrent.val();
-	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+	if (TEST_TYPE == db::TestType::SIMULATION) {
 		static bool isFirst = true;
 		if (isFirst)
 			newCurrent = (*logDataVecIte).current;
@@ -167,7 +166,7 @@ void DischargerDevice::handleNewMesures(const nlohmann::json & data) {
 	heatSinkTemp = data["HST"].get<float>() / 100.0;
 	progress = countProgress();
 
-	if (CURRENT_SOURCE != DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+	if (TEST_TYPE == db::TestType::SIMULATION) {
 		idLogData = (*logDataVecIte).idLogData;
 		testCurrent = (*logDataVecIte).current;
 		++logDataVecIte;
@@ -185,7 +184,7 @@ void DischargerDevice::testFinished() {
 }
 
 unsigned int DischargerDevice::countProgress() {
-	if (CURRENT_SOURCE == DeviceInterface::CurrentSource::NO_CURR_SOURCE) {
+	if (TEST_TYPE == db::TestType::SIMULATION) {
 		static float battLeft1stVolt = -1,
 			battRight1stVolt = -1;
 		if (battLeft1stVolt == -1 || battRight1stVolt == -1) {
