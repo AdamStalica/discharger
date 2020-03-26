@@ -121,8 +121,9 @@ void DischargerDevice::serialRecivedNewData(const QString & line) {
 	}
 	if (!data["handshake"].is_null()) {
 		// process handshake
+		if(!gotHandshake)
+			emit signalConnectionEstablished();
 		gotHandshake = true;
-		emit signalConnectionEstablished();
 	}
 	else if (!data["id"].is_null()) {
 		// process new data
@@ -170,7 +171,8 @@ void DischargerDevice::handleNewMesures(const nlohmann::json & data) {
 		idLogData = (*logDataVecIte).idLogData;
 		testCurrent = (*logDataVecIte).current;
 		++logDataVecIte;
-		if (logDataVecIte == logDataVec.end())
+
+		if ((logDataVecIte + 1) == logDataVec.end())
 			testFinished();
 	}
 	idCurrSim = idCurrSim.val() + 1;

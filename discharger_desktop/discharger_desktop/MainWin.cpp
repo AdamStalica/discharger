@@ -120,7 +120,7 @@ MainWin::MainWin(QWidget *parent)
 
 void MainWin::closeEvent(QCloseEvent * event) {
 	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
-		showWarning("Test in progress you can not log out");
+		showWarning("Test in progress you can not close the program");
 		event->ignore();
 		return;
 	}

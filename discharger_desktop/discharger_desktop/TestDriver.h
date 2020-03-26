@@ -101,6 +101,7 @@ private:
 	void deviceDebug(const QString & msg);
 
 	void updateUI(const db::SimData & sd = db::SimData());
+	void setTestState(db::TestStates testState);
 
 	TestParametersData prepareTestParametersData(const db::SimData & sd);
 	bool isSingleBattery() { return idBattRight == -1; };

@@ -1,12 +1,15 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 #include <queue>
 #include <DeviceEventsDef.h>
 #include "DbSimData.h"
 #include "Param.h"
 
 namespace db {
+
+	auto constexpr INSERTING_INTERVAL = 10000; // ms
 
 	enum TestStates {
 		READY,
@@ -36,6 +39,11 @@ namespace db {
 
 	private:
 		const std::string API_TEST_SETUP_FILE = "setup_new_test.php";
+		const std::string API_TEST_SYNCH_FILE = "synch_test_data.php";
+
+		const size_t DEFAULT_VEC_CAPACITY = 1000;
+
+		QTimer insertingDataTimer;
 
 		const std::string CURR_SOURCE_STR[3] = {
 			"MAIN",
@@ -44,20 +52,14 @@ namespace db {
 		};
 
 		std::vector<db::SimData> simDataVec;
-		std::queue<db::SimData> simDataToInsertQueue;
+		unsigned int lastInsertedId = 0;
 
 		unsigned int idSimInfo = 0;
 		TestStates testState = TestStates::NONE;
-		Device::Error testError = Device::Error::NO_DEV_ERROR;
 
-		/*
-		Param<std::string> currentSource;
-		Param<unsigned int> idSimType;
-		Param<unsigned int> idLogInfo;
-		Param<unsigned int> idBattLeft;
-		Param<unsigned int> idBattRight;
-		Param<std::string> name;
-		*/
+		Param<Device::Error> testError;
+		Param<std::string> beginTime;
+		Param<std::string> endTime;
 		
 	public:
 		TestData(QObject *parent);
@@ -68,6 +70,13 @@ namespace db {
 		void setupTestInDb(std::function<void(bool success, const QString & comment)> callback,
 			TestStates testState, CurrentSource currSource, TestType testType, const QString & name,
 			int idBattLeft, int idBattRight, int idLogInfo);
+
+		void setTestState(TestStates testState);
+		void setTestError(Device::Error error);
+
+		TestStates getTestState() { return testState; }
+
+		void addSimData(SimData && data);
 
 	private slots:
 		void insertSimDataToDb();

@@ -44,14 +44,15 @@ void TestDriver::setFilepathToLog(const QString & filepath, bool jsonFile) {
 
 void TestDriver::setupTestInDb(std::function<void(bool, const QString&)> callback) {
 	ObjectFactory::getInstance<db::TestData>()->setupTestInDb(
-		callback, TestStates::READY, devicePtr->getCurrentSource(), 
+		callback, TestStates::READY, devicePtr->getCurrentSource(),
 		devicePtr->getTestType(), testName, idBattLeft, idBattRight, 
 		devicePtr->getLogInfoId() ? devicePtr->getLogInfoId().val() : -1
 	);
 }
 
 void TestDriver::loadPageData() {
-	testState = TestStates::READY;
+	//testState = TestStates::READY;
+	setTestState(TestStates::READY);
 	if (devicePtr->getCurrentSource() == db::CurrentSource::NO_CURR_SOURCE)
 		ui.setVarTestCurrent(QString::number(devicePtr->getTestCurrent().val()));
 	ui.setVarVoltLimit(QString::number(devicePtr->getVoltageLimit().val()));
@@ -70,14 +71,16 @@ void TestDriver::stopTest() {
 		deviceFinished();
 		return;
 	}
-	testState = TestStates::REMOVED;
+	//testState = TestStates::REMOVED;
+	setTestState(TestStates::REMOVED);
 	updateUI();
 }
 
 void TestDriver::clear() {
 	devicePtr->disconnect();
 	removeDevice();
-	testState = TestStates::NONE;
+	//testState = TestStates::NONE;
+	setTestState(TestStates::NONE);
 	testStartTime = QTime();
 	testEstimEndTime = QTime();
 	testName.clear();
@@ -86,16 +89,18 @@ void TestDriver::clear() {
 	idBattRight = int();
 	graphsUsage.clear();
 	chartPorps.clear();
-	dbSimDataVec.clear();
+	//dbSimDataVec.clear();
 	plot->clearGraphs();
 	plot->hide();
 	ui.removeChart(plot);
 	calcs.clear();
+	ObjectFactory::getInstance<db::TestData>()->clear();
 }
 
 void TestDriver::deviceFinished() {
 	if (testState >= TestStates::COMPLETED) return;
-	testState = TestStates::COMPLETED;
+	//testState = TestStates::COMPLETED;
+	setTestState(TestStates::COMPLETED);
 	testEstimEndTime = QTime::currentTime();
 	updateUI();
 	ui.testFinised();
@@ -106,10 +111,12 @@ void TestDriver::deviceFinished() {
 		"(If no then it will be marked as removed)"
 	);
 	if (confirmed) {
-		testState = TestStates::CONFIRMED;
+		//testState = TestStates::CONFIRMED;
+		setTestState(TestStates::CONFIRMED);
 	}
 	else {
-		testState = TestStates::REMOVED;
+		//testState = TestStates::REMOVED;
+		setTestState(TestStates::REMOVED);
 	}
 	updateUI();
 }
@@ -131,7 +138,7 @@ void TestDriver::deviceNewData(db::SimData dbSimData) {
 		dbSimData.usedEnergy = calcs.computeUsedEnergy();
 	
 	if (testState == TestStates::READY) {
-		testState = TestStates::PROGRESS;
+		setTestState(TestStates::PROGRESS);
 		testStartTime.start();
 		if (devicePtr->getEstimetedTestTime()) {
 			testEstimEndTime = testStartTime.addMSecs(
@@ -148,11 +155,13 @@ void TestDriver::deviceNewData(db::SimData dbSimData) {
 	updateUI(dbSimData);
 	ui.appendTestDataLine(dbSimData.toCSV());
 	logToFile(dbSimData);
-	dbSimDataVec.push_back(std::move(dbSimData));
+	ObjectFactory::getInstance<db::TestData>()->addSimData(std::move(dbSimData));
+	//dbSimDataVec.push_back(std::move(dbSimData));
 }
 
 void TestDriver::deviceErrorOccured(Device::Error error) {
-	testState = TestStates::DEV_ERROR;
+	//ObjectFactory::getInstance<db::TestData>()->setTestError(error);
+	setTestState(TestStates::DEV_ERROR);
 	updateUI();
 	QString errorStr = QString::fromStdString(Device::getErrorDescription(error));
 	ui.appendEventsLine("<div style=\"color: red\">" + errorStr + "</div>");
@@ -174,6 +183,11 @@ void TestDriver::deviceDebug(const QString & msg) {
 
 void TestDriver::updateUI(const db::SimData & sd) {
 	ui.setTestPatametersData(prepareTestParametersData(sd));
+}
+
+void TestDriver::setTestState(db::TestStates testState) {
+	this->testState = testState;
+	ObjectFactory::getInstance<db::TestData>()->setTestState(testState);
 }
 
 TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd) {

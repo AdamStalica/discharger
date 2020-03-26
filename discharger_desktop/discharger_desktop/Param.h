@@ -29,4 +29,8 @@ public:
 	QString qName() const {
 		return NAME.c_str();
 	}
+	void clear() {
+		val_ = T();
+		isUsed = false;
+	}
 };
