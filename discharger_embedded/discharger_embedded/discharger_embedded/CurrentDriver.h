@@ -66,10 +66,10 @@ class CurrentDriver {
 	#else
 	struct Currents
 	{
-		uint16_t _tab_[SIM_ITE_TAB_SIZE] = { 0 };
+		int16_t _tab_[SIM_ITE_TAB_SIZE] = { 0 };
 		uint8_t back = 0xFF;
 
-		uint16_t & operator[](uint8_t id) { return _tab_[id]; }
+		int16_t & operator[](uint8_t id) { return _tab_[id]; }
 
 	} currents;
 	uint8_t setupFinished = 0;

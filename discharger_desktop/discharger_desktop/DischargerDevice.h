@@ -31,7 +31,6 @@ temp heat sink
 
 */
 
-
 class DischargerDevice :
 	public DeviceInterface
 {

@@ -18,7 +18,7 @@ Discharger::Discharger()
 		therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
 		therm2(THERMOMETER_2_PIN),
 		therm3(THERMOMETER_1_PIN),
-		simDelay(SIMULATION_INTERVAL *5)
+		simDelay(SIMULATION_INTERVAL *10)
 {
 	wdt_enable(WDTO_1S);
 	wdt_interrput_enable();
@@ -151,8 +151,14 @@ void Discharger::simulationDriver() {
 			
 	uint16_t newCurrent = getCurrentCurrent();
 	uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
-			
-	dac.writeMillivolts(newCurrent);
+	debugLog("mV=", millivoltsToSet);
+	
+//#define DIRECT
+#ifdef DIRECT
+	dac.writeMillivolts(newCurrent/10);
+#else
+	dac.writeMillivolts(millivoltsToSet);
+#endif
 }
 
 void Discharger::isrWDT() {

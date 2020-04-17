@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Calculations" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEIAAAAAQAAAAAAABAAAAAFAAAAIAIACEAAAAAAQAAA=</HashCode>
+      <FileName>Calculations.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Param&lt;T&gt;" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAIIAAAAAAACEAAAAAAAAAAAEAAAAAQAgAAQAAEA=</HashCode>
+      <FileName>Param.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectFactory" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAIAABAAAAQAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ObjectFactory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestGUI" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAgBgAAAAAgAAAAAAGECAABwAAAAgAkAAAABgAAA=</HashCode>
+      <FileName>TestGUI.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestParametersData" Collapsed="true">
+    <Position X="7.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BDRBAQQCIAYAQjIAIAoIgAoQygAkgAASYIAkoAJEgAo=</HashCode>
+      <FileName>TestParametersData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainWin" Collapsed="true">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JIABCIBghDAAE4lREAAAGUGEYBwCQAAhAkSBQABgkIY=</HashCode>
+      <FileName>MainWin.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApi" Collapsed="true">
+    <Position X="11.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAACEAAQAAAIAAAAAAgAAAAAAAAACAAgAAAA=</HashCode>
+      <FileName>WebApi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeviceInterface" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAVAAAAAAEAEAAIgIwAKMACYBIAgAAkAoIAgIAZAAAA=</HashCode>
+      <FileName>DeviceInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DischargerDevice" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>DischargerDevice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChartPropertiesDialog" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAgAAAAAAAAEAAgAAACCAAAAAAgUAABAQAACCAAAYA=</HashCode>
+      <FileName>ChartPropertiesDialog.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SerialPort" Collapsed="true">
+    <Position X="6" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAICAAAAACAAAAgBBihAAQAAAAACABAAAIAEEAAACiI=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestDriver" Collapsed="true">
+    <Position X="6" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAACAQVAIjCUAAARCEQAsAYGI0SIAcAACgAIwKEAAA=</HashCode>
+      <FileName>TestDriver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestConfigData" Collapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAQAAAACAAAAAAAAAQAUBAAAKAAAABAICAAAAAAAI=</HashCode>
+      <FileName>TestConfigData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="User" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgARAAAAAAAAAAglAAAEAAAIAAgECAAAAgAEAAQAAgA=</HashCode>
+      <FileName>User.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="db::SimData" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAQAAAAEAAAAgAAEAoAIAAAwAAAICAAIAAAAABAAAg=</HashCode>
+      <FileName>DbSimData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="db::TestData" Collapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMBAAAECAEAGRAAAAAAAIiACAAACKAAAAAAAgBAAAAA=</HashCode>
+      <FileName>DbTestData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="serialPort::worker::SerialPortWorker" Collapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAgAAAAAAA=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Typedef Name="serialPort::datasize_t" Collapsed="true">
+    <Position X="6" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="serialPort::stopbits_t" Collapsed="true">
+    <Position X="9.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="serialPort::parity_t" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SerialPort.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="db::TestStates" Collapsed="true">
+    <Position X="7.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAQAgAAAAAQAAAAAABIAAAAAAAgA=</HashCode>
+      <FileName>DbTestData.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="db::TestType" Collapsed="true">
+    <Position X="9.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAABAAA=</HashCode>
+      <FileName>DbTestData.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="db::CurrentSource" Collapsed="true">
+    <Position X="6" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DbTestData.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
