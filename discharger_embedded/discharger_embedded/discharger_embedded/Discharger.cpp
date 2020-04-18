@@ -5,6 +5,11 @@
 * Author: domin
 */
 
+/*
+	TODO: New driving algorithm
+	TODO: determination of chtic
+	TODO: Storing chtic in EEPROM memory
+*/
 
 #include "Discharger.h"
 #include <util/delay.h>
@@ -18,7 +23,8 @@ Discharger::Discharger()
 		therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
 		therm2(THERMOMETER_2_PIN),
 		therm3(THERMOMETER_1_PIN),
-		simDelay(SIMULATION_INTERVAL *10)
+		simDelay(SIMULATION_INTERVAL),
+		chticDetermDelay(2000)
 {
 	wdt_enable(WDTO_1S);
 	wdt_interrput_enable();
@@ -27,6 +33,7 @@ Discharger::Discharger()
 	Millis::init();
 	SafetyGuard::init();
 	led.init();
+	driver.setChticData(static_cast<ChticData*>(&chDeterm));
 	 
 	adc.startConversion();
 	therm1.startConversion();
@@ -42,13 +49,19 @@ Discharger::Discharger()
 	therm3.setOnCrcNoMatchWarning(Device::Warning::BATT_RIGHT_THERM_CRC);
 	therm1.setOnCrcNoMatchError(Device::Error::STOPPED_HEAT_SINK_THERM_CRC);
 	therm1.setOnNotAvaliableError(Device::Error::STOPPED_HEAT_SINK_THERM_NOT_AVALIABLE);
+	
+	chDeterm.loadFromEEPROM();
+	deviceDriver.setCallbacks(static_cast<DeviceDriverCallbacks*>(this));
 }
+
+
 
 void Discharger::run() {
 	
 	wdt_reset();
 	
-	SimulationData::run();
+	//SimulationData::run();
+	deviceDriver.run();
 	SafetyGuard::run();
 	adc.run();
 	therm1.run();
@@ -56,10 +69,54 @@ void Discharger::run() {
 	therm3.run();
 	led.run();
 	
-	if(SimulationData::isSimulationInProgress()) {
+	if(chDeterm.isInProgress() && !chticDetermDelay.skipThisTime()) {
+		detemineCharacteristic();
+		return;
+	}
+	
+	if(simData.isSimulationInProgress() && !simDelay.skipThisTime()) {
 		simulationDriver();	
 	}
 }
+
+
+void Discharger::handleHanshake() {
+	led.green().blink();
+	deviceDriver.sendHandshakeReply();
+}
+
+void Discharger::handleStop() {
+	dac.writeDACValue(0);
+	if(simData.isSimulationInProgress()) {
+		deviceDriver.sendSimulationData();
+		_delay_ms(20);
+		deviceDriver.sendDeviceHasStopped();
+	}
+	simData.clear();
+}
+
+void Discharger::handleChticDetermStart() {
+	
+}
+
+void Discharger::handleChticRead() {
+	
+}
+
+void Discharger::handleSimNewData(const DrivingData & data) {
+	if(!simData.isSimulationInProgress()) {
+		led.blue();
+	}
+	else {
+		deviceDriver.sendSimulationData();
+	}
+	
+	simData.setDrivingData(data);
+}
+
+
+
+
 
 void Discharger::simHasStarted() {
 	led.blue();
@@ -75,7 +132,36 @@ void Discharger::communicationEstablished() {
 
 void Discharger::deviceStopRequest() {
 	dac.writeDACValue(0);
-	setDeviceHasStopped();	
+	simData.clear();
+	//setDeviceHasStopped();	
+}
+
+void Discharger::startCharacteristicDetermination() {
+	led.blue().blink();
+	chDeterm.start();
+	dac.writeMillivolts(chDeterm.getMilivolts());
+	//debugLog("mv=", chDeterm.getMilivolts());
+}
+
+void Discharger::detemineCharacteristic() {	
+	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
+		
+		adc.countAverages();
+		int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
+		int16_t currentlySimulatedCurrent = CurrentDriver::getCurrentFormADC(currentlySimulatedCurrentAdc);
+		//debugLog("I=", currentlySimulatedCurrent);
+		
+		if(chDeterm.setCurrent(currentlySimulatedCurrent) == CHTIC_DONE) {
+			dac.writeMillivolts(0);
+			//debugLog("Done");
+			led.previousState();
+			chDeterm.storeInEEPROM();
+			return;
+		}
+		
+		//debugLog("mv=", chDeterm.getMilivolts());
+		dac.writeMillivolts(chDeterm.getMilivolts());
+	}	
 }
 
 void Discharger::aboutToSendNewData() {
@@ -84,8 +170,6 @@ void Discharger::aboutToSendNewData() {
 }
 
 void Discharger::simulationDriver() {
-	
-	if(simDelay.skipThisTime()) return;
 	/*
 	static uint16_t i = 0;
 	dac.writeMillivolts(i);
@@ -120,38 +204,39 @@ void Discharger::simulationDriver() {
 				
 		adc.countAverages();
 		int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
-		int16_t currentlySimulatedCurrent = driver.getCurrentFormADC(currentlySimulatedCurrentAdc);
-		driver.setSimulatedCurrent(currentlySimulatedCurrent);
-				
-		SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
+		int16_t currentlySimulatedCurrent = CurrentDriver::getCurrentFormADC(currentlySimulatedCurrentAdc);
+		driver.setMeasuredCurrent(currentlySimulatedCurrent);
+			
+		simData.setMeasuredCurrent(currentlySimulatedCurrent);	
+		//SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
 	}						
 	if(adc.isNewValueAvailable(AnalogMeasurement::BRV)) {
-		SimulationData::setBattLeftVolt(
+		simData.setMeasuredBLV(
 			AnalogMeasurement::convertAdcToMillivolts(
 				adc.getAvgADC(AnalogMeasurement::BLV)
 			)
 		);
 	}
 	if(adc.isNewValueAvailable(AnalogMeasurement::BLV)) {
-		SimulationData::setBattRightVolt(
+		simData.getMeasuredBRV(
 			AnalogMeasurement::convertAdcToMillivolts(
 				adc.getAvgADC(AnalogMeasurement::BRV)
 			)
 		);
 	}
 	if(therm1.isNewValueAvaliable()) {
-		SimulationData::setHeatSinkTemp(therm1.getTemperature());
+		simData.setMeasuredHST(therm1.getTemperature());
 	}
 	if(therm2.isNewValueAvaliable()) {
-		SimulationData::setBattLeftTemp(therm2.getTemperature());
+		simData.setMeasuredBLT(therm2.getTemperature());
 	}
 	if(therm3.isNewValueAvaliable()) {
-		SimulationData::setBattRightTemp(therm3.getTemperature());
+		simData.setMeasuredBRT(therm3.getTemperature());
 	}
 			
-	uint16_t newCurrent = getCurrentCurrent();
+	uint16_t newCurrent = simData.getDrivingCurrent();
 	uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
-	debugLog("mV=", millivoltsToSet);
+	//debugLog("mV=", millivoltsToSet);
 	
 //#define DIRECT
 #ifdef DIRECT

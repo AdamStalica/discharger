@@ -18,6 +18,9 @@
 #include "SafetyGuard.h"
 #include "Led.h"
 #include "ExecuteDelay.h"
+#include "ChticDeterm.h"
+#include "ChticData.h"
+#include "DeviceDriver.h"
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -27,17 +30,20 @@
 #define __DISCHARGER_H__
 
 
-class Discharger : public SimulationData, SafetyGuard
+class Discharger : public SafetyGuard, DeviceDriverCallbacks
 {
 	AnalogMeasurement adc;
 	MCP4725 dac;
 	UsartHolder & uart;
+	ChticDeterm chDeterm;
 	CurrentDriver driver;
 	DS18B20 therm1;
 	DS18B20 therm2;
 	DS18B20 therm3;
 	
-	ExecuteDelay simDelay;
+	//DS18B20 therms[THERMOMETER_NUM];
+	
+	ExecuteDelay simDelay, chticDetermDelay;
 	
 	uint8_t simulationCurrentAlreadySet = 0;
 	
@@ -48,7 +54,17 @@ class Discharger : public SimulationData, SafetyGuard
 	void raceivedStopDevice() override;
 	void communicationEstablished() override;
 	void deviceStopRequest() override;
+	void startCharacteristicDetermination() override;
 	
+		
+	void handleHanshake() override;
+	void handleStop() override;
+	void handleChticDetermStart() override;
+	void handleChticRead() override;
+	void handleSimNewData(const DrivingData & data) override;
+	
+	
+	void detemineCharacteristic();
 	void simulationDriver();
 
 public:
@@ -64,12 +80,13 @@ public:
 	void isrTimer0CompBVect() { Millis::isrTimer0CompBVect(); }
 	void isrWDT();
 		
-		
+/*	
 #ifdef DEBUG_MODE
 	void debugerUartFunction(char * string, int32_t digit) {
 		uart.debuger(string, digit);
 	};
 #endif
+*/
 };
 
 #endif

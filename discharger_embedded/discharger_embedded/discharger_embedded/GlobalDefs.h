@@ -108,6 +108,7 @@
 #define THERMOMETER_1_PIN			PC5
 #define THERMOMETER_2_PIN			PC6
 #define THERMOMETER_3_PIN			PC7
+#define THERMOMETER_NUM				3
 
 
 /****************************************************************************************************/
@@ -137,12 +138,76 @@
 
 /****************************************************************************************************/
 /*												DEBUGING											*/
-/****************************************************************************************************/
+/****************************************************************************************************
 #define SKIP_SECOND_PARAM 0xFFFFFFFF
 #ifdef DEBUG_MODE
 extern void debugLog(char * string, int32_t digit = SKIP_SECOND_PARAM);
 #else
 static void debugLog(char * string, int32_t digit = SKIP_SECOND_PARAM) { return; }
 #endif
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define CHTIC_ZERO_STEP 100
+#define CHTIC_NON_ZERO_STEP 10
+
+#define CHTIC_ZERO_CURRENT 0
+
+#define CHTIC_VOLT_LIM 5000
+#define CHTIC_CURRENT_LIM 800
+#define CHTIC_CURRENT_POINTS 50
+#define CHTIC_OUT_OF_RANGE 1
+#define CHTIC_DONE 1
+#define CHTIC_TOO_HIGH_CURRENT 1
+
+#define CHTIC_EEPROM_FLAG_ADDR 0
+#define CHTIC_EEPROM_BEG 1
+#define CHTIC_EEPROM_SIZE ((CHTIC_CURRENT_POINTS + 1) * 2)
+
+#define CURR_DRIVER_ERROR -1
+#define CURR_DRIVER_CORRECTION_RATIO 7 // 0 - 10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif /* GLOBALDEFS_H_ */

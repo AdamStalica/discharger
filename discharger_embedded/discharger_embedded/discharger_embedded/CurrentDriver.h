@@ -12,6 +12,66 @@
 #include <avr/io.h>
 #include "GlobalDefs.h"
 
+#include "GlobalDefs.h"
+#include "ChticData.h"
+
+class CurrentDriver
+{
+	ChticData * chData;
+
+	int16_t lastReqCurrent = -1,
+	lastMeasuredCurrent = -1;
+
+	int16_t computeCorrection() {
+		if (lastReqCurrent == -1 || lastMeasuredCurrent == -1)
+		return 0;
+		int32_t correction = lastMeasuredCurrent - lastReqCurrent;
+		correction /= (chData->getRangeEndCurrent() - chData->getRangeBeginCurrent());
+		correction *= CURR_DRIVER_CORRECTION_RATIO;
+		correction += 5;
+		correction /= 10;
+		return correction;
+	}
+
+public:
+	static int16_t getCurrentFormADC(int16_t adcVolt) {
+		if(adcVolt == 0) return 0;
+		int16_t current = adcVolt;
+		current *= 19;
+		current -= 74;
+		current += current < 0 ? -5 : 5;
+		current /= 10;
+		return current;
+	}
+
+	void setChticData(ChticData * chData) {
+		this->chData = chData;
+	}
+
+	void setMeasuredCurrent(int16_t current) {
+		lastMeasuredCurrent = current;
+	}
+
+	int16_t getEstimatedMillivolts(int16_t reqCurrent, uint8_t useCorrection = 1) {
+		int16_t correction = (useCorrection == 1 ? computeCorrection() : 0);
+
+		if (chData->moveRangeTo(reqCurrent) == CHTIC_TOO_HIGH_CURRENT)
+		return CURR_DRIVER_ERROR;
+		
+		int32_t result = reqCurrent - chData->getRangeBeginCurrent();
+		result *= CHTIC_NON_ZERO_STEP;
+		result /= (chData->getRangeEndCurrent() - chData->getRangeBeginCurrent());
+		result += chData->getRangeBeginMv();
+		result += correction;
+
+		lastReqCurrent = reqCurrent;
+		lastMeasuredCurrent = -1;
+		return result;
+	}
+};
+
+
+/*
 #ifdef INTERPOLATION
 #define SIM_INTPOL_POINT_NUM 3
 #define SIM_INTPOL_REC_CYC_NUM 10
@@ -78,5 +138,5 @@ class CurrentDriver {
 	#endif //INTERPOLATION
 
 }; //CurrentDriver
-
+*/
 #endif //__CURRENTDRIVER_H__

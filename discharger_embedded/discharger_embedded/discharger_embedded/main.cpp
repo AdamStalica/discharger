@@ -9,11 +9,13 @@
 
 Discharger discharger;
 
+/*
 #ifdef DEBUG_MODE
 void debugLog(char * string, int32_t digit) {
 	discharger.debugerUartFunction(string, digit);
 }
 #endif
+*/
 
 int main(void)
 {	

@@ -92,7 +92,7 @@ void UsartHolder::endl() {
 }
 
 
-
+/*
 #ifdef DEBUG_MODE
 void UsartHolder::debuger(char * string, int32_t digit) {
 	
@@ -103,3 +103,4 @@ void UsartHolder::debuger(char * string, int32_t digit) {
 	endl();
 }
 #endif
+*/

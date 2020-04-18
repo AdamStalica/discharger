@@ -200,16 +200,34 @@
     <Compile Include="Button.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="ChticData.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="ChticDeterm.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="CurrentDriver.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="CurrentDriver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="DeviceDriver.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="DeviceDriver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="DeviceDriverCallbacks.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Discharger.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Discharger.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="DrivingData.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="DS18B20.cpp">
@@ -267,6 +285,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="SimulationData.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="StringProcessor.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="UsartHolder.cpp">

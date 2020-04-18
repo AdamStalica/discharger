@@ -11,7 +11,106 @@
 
 #include "UsartHolder.h"
 #include "GlobalDefs.h"
+#include "DrivingData.h"
 
+class SimulationData {
+
+	DrivingData drivingData;
+	uint16_t mCurrent = 0xFFFF,
+		mBLV = 0xFFFF,
+		mBLT = 0xFFFF,
+		mBRV = 0xFFFF,
+		mBRT = 0xFFFF,
+		mHST = 0xFFFF;
+
+public:
+
+	uint8_t isSimulationInProgress() {
+		drivingData.id != 0xFFFF;
+	}
+	
+	void clear() {
+		mCurrent = 0xFFFF;
+		mBLV = 0xFFFF;
+		mBLT = 0xFFFF;
+		mBRV = 0xFFFF;
+		mBRT = 0xFFFF;
+		mHST = 0xFFFF;
+		drivingData.clear();
+	}
+
+	void setDrivingData(const DrivingData & data) {
+		drivingData = data;
+	}
+	
+	void setMeasuredCurrent(uint16_t current) {
+		mCurrent = current;
+	}
+	
+	void setMeasuredBLV(uint16_t blv) {
+		mBLV = blv;
+	}
+	
+	void setMeasuredBLT(uint16_t blt) {
+		mBLT = blt;
+	}
+	
+	void setMeasuredBRV(uint16_t brv) {
+		mBRV = brv;
+	}
+	
+	void setMeasuredBRT(uint16_t brt) {
+		mBRT = brt;
+	}
+	
+	void setMeasuredHST(uint16_t hst) {
+		mHST = hst;
+	}
+	
+	uint16_t getDrivingId() {
+		return drivingData.id;
+	}
+	
+	uint16_t getDrivingCurrent() {
+		return drivingData.current;
+	}
+	
+	uint16_t getVoltageLimit() {
+		return drivingData.voltLimit;
+	}
+	
+	uint16_t getHeatSinkTempLimit() {
+		return drivingData.tempLimit;
+	}
+	
+	uint16_t getMeasuredCurrent() {
+		return mCurrent;
+	}
+	
+	uint16_t getMeasuredBLV() {
+		return mBLV;
+	}
+	
+	uint16_t getMeasuredBLT() {
+		return mBLT;
+	}
+	
+	uint16_t getMeasuredBRV() {
+		return mBRV;
+	}
+	
+	uint16_t getMeasuredBRT() {
+		return mBRT;
+	}
+	
+	uint16_t getMeasuredHST() {
+		return mHST;
+	}
+};
+
+extern SimulationData simData;
+
+/*
 class SimulationData : public UsartHolder
 {
 	static Device::Error lastError;
@@ -39,6 +138,7 @@ public:
 	virtual void aboutToSendNewData() = 0;
 	virtual void raceivedStopDevice() = 0;
 	virtual void communicationEstablished() = 0;
+	virtual void startCharacteristicDetermination() = 0;
 	
 	uint16_t getCurrentCurrent() { return currentCurrent; }
 	
@@ -79,5 +179,5 @@ private:
 	uint8_t doesStrContainParam(char * str, char * param);
 	uint16_t getUIntValueFromStr(char * str, char * name);
 };
-
+*/
 #endif

@@ -4,7 +4,7 @@
 * Created: 21.11.2019 11:31:53
 * Author: domin
 */
-
+/*
 
 #include "CurrentDriver.h"
 #include <stdlib.h>
@@ -12,7 +12,7 @@
 /**
 *	adcVolt 0..1023
 *	I = adcVolt * 0.19 - 0.74 [A] -> adcVolt * 1.9 - 7.4 [E2mA]
-*/
+*
 int16_t CurrentDriver::getCurrentFormADC(int16_t adcVolt) {
 	if(adcVolt == 0) return 0;
 	int16_t current = adcVolt;
@@ -187,3 +187,4 @@ uint8_t CurrentDriver::getLowerVoltIdForCurr(int16_t curr) {
 }
 
 #endif //INTERPOLATION
+*/

@@ -6,8 +6,10 @@
 */
 
 #include "SimulationData.h"
-#include "SafetyGuard.h"
 
+
+
+/*
 Device::Error SimulationData::lastError = Device::Error::NO_DEV_ERROR;
 Device::Warning SimulationData::lastWarn = Device::Warning::NO_WARNING;
 uint16_t SimulationData::voltLimit = BATT_VOLT_LIMIT_DEFAULT;
@@ -26,6 +28,11 @@ void SimulationData::processNewData() {
 	
 	if(doesStrContainParam(data, "handshake")) {
 		sendHandshake();
+		return;
+	}
+	
+	if(doesStrContainParam(data, "chtic_determ")) {
+		startCharacteristicDetermination();
 		return;
 	}
 	
@@ -65,7 +72,7 @@ void SimulationData::processNewData() {
 	}
 	
 	logWarning(Device::Warning::RECEIVED_NOT_STANDARDIZED_DATA);
-	debugLog(data, strlen(data));
+	//debugLog(data, strlen(data));
 }
 
 void SimulationData::sendResponse() {
@@ -130,11 +137,11 @@ void SimulationData::sendDeviceHasStopped() {
 	setDeviceHasStopped();
 	raceivedStopDevice();
 }
-/*
+
 uint8_t SimulationData::simulationInProgress() {
 	return currentId != 0;
 }
-*/
+
 uint8_t SimulationData::doesStrContainParam(char * str, char * param) {
 	return (strstr(str, param) != nullptr);
 }
@@ -144,3 +151,6 @@ uint16_t SimulationData::getUIntValueFromStr(char * str, char * name) {
 	char * begin = strchr(type, ':') + 1;
 	return strtol(begin, &type, 10);
 }
+*/
+
+SimulationData simData;

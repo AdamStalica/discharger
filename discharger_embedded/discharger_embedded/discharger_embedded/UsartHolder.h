@@ -25,11 +25,6 @@
 
 class UsartHolder
 {
-//variables
-public:
-protected:
-private:
-
 	char _txBuffer[TX_BUFFER_SIZE];
 	uint8_t _txDataEnd = 0;
 	uint8_t _txDataPtr = 0;
@@ -38,7 +33,9 @@ private:
 	uint8_t _rxDataEnd = 0;
 	uint8_t _rxDataReady = 0;
 
-//functions
+	void readData();
+	void putBuffer();
+
 public:
 	UsartHolder();
 	~UsartHolder() {};
@@ -62,17 +59,12 @@ public:
 	void isrUsart0RxHandler();
 	void isrUsart0UdreHandler();
 
+/*
 #ifdef DEBUG_MODE
 	void debuger(char * string, int32_t digit);
 #endif
-	
-protected:
-private:
-	UsartHolder( const UsartHolder &c );
-	UsartHolder& operator=( const UsartHolder &c );
-	void readData();
-	void putBuffer();
-	
+*/
+
 
 }; //UsartHolder
 
