@@ -6,9 +6,9 @@
 */
 
 
-#include "MCP4725.h"
+#include "MCP4726.h"
 
-uint16_t MCP4725::readDACValue() {
+uint16_t MCP4726::readDACValue() {
 	
 	uint8_t data[5];
 	
@@ -21,7 +21,7 @@ uint16_t MCP4725::readDACValue() {
 	return 0xFFFF;
 }
 
-uint8_t MCP4725::writeDACValue(uint16_t dacValue) {
+uint8_t MCP4726::writeDACValue(uint16_t dacValue) {
 
 	dacValue = dacValue << 4;
 	uint8_t data[3] = {
@@ -34,10 +34,10 @@ uint8_t MCP4725::writeDACValue(uint16_t dacValue) {
 	return ans;
 }
 
-uint16_t MCP4725::convertMillivoltsToDAC(uint16_t millivolts) {
+uint16_t MCP4726::convertMillivoltsToDAC(uint16_t millivolts) {
 	return (uint32_t(millivolts) * MCP4725_MAX_DAC / MCP4725_VREF);
 }
 
-uint8_t MCP4725::writeMillivolts(uint16_t millivolts) {
+uint8_t MCP4726::writeMillivolts(uint16_t millivolts) {
 	return writeDACValue(convertMillivoltsToDAC(millivolts));
 }

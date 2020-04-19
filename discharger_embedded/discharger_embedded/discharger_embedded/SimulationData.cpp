@@ -153,4 +153,21 @@ uint16_t SimulationData::getUIntValueFromStr(char * str, char * name) {
 }
 */
 
+int16_t SimulationData::getMeasuredCurrentQuantileMean()
+{
+	int16_t min = mCurrent[0];
+	int16_t max = mCurrent[0];
+	int32_t sum = mCurrent[0];
+	for(uint8_t i = 1; i < M_CURRENT_SAMPLES; ++i) {
+		if(min > mCurrent[i])
+			min = mCurrent[i];
+		else if(max < mCurrent[i])
+			max = mCurrent[i];
+		sum += mCurrent[i];
+	}
+	sum -= min;
+	sum -= max;
+	return sum / (M_CURRENT_SAMPLES - 2);
+}
+
 SimulationData simData;

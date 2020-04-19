@@ -197,6 +197,9 @@
     <Compile Include="AnalogMeasurement.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="BuildDefs.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Button.h">
       <SubType>compile</SubType>
     </Compile>
@@ -257,10 +260,10 @@
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MCP4725.cpp">
+    <Compile Include="MCP4726.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MCP4725.h">
+    <Compile Include="MCP4726.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Millis.cpp">

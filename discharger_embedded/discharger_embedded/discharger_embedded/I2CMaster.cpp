@@ -11,7 +11,7 @@
 
 I2CMaster::I2CMaster(unsigned long fScl, uint8_t prescaler)
 {
-	uint8_t twbrVal = ((F_CPU / fScl / prescaler) - 16) / 2;
+	uint8_t twbrVal = ((F_CPU / fScl) - 16) / 2 / prescaler;
 	TWBR = twbrVal;
 	
 	TWDR = 0xFF;

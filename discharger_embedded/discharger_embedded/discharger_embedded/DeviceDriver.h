@@ -34,24 +34,15 @@ public:
 	void sendDebug(char * str, int32_t num);
 	void sendDebug(char * str);
 	void sendSimulationData();
-	void sendSimulationData(
-		uint16_t id, 
-		int16_t I, 
-		uint16_t bLV, 
-		uint16_t bLT, 
-		uint16_t bRV, 
-		uint16_t bRT, 
-		uint16_t HST
-	);
 	void sendCharacteristicData(uint8_t id, int16_t mV, int16_t I);
 	void sendCharacteristicDone();
+	void sendDeviceInfo();
+	void setDeviceId(uint8_t id);
 	
 	void setCallbacks(DeviceDriverCallbacks * callbacks) {
 		this->callbacks = callbacks;
 	}
 	
-	//friend void Discharger::isrUsart0RxHandler();
-	//friend void Discharger::isrUsart0UdreHandler();
 	friend class Discharger;
 }; //DeviceDriver
 

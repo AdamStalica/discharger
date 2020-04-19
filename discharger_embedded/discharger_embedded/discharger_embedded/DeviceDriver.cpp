@@ -10,6 +10,7 @@
 #include "StringProcessor.h"
 #include "SafetyGuard.h"
 #include "SimulationData.h"
+#include <avr/eeprom.h>
 
 DeviceDriver deviceDriver;
 
@@ -35,6 +36,12 @@ void DeviceDriver::processNewData() {
 	}
 	else if(sp.isSetParam("stop")) {
 		callbacks->handleStop();
+	}
+	else if(sp.isSetParam("devInfo") && sp.isSetParam("get")) {
+		sendDeviceInfo();
+	}
+	else if(sp.isSetParam("setDevId")) {
+		setDeviceId(sp.getUIntValue("setDevId"));
 	}
 	else {
 		sendWarning(Device::Warning::RECEIVED_NOT_STANDARDIZED_DATA);
@@ -82,22 +89,12 @@ void DeviceDriver::sendSimulationData() {
 	printP(
 		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"HST\":%d}"),
 		simData.getDrivingId(),
-		simData.getMeasuredCurrent(),
+		simData.getMeasuredCurrentQuantileMean(),
 		simData.getMeasuredBLV(),
 		simData.getMeasuredBLT(),
 		simData.getMeasuredBRV(),
 		simData.getMeasuredBRT(),
 		simData.getMeasuredHST()
-	), endl();
-}
-
-void DeviceDriver::sendSimulationData(
-	uint16_t id, int16_t I, 
-	uint16_t bLV, uint16_t bLT, 
-	uint16_t bRV, uint16_t bRT, uint16_t HST) {
-	printP(
-		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"HST\":%d}"),
-		id, I, bLV,	bRV, bLT, bRT, HST
 	), endl();
 }
 
@@ -110,4 +107,19 @@ void DeviceDriver::sendCharacteristicData(uint8_t id, int16_t mV, int16_t I) {
 
 void DeviceDriver::sendCharacteristicDone() {
 	printP(PSTR("{\"chtic\":\"done\"}")), endl();
+}
+
+void DeviceDriver::sendDeviceInfo() {
+	printP(
+		PSTR("{\"devInfo\":\"data\",\"v\":%d,\"y\":%d,\"m\":%d,\"d\":%d,\"id\":%d}"),
+		SOFT_VERSION,
+		SOFT_RELEASE_YEAR,
+		SOFT_RELEASE_MONTH,
+		SOFT_RELEASE_DAY,
+		eeprom_read_byte((uint8_t *)DEVICE_ID_EEPROM_ADDR)
+	), endl();
+}
+
+void DeviceDriver::setDeviceId(uint8_t id) {
+	eeprom_write_byte((uint8_t *)DEVICE_ID_EEPROM_ADDR, id);
 }

@@ -19,19 +19,28 @@ class CurrentDriver
 {
 	ChticData * chData;
 
-	int16_t lastReqCurrent = -1,
-	lastMv = -1,
+	//lastReqCurrent = -1,
+	int16_t lastMv = -1,
 	lastMeasuredCurrent = -1;
 
 	int16_t computeCorrection() {
-		if (lastReqCurrent == -1 || lastMeasuredCurrent == -1)
-		return 0;
-		int32_t correction = lastMeasuredCurrent - lastReqCurrent;
-		correction /= (chData->getRangeEndCurrent() - chData->getRangeBeginCurrent());
+		if (lastMv == -1 || lastMeasuredCurrent == -1)
+			return 0;
+		if (chData->moveRangeTo(lastMeasuredCurrent) == CHTIC_TOO_HIGH_CURRENT)
+			return 0;
+		int16_t correction = (lastMv - computeMv(lastMeasuredCurrent));
 		correction *= CURR_DRIVER_CORRECTION_RATIO;
 		correction += 5;
 		correction /= 10;
 		return correction;
+	}
+	
+	int16_t computeMv(int16_t current) {
+		int32_t result = current - chData->getRangeBeginCurrent();
+		result *= CHTIC_NON_ZERO_STEP;
+		result /= (chData->getRangeEndCurrent() - chData->getRangeBeginCurrent());
+		result += chData->getRangeBeginMv();
+		return result;
 	}
 
 public:
@@ -57,16 +66,13 @@ public:
 		int16_t correction = (useCorrection == 1 ? computeCorrection() : 0);
 
 		if (chData->moveRangeTo(reqCurrent) == CHTIC_TOO_HIGH_CURRENT)
-		return CURR_DRIVER_ERROR;
+			return CURR_DRIVER_ERROR;
 		
-		int32_t result = reqCurrent - chData->getRangeBeginCurrent();
-		result *= CHTIC_NON_ZERO_STEP;
-		result /= (chData->getRangeEndCurrent() - chData->getRangeBeginCurrent());
-		result += chData->getRangeBeginMv();
+		int32_t result = computeMv(reqCurrent);
 		result += correction;
 
-		lastReqCurrent = reqCurrent;
 		lastMeasuredCurrent = -1;
+		lastMv = result;
 		return result;
 	}
 /*

@@ -31,10 +31,10 @@ AnalogMeasurement::AnalogMeasurement()
 			| (0 << FOC1A) | (0 << FOC1B) | (0 << WGM11) | (0 << WGM10);
 			
 	// New measure every 5ms -> 200 Hz.
-	// fCpu = 10 240 000 Hz.
+	// fCpu = 18,432,000 Hz.
 	TCCR1B =  (0 << WGM13) | (1 << WGM12) | (0 << WGM11) | (0 << WGM10) // CTC timer mode.
 			| (0 << CS12) | (1 << CS11) | (0 << CS00);					// fCpu / 8
-	OCR1B = OCR1A = (F_CPU / ADC_MEASURE_FREQ / 8);							// e.g. 10 240 000 / 200 / 8 = 6400 
+	OCR1B = OCR1A = (F_CPU / ADC_MEASURE_FREQ / 8);							// e.g. 18,432,000 / 200 / 8 = 11,520 
 	
 }
 

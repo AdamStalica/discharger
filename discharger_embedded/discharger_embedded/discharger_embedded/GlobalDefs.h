@@ -8,15 +8,25 @@
 
 #ifndef GLOBALDEFS_H_
 #define GLOBALDEFS_H_
-
+#include "BuildDefs.h"
 #include <avr/io.h>
 #include <DeviceEventsDef.h>
 
+/****************************************************************************************************/
+/*											  SOFTWARE												*/
+/****************************************************************************************************/
+
+//		NAME					VALUE
+#define SOFT_VERSION			1
+#define SOFT_RELEASE_YEAR		BUILD_YEAR
+#define SOFT_RELEASE_MONTH		BUILD_MONTH
+#define SOFT_RELEASE_DAY		BUILD_DAY
+#define DEVICE_ID_EEPROM_ADDR	1
 
 /****************************************************************************************************/
 /*												 SYS												*/
 /****************************************************************************************************/
-#define F_CPU 10240000UL
+#define F_CPU 18432000UL
 #define DEBUG_MODE
 
 
@@ -61,7 +71,7 @@
 /*	Stop bits: 2 bit																				*/
 /*																									*/
 /****************************************************************************************************/
-#define BAUDRATE 57600UL
+#define BAUDRATE 230400UL
 #define TX_INT_ENABLED
 
 
@@ -69,9 +79,9 @@
 /*											  SIMULATION											*/
 /****************************************************************************************************/
 #define INTERPOLATION
-#define SIM_EPS			1		// 10^-1 A
-#define SIM_MAX_CURRENT 400		// 10^-1 A
-#define SIM_MIN_CURRENT 9		// 10^-1 A
+#define SIM_EPS			1		// 10^-2 A
+#define SIM_MAX_CURRENT 1000	// 10^-2 A
+#define SIM_MIN_CURRENT 9		// 10^-2 A
 #define SIM_MAX_VOLT	5000	// mV
 
 
@@ -83,7 +93,7 @@
 #define SAFETY_BTN_PRESS_TIMEOUT		5000					// ms
 #define BATT_VOLT_LIMIT_DEFAULT			10000					// mV
 #define HEAT_SINK_TEMP_LIMIT_DEFAULT	8000					// 10^-2 °C
-#define SAFETY_MAX_CURRENT				(SIM_MAX_CURRENT + 50)	// 10^-1A
+#define SAFETY_MAX_CURRENT				(SIM_MAX_CURRENT + 50)	// 10^-2A
 #define BTN_ACTIVE						0
 #define STP_BTN							PB3
 #define STP_BTN_DDR						DDRB
@@ -136,77 +146,24 @@
 #define ADC_CH3_CONF		((0 << MUX4) | (0 << MUX3) | (1 << MUX2) | (1 << MUX1) | (1 << MUX0))
 
 
-/****************************************************************************************************/
-/*												DEBUGING											*/
-/****************************************************************************************************
-#define SKIP_SECOND_PARAM 0xFFFFFFFF
-#ifdef DEBUG_MODE
-extern void debugLog(char * string, int32_t digit = SKIP_SECOND_PARAM);
-#else
-static void debugLog(char * string, int32_t digit = SKIP_SECOND_PARAM) { return; }
-#endif
-*/
+#define CHTIC_ZERO_STEP			100
+#define CHTIC_NON_ZERO_STEP		10
 
+#define CHTIC_ZERO_CURRENT		0
 
+#define CHTIC_VOLT_LIM			5000
+#define CHTIC_CURRENT_LIM		800
+#define CHTIC_CURRENT_POINTS	50
+#define CHTIC_OUT_OF_RANGE		1
+#define CHTIC_DONE				1
+#define CHTIC_TOO_HIGH_CURRENT	1
 
+#define CHTIC_EEPROM_FLAG_ADDR	2
+#define CHTIC_EEPROM_BEG		3
+#define CHTIC_EEPROM_SIZE		((CHTIC_CURRENT_POINTS + 1) * 2)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#define CHTIC_ZERO_STEP 100
-#define CHTIC_NON_ZERO_STEP 10
-
-#define CHTIC_ZERO_CURRENT 0
-
-#define CHTIC_VOLT_LIM 5000
-#define CHTIC_CURRENT_LIM 800
-#define CHTIC_CURRENT_POINTS 50
-#define CHTIC_OUT_OF_RANGE 1
-#define CHTIC_DONE 1
-#define CHTIC_TOO_HIGH_CURRENT 1
-
-#define CHTIC_EEPROM_FLAG_ADDR 0
-#define CHTIC_EEPROM_BEG 1
-#define CHTIC_EEPROM_SIZE ((CHTIC_CURRENT_POINTS + 1) * 2)
-
-#define CURR_DRIVER_ERROR -1
-#define CURR_DRIVER_CORRECTION_RATIO 7 // 0 - 10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#define CURR_DRIVER_ERROR		-1
+#define CURR_DRIVER_CORRECTION_RATIO 10 // 0 - 10
 
 
 

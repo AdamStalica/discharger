@@ -10,7 +10,7 @@
 
 #include "GlobalDefs.h"
 #include "SimulationData.h"
-#include "MCP4725.h"
+#include "MCP4726.h"
 #include "AnalogMeasurement.h"
 #include "CurrentDriver.h"
 #include "DS18B20.h"
@@ -33,7 +33,7 @@
 class Discharger : public SafetyGuard, DeviceDriverCallbacks
 {
 	AnalogMeasurement adc;
-	MCP4725 dac;
+	MCP4726 dac;
 	//UsartHolder & uart;
 	ChticDeterm chDeterm;
 	CurrentDriver driver;

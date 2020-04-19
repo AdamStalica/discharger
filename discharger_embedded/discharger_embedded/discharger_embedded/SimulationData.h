@@ -13,10 +13,13 @@
 #include "GlobalDefs.h"
 #include "DrivingData.h"
 
+#define M_CURRENT_SAMPLES 5
+
 class SimulationData {
 
 	DrivingData drivingData;
-	int16_t mCurrent = 0xFFFF;
+	int16_t mCurrent[M_CURRENT_SAMPLES];
+	uint8_t mCurrId = 0;
 	uint16_t mBLV = 0xFFFF,
 		mBLT = 0xFFFF,
 		mBRV = 0xFFFF,
@@ -30,7 +33,8 @@ public:
 	}
 	
 	void clear() {
-		mCurrent = 0xFFFF;
+		for(uint8_t i = 0; i < M_CURRENT_SAMPLES; ++i)
+			mCurrent[i] = 0;
 		mBLV = 0xFFFF;
 		mBLT = 0xFFFF;
 		mBRV = 0xFFFF;
@@ -44,7 +48,8 @@ public:
 	}
 	
 	void setMeasuredCurrent(int16_t current) {
-		mCurrent = current;
+		mCurrId = (++mCurrId % M_CURRENT_SAMPLES);
+		mCurrent[mCurrId] = current;
 	}
 	
 	void setMeasuredBLV(uint16_t blv) {
@@ -84,7 +89,7 @@ public:
 	}
 	
 	int16_t getMeasuredCurrent() {
-		return mCurrent;
+		return mCurrent[mCurrId];
 	}
 	
 	uint16_t getMeasuredBLV() {
@@ -106,6 +111,8 @@ public:
 	uint16_t getMeasuredHST() {
 		return mHST;
 	}
+	
+	int16_t getMeasuredCurrentQuantileMean();
 };
 
 extern SimulationData simData;

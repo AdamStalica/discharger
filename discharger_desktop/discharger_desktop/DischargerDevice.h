@@ -6,7 +6,7 @@
 #include "WebApi.h"
 
 auto constexpr DISCHARGER_CONN_TIMEOUT = 2000;
-auto constexpr DISCHARGER_BOUDRATE = 57600;
+auto constexpr DISCHARGER_BOUDRATE = 230400;
 auto constexpr DISCHARGER_DATA_SIZE = serialPort::datasize_t::eightbits;
 auto constexpr DISCHARGER_STOP_BITS = serialPort::stopbits_t::stopbits_two;
 auto constexpr DISCHARGER_PARITY = serialPort::parity_t::parity_none;

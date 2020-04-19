@@ -159,7 +159,7 @@ void DischargerDevice::handleError(Device::Error err) {
 }
 
 void DischargerDevice::handleNewMesures(const nlohmann::json & data) {
-	current = data["I"].get<float>() / 10.0;
+	current = data["I"].get<float>() / 100.0;
 	battLeftVolt = data["bLV"].get<float>() / 1000.0;
 	battRightVolt = data["bRV"].get<float>() / 1000.0;
 	battLeftTemp = data["bLT"].get<float>() / 100.0;

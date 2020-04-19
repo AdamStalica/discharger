@@ -68,21 +68,17 @@
 #include "GlobalDefs.h"
 #include "I2CMaster.h"
 
-class MCP4725 : protected I2CMaster
+class MCP4726 : protected I2CMaster
 {
 	
 //functions
 public:
-	MCP4725() {};
-	~MCP4725() {};
+	MCP4726() : I2CMaster(400000UL) {};
+	~MCP4726() {};
 	uint16_t readDACValue();
 	uint8_t writeDACValue(uint16_t dacValue);
 	static uint16_t convertMillivoltsToDAC(uint16_t millivolts);
-	uint8_t writeMillivolts(uint16_t millivolts);
-	
-private:
-	MCP4725( const MCP4725 &c );
-	MCP4725& operator=( const MCP4725 &c );
+	uint8_t writeMillivolts(uint16_t millivolts);	
 
 }; //MCP4725
 
