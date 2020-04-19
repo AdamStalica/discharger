@@ -9,6 +9,7 @@
 #include "Millis.h"
 #include "SafetyGuard.h"
 #include "SimulationData.h"
+#include "DeviceDriver.h"
 
 #define SKIP_ROM 0xCC
 #define CONVERT_T 0x44
@@ -63,7 +64,7 @@ void DS18B20::run() {
 			}
 			else if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_WARN) { 
 				if(_warnCrc != Device::Warning::NO_WARNING) 
-					SimulationData::logWarning(_warnCrc);
+					deviceDriver.sendWarning(_warnCrc);
 			}
 			++_crcNoMatchCounter;
 		}

@@ -15,6 +15,7 @@
 class ChticDeterm :
 public ChticData
 {
+	uint8_t id = 0;
 	int16_t mv = 0;
 	uint8_t progress = 0;
 	uint8_t step = CHTIC_ZERO_STEP;
@@ -25,6 +26,7 @@ public:
 	}
 
 	uint8_t setCurrent(int16_t current) {
+		++id;
 		if (step == CHTIC_ZERO_STEP && current > CHTIC_ZERO_CURRENT) {
 			step = CHTIC_NON_ZERO_STEP;
 			mv -= CHTIC_ZERO_STEP;
@@ -48,6 +50,16 @@ public:
 
 	void start() {
 		progress = 1;
+	}
+	
+	uint8_t getId() {
+		return id;
+	}
+	
+	void clear() {
+		id = 0;
+		mv = 0;
+		progress = 0;
 	}
 
 };

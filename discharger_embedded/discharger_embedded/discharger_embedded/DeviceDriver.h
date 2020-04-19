@@ -13,6 +13,8 @@
 #include "GlobalDefs.h"
 #include "DeviceDriverCallbacks.h"
 
+class Discharger;
+
 class StringProcessor;
 
 class DeviceDriver : 
@@ -34,19 +36,23 @@ public:
 	void sendSimulationData();
 	void sendSimulationData(
 		uint16_t id, 
-		uint16_t I, 
+		int16_t I, 
 		uint16_t bLV, 
 		uint16_t bLT, 
 		uint16_t bRV, 
 		uint16_t bRT, 
 		uint16_t HST
 	);
-	void sendCharacteristicData(uint8_t id, uint16_t mV, uint16_t I);
+	void sendCharacteristicData(uint8_t id, int16_t mV, int16_t I);
 	void sendCharacteristicDone();
 	
 	void setCallbacks(DeviceDriverCallbacks * callbacks) {
 		this->callbacks = callbacks;
 	}
+	
+	//friend void Discharger::isrUsart0RxHandler();
+	//friend void Discharger::isrUsart0UdreHandler();
+	friend class Discharger;
 }; //DeviceDriver
 
 extern DeviceDriver deviceDriver;

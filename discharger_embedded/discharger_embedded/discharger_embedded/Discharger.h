@@ -34,7 +34,7 @@ class Discharger : public SafetyGuard, DeviceDriverCallbacks
 {
 	AnalogMeasurement adc;
 	MCP4725 dac;
-	UsartHolder & uart;
+	//UsartHolder & uart;
 	ChticDeterm chDeterm;
 	CurrentDriver driver;
 	DS18B20 therm1;
@@ -45,16 +45,16 @@ class Discharger : public SafetyGuard, DeviceDriverCallbacks
 	
 	ExecuteDelay simDelay, chticDetermDelay;
 	
-	uint8_t simulationCurrentAlreadySet = 0;
+	//uint8_t simulationCurrentAlreadySet = 0;
 	
-	uint8_t stoppedByBtn = 0;
+	//uint8_t stoppedByBtn = 0;
 
-	void simHasStarted() override;
-	void aboutToSendNewData() override;
-	void raceivedStopDevice() override;
-	void communicationEstablished() override;
+	//void simHasStarted() override;
+	//void aboutToSendNewData() override;
+	//void raceivedStopDevice() override;
+	//void communicationEstablished() override;
 	void deviceStopRequest() override;
-	void startCharacteristicDetermination() override;
+	//void startCharacteristicDetermination();
 	
 		
 	void handleHanshake() override;
@@ -74,8 +74,8 @@ public:
 	
 	
 // ISR vecs
-	void isrUsart0RxHandler() { uart.isrUsart0RxHandler(); }
-	void isrUsart0UdreHandler() { uart.isrUsart0UdreHandler(); }
+	void isrUsart0RxHandler() { deviceDriver.isrUsart0RxHandler(); }
+	void isrUsart0UdreHandler() { deviceDriver.isrUsart0UdreHandler(); }
 	void isrADCVect() { adc.isrADCVect(); }
 	void isrTimer0CompBVect() { Millis::isrTimer0CompBVect(); }
 	void isrWDT();

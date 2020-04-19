@@ -16,8 +16,8 @@
 class SimulationData {
 
 	DrivingData drivingData;
-	uint16_t mCurrent = 0xFFFF,
-		mBLV = 0xFFFF,
+	int16_t mCurrent = 0xFFFF;
+	uint16_t mBLV = 0xFFFF,
 		mBLT = 0xFFFF,
 		mBRV = 0xFFFF,
 		mBRT = 0xFFFF,
@@ -26,7 +26,7 @@ class SimulationData {
 public:
 
 	uint8_t isSimulationInProgress() {
-		drivingData.id != 0xFFFF;
+		return drivingData.id != 0xFFFF;
 	}
 	
 	void clear() {
@@ -43,7 +43,7 @@ public:
 		drivingData = data;
 	}
 	
-	void setMeasuredCurrent(uint16_t current) {
+	void setMeasuredCurrent(int16_t current) {
 		mCurrent = current;
 	}
 	
@@ -83,7 +83,7 @@ public:
 		return drivingData.tempLimit;
 	}
 	
-	uint16_t getMeasuredCurrent() {
+	int16_t getMeasuredCurrent() {
 		return mCurrent;
 	}
 	

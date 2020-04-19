@@ -9,6 +9,7 @@
 #include "SafetyGuard.h"
 #include "Millis.h"
 #include "Led.h"
+#include "DeviceDriver.h"
 
 Device::Error SafetyGuard::error = Device::Error::NO_DEV_ERROR;
 
@@ -23,7 +24,7 @@ void SafetyGuard::init()
 void SafetyGuard::run() {
 	
 	if(error != Device::Error::NO_DEV_ERROR) {
-		SimulationData::logError(error);
+		deviceDriver.sendError(error);
 		safetyEventTimeout();
 		error = Device::Error::NO_DEV_ERROR;
 		return;
@@ -31,24 +32,24 @@ void SafetyGuard::run() {
 	
 	safetyBtn.run();
 	if(safetyBtn.isPressed()) {
-		if(!SimulationData::isSimulationInProgress()) {
+		if(!simData.isSimulationInProgress()) {
 			led.red();
 			reset();
 		}
 		
-		SimulationData::logWarning(Device::Warning::SAFETY_BTN_PRESSED);
+		deviceDriver.sendWarning(Device::Warning::SAFETY_BTN_PRESSED);
 		safetyEventStart(SafetyEvents::SAFETY_BTN);
 		
 		safetyBtn.setHandled();
 	}
 	
-	if(!SimulationData::isSimulationInProgress()) return;
+	if(!simData.isSimulationInProgress()) return;
 	if(runDelay.skipThisTime()) return;
 	
 	
 	if(_safetyEvent == SafetyEvents::SAFETY_BTN) {
 		if(hasTimeoutOccured(SAFETY_BTN_PRESS_TIMEOUT)) {
-			SimulationData::logError(Device::Error::STOPPED_BY_SAFETY_BTN);
+			deviceDriver.sendError(Device::Error::STOPPED_BY_SAFETY_BTN);
 			safetyEventTimeout();
 		}
 		else if(safetyBtn.isRelesed()) {
@@ -62,7 +63,7 @@ void SafetyGuard::run() {
 			Device::Warning::HEAT_SINK_TEMP_TOO_HIGH, 
 			Device::Error::STOPPED_HEAT_SINK_TEMP_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
-			(SimulationData::getHeatSinkTemp() > SimulationData::getHeatSinkTempLimit())
+			(simData.getMeasuredHST() > simData.getHeatSinkTempLimit())
 		)
 	) return;
 
@@ -71,7 +72,7 @@ void SafetyGuard::run() {
 			Device::Warning::CURRENT_TOO_HIGH, 
 			Device::Error::STOPPED_CURRENT_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
-			(abs(SimulationData::getMeasuredCurrent()) > SAFETY_MAX_CURRENT)
+			(abs(simData.getMeasuredCurrent()) > SAFETY_MAX_CURRENT)
 		)
 	) return;
 
@@ -81,8 +82,8 @@ void SafetyGuard::run() {
 			Device::Error::STOPPED_VOLTAGE_TOO_LOW, 
 			SAFETY_TIMEOUT, 
 			(
-				SimulationData::getBattLeftVolt() < SimulationData::getVoltageLimit() ||
-				SimulationData::getBattRightVolt() < SimulationData::getVoltageLimit()
+				simData.getMeasuredBLV() < simData.getVoltageLimit() ||
+				simData.getMeasuredBRV() < simData.getVoltageLimit()
 			)
 		)
 	) return;
@@ -97,12 +98,12 @@ uint8_t SafetyGuard::safetyCheckEvent(
 {
 	if(logicState) {
 		if(_safetyEvent == NONE) {
-			SimulationData::logWarning(warn);
+			deviceDriver.sendWarning(warn);
 			safetyEventStart(event);
 		}
 		else if(_safetyEvent == event) {
 			if(hasTimeoutOccured(timeout)) {
-				SimulationData::logError(error);
+				deviceDriver.sendError(error);
 				safetyEventTimeout();
 			}
 		}

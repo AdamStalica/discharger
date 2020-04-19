@@ -84,7 +84,7 @@ void DeviceDriver::sendSimulationData() {
 		simData.getDrivingId(),
 		simData.getMeasuredCurrent(),
 		simData.getMeasuredBLV(),
-		simData.getMeasuredBLT,
+		simData.getMeasuredBLT(),
 		simData.getMeasuredBRV(),
 		simData.getMeasuredBRT(),
 		simData.getMeasuredHST()
@@ -92,7 +92,7 @@ void DeviceDriver::sendSimulationData() {
 }
 
 void DeviceDriver::sendSimulationData(
-	uint16_t id, uint16_t I, 
+	uint16_t id, int16_t I, 
 	uint16_t bLV, uint16_t bLT, 
 	uint16_t bRV, uint16_t bRT, uint16_t HST) {
 	printP(
@@ -101,7 +101,7 @@ void DeviceDriver::sendSimulationData(
 	), endl();
 }
 
-void DeviceDriver::sendCharacteristicData(uint8_t id, uint16_t mV, uint16_t I) {
+void DeviceDriver::sendCharacteristicData(uint8_t id, int16_t mV, int16_t I) {
 	printP(
 		PSTR("{\"chtic\":\"data\",\"id\":%d,\"mV\":%d,\"I\":%d}"),
 		id, mV, I

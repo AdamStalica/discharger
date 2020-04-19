@@ -10,6 +10,7 @@
 #define __DEVICEDRIVERCALLBACKS_H__
 
 #include "DrivingData.h"
+class DrivingData;
 
 class DeviceDriverCallbacks {
 public:	

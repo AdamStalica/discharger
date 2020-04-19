@@ -9,8 +9,8 @@
 #ifndef __DRIVINGDATA_H__
 #define __DRIVINGDATA_H__
 
-#include "SimulationData.h"
-#include "DeviceDriver.h"
+class SimulationData;
+class DeviceDriver;
 
 class DrivingData {
 
@@ -30,13 +30,14 @@ class DrivingData {
 	}
 	
 public:
-	void oparator=(const DrivingData & oth) {
+	DrivingData & operator=(const DrivingData & oth) {
 		id = oth.id;
 		current = oth.current;
 		if(oth.voltLimit != 0xFFFF)
 			voltLimit = oth.voltLimit;
 		if(oth.tempLimit != 0xFFFF)
 			tempLimit = oth.tempLimit;
+		return *this;
 	}
 	
 }; //DrivingData

@@ -11,6 +11,7 @@
 
 #include "GlobalDefs.h"
 #include "SimulationData.h"
+#include "DeviceDriver.h"
 #include <avr/eeprom.h>
 
 
@@ -47,7 +48,7 @@ class ChticData
 	void loadFromEEPROM() {
 		uint8_t id = getChticId();
 		if(id == 0xFF) {
-			SimulationData::logWarning(Device::Warning::NO_CHTIC_IN_EEPROM_MEMORY);
+			deviceDriver.sendWarning(Device::Warning::NO_CHTIC_IN_EEPROM_MEMORY);
 			return;
 		}
 		eeprom_read_block(
@@ -98,6 +99,14 @@ class ChticData
 
 	int16_t getRangeEndCurrent() const {
 		return data[rangeBegin + 1];
+	}
+	
+	uint8_t readPointAt(uint8_t id, int16_t & mV, int16_t & I) {
+		if(id < CHTIC_CURRENT_POINTS) {
+			mV = data[VOLT_0] + id * CHTIC_NON_ZERO_STEP;
+			I = data[CURR_N(id)];
+		}
+		return (id < CHTIC_CURRENT_POINTS);
 	}
 };
 

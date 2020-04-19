@@ -22,7 +22,6 @@
 #define END_LINE_CHAR2 '\n'
 #define STR_END_CHAR '\0'
 
-
 class UsartHolder
 {
 	char _txBuffer[TX_BUFFER_SIZE];

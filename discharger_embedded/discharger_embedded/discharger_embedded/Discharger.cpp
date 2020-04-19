@@ -19,8 +19,7 @@
 )
 
 Discharger::Discharger() 
-	:	uart(static_cast<UsartHolder&>(*this)),
-		therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
+	:	therm1(THERMOMETER_3_PIN),				// swap therm1 with therm 3 !
 		therm2(THERMOMETER_2_PIN),
 		therm3(THERMOMETER_1_PIN),
 		simDelay(SIMULATION_INTERVAL),
@@ -57,10 +56,8 @@ Discharger::Discharger()
 
 
 void Discharger::run() {
-	
 	wdt_reset();
 	
-	//SimulationData::run();
 	deviceDriver.run();
 	SafetyGuard::run();
 	adc.run();
@@ -81,7 +78,7 @@ void Discharger::run() {
 
 
 void Discharger::handleHanshake() {
-	led.green().blink();
+	led.green();
 	deviceDriver.sendHandshakeReply();
 }
 
@@ -90,17 +87,28 @@ void Discharger::handleStop() {
 	if(simData.isSimulationInProgress()) {
 		deviceDriver.sendSimulationData();
 		_delay_ms(20);
-		deviceDriver.sendDeviceHasStopped();
 	}
 	simData.clear();
+	led.green().blink();
+	deviceDriver.sendDeviceHasStopped();
 }
 
 void Discharger::handleChticDetermStart() {
-	
+	led.blue().blink();
+	chDeterm.start();
+	dac.writeMillivolts(chDeterm.getMilivolts());
 }
 
 void Discharger::handleChticRead() {
-	
+	uint8_t id = 0;
+	int16_t mV, I;
+	while(chDeterm.readPointAt(id, mV, I)) {
+		deviceDriver.sendCharacteristicData(id, mV, I);
+		++id;
+		_delay_ms(10);
+		wdt_reset();
+	}
+	deviceDriver.sendCharacteristicDone();
 }
 
 void Discharger::handleSimNewData(const DrivingData & data) {
@@ -110,37 +118,12 @@ void Discharger::handleSimNewData(const DrivingData & data) {
 	else {
 		deviceDriver.sendSimulationData();
 	}
-	
 	simData.setDrivingData(data);
-}
-
-
-
-
-
-void Discharger::simHasStarted() {
-	led.blue();
-}
-
-void Discharger::raceivedStopDevice() {
-	SafetyGuard::reset();
-}
-
-void Discharger::communicationEstablished() {
-	led.green();
 }
 
 void Discharger::deviceStopRequest() {
 	dac.writeDACValue(0);
 	simData.clear();
-	//setDeviceHasStopped();	
-}
-
-void Discharger::startCharacteristicDetermination() {
-	led.blue().blink();
-	chDeterm.start();
-	dac.writeMillivolts(chDeterm.getMilivolts());
-	//debugLog("mv=", chDeterm.getMilivolts());
 }
 
 void Discharger::detemineCharacteristic() {	
@@ -149,24 +132,22 @@ void Discharger::detemineCharacteristic() {
 		adc.countAverages();
 		int16_t currentlySimulatedCurrentAdc = adc.getAvgADC(AnalogMeasurement::LEM);
 		int16_t currentlySimulatedCurrent = CurrentDriver::getCurrentFormADC(currentlySimulatedCurrentAdc);
-		//debugLog("I=", currentlySimulatedCurrent);
+		deviceDriver.sendCharacteristicData(
+			chDeterm.getId(), 
+			chDeterm.getMilivolts(), 
+			currentlySimulatedCurrent
+		);
 		
 		if(chDeterm.setCurrent(currentlySimulatedCurrent) == CHTIC_DONE) {
 			dac.writeMillivolts(0);
-			//debugLog("Done");
 			led.previousState();
 			chDeterm.storeInEEPROM();
+			chDeterm.clear();
+			deviceDriver.sendCharacteristicDone();
 			return;
 		}
-		
-		//debugLog("mv=", chDeterm.getMilivolts());
 		dac.writeMillivolts(chDeterm.getMilivolts());
 	}	
-}
-
-void Discharger::aboutToSendNewData() {
-	//debugLog("T", SimulationData::getRadiatorTempLimit());
-	//led.blue();
 }
 
 void Discharger::simulationDriver() {
@@ -199,6 +180,7 @@ void Discharger::simulationDriver() {
 	*/
 	
 	//debugLog("Hello World!");
+	deviceDriver.sendDebug("Hi");
 	
 	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
@@ -218,7 +200,7 @@ void Discharger::simulationDriver() {
 		);
 	}
 	if(adc.isNewValueAvailable(AnalogMeasurement::BLV)) {
-		simData.getMeasuredBRV(
+		simData.setMeasuredBRV(
 			AnalogMeasurement::convertAdcToMillivolts(
 				adc.getAvgADC(AnalogMeasurement::BRV)
 			)
@@ -247,7 +229,6 @@ void Discharger::simulationDriver() {
 }
 
 void Discharger::isrWDT() {
-	logWarning(Device::Warning::WDT_RESET);
-	SimulationData::run();
+	deviceDriver.sendWarning(Device::Warning::WDT_RESET);
 	_delay_ms(10);
 }
