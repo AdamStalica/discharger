@@ -179,9 +179,6 @@ void Discharger::simulationDriver() {
 	return;
 	*/
 	
-	//debugLog("Hello World!");
-	deviceDriver.sendDebug("Hi");
-	
 	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
 		adc.countAverages();

@@ -20,6 +20,7 @@ class CurrentDriver
 	ChticData * chData;
 
 	int16_t lastReqCurrent = -1,
+	lastMv = -1,
 	lastMeasuredCurrent = -1;
 
 	int16_t computeCorrection() {
@@ -68,6 +69,49 @@ public:
 		lastMeasuredCurrent = -1;
 		return result;
 	}
+/*
+	
+	int16_t getEstimatedMillivolts(int16_t reqCurrent) {
+		int16_t correction = computeCorrection();
+
+		if (chData->moveRangeTo(reqCurrent) == CHTIC_TOO_HIGH_CURRENT)
+			return (CURR_DRIVER_ERROR + 1);
+
+		int16_t interpolated = getInterpolatedValue(reqCurrent);
+
+		lastMv = interpolated;
+		
+		return interpolated;
+	}
+
+private:
+
+	uint16_t getInterpolatedValue(uint16_t x) {
+
+		#define x0 (lastMeasuredCurrent)
+		#define y0 (lastMv)
+		#define x1 (chData->getRangeBeginCurrent())
+		#define y1 (chData->getRangeBeginMv())
+		#define x2 (chData->getRangeEndCurrent())
+		#define y2 (chData->getRangeEndMv())
+
+		float xx0 = (x - x0);
+		float xx1 = (x - x1);
+		float xx2 = (x - x2);
+		int16_t x0x1 = (x0 - x1);
+		int16_t x0x2 = (x0 - x2);
+		int16_t x1x0 = (x1 - x0);
+		int16_t x1x2 = (x1 - x2);
+		int16_t x2x0 = (x2 - x0);
+		int16_t x2x1 = (x2 - x1);
+
+		int16_t L0 = (y0 * ((xx1 / x0x1) * (xx2 / x0x2)));
+		int16_t L1 = (y1 * ((xx0 / x1x0) * (xx2 / x1x2)));
+		int16_t L2 = (y2 * ((xx0 / x2x0) * (xx1 / x2x1)));
+
+		return abs(L0 + L1 + L2);
+	}
+*/
 };
 
 
