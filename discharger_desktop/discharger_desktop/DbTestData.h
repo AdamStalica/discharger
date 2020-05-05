@@ -57,7 +57,7 @@ namespace db {
 		unsigned int idSimInfo = 0;
 		TestStates testState = TestStates::NONE;
 
-		Param<Device::Error> testError;
+		Param<dischargerDevice::Error> testError;
 		Param<std::string> beginTime;
 		Param<std::string> endTime;
 		
@@ -72,7 +72,7 @@ namespace db {
 			int idBattLeft, int idBattRight, int idLogInfo);
 
 		void setTestState(TestStates testState);
-		void setTestError(Device::Error error);
+		void setTestError(dischargerDevice::Error error);
 
 		TestStates getTestState() { return testState; }
 

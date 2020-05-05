@@ -25,7 +25,7 @@ void DeviceDriver::processNewData() {
 	if(sp.isSetParam("handshake")) {
 		callbacks->handleHanshake();
 	}
-	else if(sp.isSetParam("id")) {
+	else if(sp.isSetParam("sim") && sp.isSetParam("drive")) {
 		parseSimParams(&sp);
 	}
 	else if(sp.isSetParam("chtic") && sp.isSetParam("start")) {
@@ -43,15 +43,18 @@ void DeviceDriver::processNewData() {
 	else if(sp.isSetParam("setDevId")) {
 		setDeviceId(sp.getUIntValue("setDevId"));
 	}
+	else if(sp.isSetParam("setMV")) {
+		callbacks->handleSetDACVolt(sp.getUIntValue("setMV"));
+	}
 	else {
-		sendWarning(Device::Warning::RECEIVED_NOT_STANDARDIZED_DATA);
+		sendWarning(dischargerDevice::Warning::RECEIVED_NOT_STANDARDIZED_DATA);
 		sendDebug(this->getRxData(), this->getRxDataSize());
 	}
 }
 
 void DeviceDriver::parseSimParams(StringProcessor * sp) {	
 	if(!sp->isSetParam("I"))
-		SafetyGuard::stopDevice(Device::Error::CURRENT_IS_REQUIRED);
+		SafetyGuard::stopDevice(dischargerDevice::Error::CURRENT_IS_REQUIRED);
 		
 	DrivingData data;
 	data.id = sp->getUIntValue("id");
@@ -69,11 +72,11 @@ void DeviceDriver::sendDeviceHasStopped() {
 	printP(PSTR("{\"stop\":\"stopped\"}")), endl();
 }
 
-void DeviceDriver::sendError(Device::Error errno) {
+void DeviceDriver::sendError(dischargerDevice::Error errno) {
 	printP(PSTR("{\"error\":%d}"), errno), endl();
 }
 
-void DeviceDriver::sendWarning(Device::Warning warnno) {
+void DeviceDriver::sendWarning(dischargerDevice::Warning warnno) {
 	printP(PSTR("{\"warn\":%d}"), warnno), endl();
 }
 
@@ -87,7 +90,7 @@ void DeviceDriver::sendDebug(char * str) {
 
 void DeviceDriver::sendSimulationData() {
 	printP(
-		PSTR("{\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"HST\":%d}"),
+		PSTR("{\"sim\":\"data\",\"id\":%d,\"I\":%d,\"bLV\":%d,\"bRV\":%d,\"bLT\":%d,\"bRT\":%d,\"HST\":%d}"),
 		simData.getDrivingId(),
 		simData.getMeasuredCurrentQuantileMean(),
 		simData.getMeasuredBLV(),

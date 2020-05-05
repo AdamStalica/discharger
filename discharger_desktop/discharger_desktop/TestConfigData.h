@@ -11,7 +11,7 @@ class TestConfigData : public QObject
 	Q_OBJECT
 
 private:
-	std::string API_FILE = "get_test_config_data.php";
+	std::string API_FILE = "desktop_app/get_race_logs_info.php";
 
 	nlohmann::json jsonData;
 

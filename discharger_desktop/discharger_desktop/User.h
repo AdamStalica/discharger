@@ -1,21 +1,26 @@
 #pragma once
 #include <QObject>
 #include <functional>
+#include "WebApi.h"
 
 class User : public QObject
 {
 	Q_OBJECT
 
 private:
-	const std::string API_FILE{ "auth/login.php" };
+	const std::string API_FILE{ "auth/login_new.php" };
 
-	QString name, surname, email;
-	unsigned int id{ 0 };
-	bool userLoggedIn{ false };
+	QString name, surname, email, password;
+	unsigned int id		{ 0 };
+	bool userLoggedIn	{ false };
 
 	std::function<void(bool, QString)> loggedInCallback{
 		[](bool success, const QString & response) {}
 	};
+
+	void handleApiCallback(WebApi::StatsEnum status, nlohmann::json && response);
+
+	QString getPassword() { return password; }
 
 public:
 	User(QObject *parent);
@@ -32,4 +37,6 @@ public:
 	unsigned int getId(){ return id; }
 
 	operator bool() { return userLoggedIn; }
+
+	friend class WebApi;
 };

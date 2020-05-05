@@ -45,15 +45,15 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Header Files\Refactorized">
+      <UniqueIdentifier>{4c2075b0-daa0-4fc5-b313-7bcfaf9f172f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Refactorized">
+      <UniqueIdentifier>{7fc98d03-1aa6-4f75-a35b-38debe063b1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DischargerDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MainWin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestConfigData.cpp">
@@ -62,16 +62,7 @@
     <ClCompile Include="TestDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="User.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WebApi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SerialPort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChartPropertiesDialog.cpp">
@@ -80,14 +71,29 @@
     <ClCompile Include="DbTestData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DischargerDevice1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WebApi.cpp">
+      <Filter>Source Files\Refactorized</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Source Files\Refactorized</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp">
+      <Filter>Source Files\Refactorized</Filter>
+    </ClCompile>
+    <ClCompile Include="DischargerDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialPort.cpp">
+      <Filter>Source Files\Refactorized</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="ObjectFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="TestConfigData.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -100,16 +106,7 @@
     <ClInclude Include="TestParametersData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <QtMoc Include="User.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="WebApi.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="DeviceInterface.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="DischargerDevice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="ChartPropertiesDialog.h">
@@ -117,6 +114,21 @@
     </QtMoc>
     <QtMoc Include="DbTestData.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DischargerDevice1.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WebApi.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </QtMoc>
+    <QtMoc Include="User.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </QtMoc>
+    <QtMoc Include="DischargerDevice.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SerialPort.h">
+      <Filter>Header Files\Refactorized</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -136,11 +148,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="SerialPort.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Param.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -148,6 +155,15 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Calculations.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="DischargerDeviceData.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DischargerDeviceConverter.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

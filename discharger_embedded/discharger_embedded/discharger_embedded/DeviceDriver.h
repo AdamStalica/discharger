@@ -29,8 +29,8 @@ public:
 	void run();	
 	void sendHandshakeReply();
 	void sendDeviceHasStopped();
-	void sendError(Device::Error errno);
-	void sendWarning(Device::Warning warnno);
+	void sendError(dischargerDevice::Error errno);
+	void sendWarning(dischargerDevice::Warning warnno);
 	void sendDebug(char * str, int32_t num);
 	void sendDebug(char * str);
 	void sendSimulationData();

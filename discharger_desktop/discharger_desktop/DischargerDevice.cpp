@@ -1,227 +1,236 @@
 #include "DischargerDevice.h"
+#include "DeviceEventsDecriptions.h"
+#include "ObjectFactory.h"
+#include <nlohmann/json.h>
+#include <QDebug>
 
-DischargerDevice::DischargerDevice(QObject * parent, const QString & com, db::TestType testType, db::CurrentSource currSource) :
-	DeviceInterface(parent, testType, currSource)
+using namespace dischargerDevice;
+using namespace nlohmann;
+
+/*
+	Estalishing an connection:
+		1. Open port, if can not open emit connectionFilure and stop
+		2. Send handshake and start connection timer. If timeout and did not get handshake send next, unless counter overflow then emit connectionFailure 
+		3. Send device info request and start single shot timer, if timeout emit connectionFilure.
+		4. If got device into emit connected.
+
+
+*/
+
+Device::Device(QObject *parent)
+	:	QObject(parent),
+		handshakeTimer(this)
+
 {
-	comPortName = com;
-	connect(&timer, &QTimer::timeout, this, &DischargerDevice::timerTimeout);
-	connect(&connectionTimer, &QTimer::timeout, this, &DischargerDevice::connectionTimerTimeout);
-	connectionTimer.setInterval(DISCHARGER_CONN_TIMEOUT);
-	connectionTimer.setSingleShot(true);
-	connect(serial, &serialPort::SerialPort::receivedLine, this, &DischargerDevice::serialRecivedNewData);
+	if (!ObjectFactory::hasInstance<serialPort::SerialPort>())
+		throw std::exception("The instance of serial port class is required.");
+	serial = ObjectFactory::getInstance<serialPort::SerialPort>();
+
+	handshakeTimer.setInterval(RESPONSE_MAX_TIME);
+	connect(&handshakeTimer, &QTimer::timeout, this, &dischargerDevice::Device::handleHandshakeTimerTimeout);
+	connect(serial, &serialPort::SerialPort::opened, this, &dischargerDevice::Device::handlePortOpened);
+	connect(serial, &serialPort::SerialPort::unableToOpen, this, &dischargerDevice::Device::handleUnableToOpen);
+	connect(serial, &serialPort::SerialPort::receivedLine, this, &dischargerDevice::Device::handleReceivedLine);
 }
 
-DischargerDevice::~DischargerDevice() {
-
+void dischargerDevice::Device::clear() {
+	gotHandshake = false;
+	gotDeviceInfo = false;
+	gotStop = false;
+	newData.clear();
+	deviceId = 0;
+	deviceSoftwareVersion = 0;
+	deviceFlashDate = QDate();
 }
 
-// TODO: log time
-void DischargerDevice::fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback) {
-	if (TEST_TYPE != db::TestType::SIMULATION) {
-		throw std::exception("This current source not support such a functionality");
-	}
+void Device::connectToDevice(const QString & comPort) {
+	serial->setPort(comPort.toStdString());
+	serial->setBaudrate(BOUDRATE);
+	serial->setDataSize(DATA_SIZE);
+	serial->setStopBits(STOP_BITS);
+	serial->setParity(PARITY);
 
-	auto api = ObjectFactory::getInstance<WebApi>();
-	this->idLogInfo = idLogInfo;
-	static std::function<void(bool, const QString & comment)> cb = callback;
-
-	if (CURRENT_SOURCE == db::CurrentSource::MOTOR) {
-		currSourceName = DB_MOTOR_CURR;
-	}
-
-	nlohmann::json req{
-		{"id_log_info",  std::to_string(idLogInfo)},
-		{"curr_source", currSourceName}
-	};
-
-	api->POST(API_GET_CURR, req, [this](bool success, std::string && resp) {
-		nlohmann::json response = nlohmann::json::parse(resp);
-		if (success) {
-			sendingNewDataPeriod = response["period"].get<int>();
-			logDataVec.reserve(response["data"].size());
-			for (auto & log : response["data"]) {
-				logDataVec.emplace_back(
-					log["id_log_data"].get<unsigned int>(),
-					log[currSourceName].get<double>()
-				);
-			}
-			std::sort(logDataVec.begin(), logDataVec.end());
-			logDataVecIte = logDataVec.begin();
-		}
-		cb(success, response["comment"].get<std::string>().c_str());
-	});
-}
-
-bool DischargerDevice::isStopable() { 
-	return TEST_TYPE != db::TestType::SIMULATION; 
-}
-
-void DischargerDevice::connectToDevice() {
-	serial->setPortQ(comPortName);
-	serial->setBaudrate(DISCHARGER_BOUDRATE);
-	serial->setDataSize(DISCHARGER_DATA_SIZE);
-	serial->setStopBits(DISCHARGER_STOP_BITS);
-	serial->setParity(DISCHARGER_PARITY);
 	serial->open();
-	connectionTimer.start();
+}
 
-	connect(serial, &serialPort::SerialPort::opened, [this] {
-		this->sendHandshake();
+void Device::disconnectDevice() {
+	serial->close();
+}
+
+void Device::sendSimDrivingData(const SimDrivingData & data) {
+	json j = data;
+	serial->println(j.dump());
+}
+
+void Device::sendStop() {
+	serial->println("{\"stop\":\"now\"}");
+	QTimer::singleShot(RESPONSE_MAX_TIME, [this] {
+		if (!gotStop)
+			emit errorDeviceStopTimeout();
 	});
 }
 
-void DischargerDevice::start() {
-	if(TEST_TYPE == db::TestType::SIMULATION)
-		estimetedTestTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * logDataVec.size());
-	timer.setInterval(sendingNewDataPeriod);
-	timer.start();
-	timerTimeout();
+void Device::sendStartOfChracteristicDetermination() {
+	serial->println("{\"chtic\":\"start\"}");
 }
 
-void DischargerDevice::stop() {
-	timer.stop();
-	sendStop();
+void Device::sendReadCharacteristic() {
+	serial->println("{\"chtic\":\"read\"}");
 }
 
-bool DischargerDevice::checkBatteryNumber(int numebrOfBatteries) {
-	return (numebrOfBatteries == BATT_NUM);
+void dischargerDevice::Device::sendHandshake() {
+	serial->println("{\"handshake\":\"PC\"}");
 }
 
-void DischargerDevice::timerTimeout() {
-	float newCurrent = testCurrent.val();
-	if (TEST_TYPE == db::TestType::SIMULATION) {
-		static bool isFirst = true;
-		if (isFirst)
-			newCurrent = (*logDataVecIte).current;
-		else if ((logDataVecIte + 1) != logDataVec.end())
-			newCurrent = (*(logDataVecIte + 1)).current;
-		else {
-			// TODO: handle out of ragne
-			throw std::exception("Out of range");
-		}
-		isFirst = false;
+void dischargerDevice::Device::sendDeviceInfoRequest() {
+	serial->println("{\"devInfo\":\"get\"}");
+}
+
+unsigned int Device::getDeviceId() {
+	return deviceId;
+}
+
+unsigned int Device::getDeviceSoftwareVersion() {
+	return deviceSoftwareVersion;
+}
+
+QDate Device::getDeviceFlashDate() {
+	return deviceFlashDate;
+}
+
+void Device::handlePortOpened() {
+	sendHandshake();
+	handshakeTimer.start();
+}
+
+void Device::handleUnableToOpen() {
+	emit connectionFailure();
+}
+
+void Device::handleHandshakeTimerTimeout() {
+	if (gotHandshake) {
+		handshakeTimer.stop();
 	}
-	sendDrivingData(idCurrSim, newCurrent, heatSinkTempLimit.val(), voltageLimit.val());
+	else if (++handshakeTimerTimeoutCounter >= HANDSHAKE_MAX_ATTMEPT_NUM) {
+		emit connectionFailure();
+		handshakeTimer.stop();
+	}
+	else
+		sendHandshake();
 }
 
-void DischargerDevice::connectionTimerTimeout() {
-	if (gotHandshake) return;
-	serial->close();
-	emit signalCanNotEstablishConnection();
-}
-
-void DischargerDevice::serialRecivedNewData(const QString & line) {
-	nlohmann::json data;
+void Device::handleReceivedLine(const QString & line) {
 	try {
-		data = nlohmann::json::parse(line.toStdString());
+		newData = json::parse(line.toStdString());
+	}
+	catch (const std::exception & ex) {
+		return;
+	}
+
+	if (!newData["handshake"].is_null()) {
+		processHandshake();
+	}
+	else if (!newData["sim"].is_null() && newData["sim"].get<std::string>() == "data") {
+		processSimData();
+	}
+	else if (!newData["warn"].is_null()) {
+		processWarning();
+	}
+	else if (!newData["error"].is_null()) {
+		processError();
+	}
+	else if (!newData["stop"].is_null()) {
+		processStop();
+	}
+	else if (!newData["debug"].is_null()) {
+		processDebug();
+	}
+	else if (!newData["chtic"].is_null() && newData["chtic"].get<std::string>() == "data") {
+		processCharacteristicPoint();
+	}
+	else if (!newData["chtic"].is_null() && newData["chtic"].get<std::string>() == "done") {
+		processCharacteristicDone();
+	}
+	else if(!newData["devInfo"].is_null() && newData["devInfo"].get<std::string>() == "data") {
+		processDeviceInfo();
+	}
+	else {
+		qDebug() << line;
+	}
+}
+
+void Device::processHandshake() {
+	if (gotHandshake)
+		return;
+	gotHandshake = true;
+	sendDeviceInfoRequest();
+	QTimer::singleShot(RESPONSE_MAX_TIME, [this] {
+		if (!gotDeviceInfo)
+			emit connectionFailure();
+	});
+}
+
+void Device::processSimData() {
+	try {
+		SimData simData = newData;
+		emit gotSimulationData(simData);
 	}
 	catch (const std::exception & ex) {
 		qDebug() << ex.what();
-		return;
-	}
-	if (!data["handshake"].is_null()) {
-		// process handshake
-		if(!gotHandshake)
-			emit signalConnectionEstablished();
-		gotHandshake = true;
-	}
-	else if (!data["id"].is_null()) {
-		// process new data
-		handleNewMesures(data);
-	}
-	else if (!data["warn"].is_null()) {
-		// process warning
-		handleWarning(static_cast<Device::Warning>(data["warn"].get<int>()));
-	}
-	else if (!data["error"].is_null()) {
-		// process error
-		handleError(static_cast<Device::Error>(data["error"].get<int>()));
-	}
-	else if (!data["stop"].is_null()) {
-		// process stop
-		ObjectFactory::getInstance<serialPort::SerialPort>()->close();
-		emit signalFinished();
-	}
-	else if (!data["debug"].is_null()) {
-		// process debug
-		emit signalDebugMsg(data["debug"].get<std::string>().c_str());
 	}
 }
 
-void DischargerDevice::handleWarning(Device::Warning warn) {
-	emit signalWarning(warn);
+void Device::processStop() {
+	if (!gotStop)
+		emit deviceHasStopped();
+	gotStop = true;
 }
 
-void DischargerDevice::handleError(Device::Error err) {
-	timer.stop();
-	serial->close();
-	emit signalError(err);
+void Device::processError() {
+	Error errorNo = static_cast<Error>(newData["error"].get<int>());
+	emit error(errorNo);
+	emit error(QString::fromStdString(getErrorDescription(errorNo)));
 }
 
-void DischargerDevice::handleNewMesures(const nlohmann::json & data) {
-	current = data["I"].get<float>() / 100.0;
-	battLeftVolt = data["bLV"].get<float>() / 1000.0;
-	battRightVolt = data["bRV"].get<float>() / 1000.0;
-	battLeftTemp = data["bLT"].get<float>() / 100.0;
-	battRightTemp = data["bRT"].get<float>() / 100.0;
-	heatSinkTemp = data["HST"].get<float>() / 100.0;
-	progress = countProgress();
+void Device::processWarning() {
+	Warning warnNo = static_cast<Warning>(newData["warn"].get<int>());
+	emit warning(warnNo);
+	emit warning(QString::fromStdString(getWarningDescription(warnNo)));
+}
 
-	if (TEST_TYPE == db::TestType::SIMULATION) {
-		idLogData = (*logDataVecIte).idLogData;
-		testCurrent = (*logDataVecIte).current;
-		++logDataVecIte;
+void Device::processDebug() {
+	emit debug(QString::fromStdString(newData["debug"].get<std::string>()));
+}
 
-		if ((logDataVecIte + 1) == logDataVec.end())
-			testFinished();
+void Device::processCharacteristicPoint() {
+	try {
+		CharacteristicPoint chPoint = newData;
+		emit gotCharacteristicPoint(chPoint);
 	}
-	idCurrSim = idCurrSim.val() + 1;
-
-	emit signalNewData(getDbSimData());
-}
-
-void DischargerDevice::testFinished() {
-	sendStop();
-	timer.stop();
-}
-
-unsigned int DischargerDevice::countProgress() {
-	if (TEST_TYPE == db::TestType::SIMULATION) {
-		static float battLeft1stVolt = -1,
-			battRight1stVolt = -1;
-		if (battLeft1stVolt == -1 || battRight1stVolt == -1) {
-			battLeft1stVolt = battLeftVolt.val();
-			battRight1stVolt = battRightVolt.val();
-		}
-		float b1 = (battLeft1stVolt - battLeftVolt.val()) / (battLeft1stVolt - voltageLimit.val()) * 100 + 0.5;
-		float b2 = (battRight1stVolt - battRightVolt.val()) / (battRight1stVolt - voltageLimit.val()) * 100 + 0.5;
-		return (b1 > b2 ? b1 : b2);
-	}
-	else {
-		return (idCurrSim.val() * 100.0) / logDataVec.size() + 0.5;
+	catch (const std::exception & ex) {
+		qDebug() << ex.what();
 	}
 }
 
-void DischargerDevice::sendHandshake() {
-	serial->println(
-		"{\"handshake\":\"PC\"}"
-	);
+void Device::processCharacteristicDone() {
+	emit characteristicDone();
 }
 
-void DischargerDevice::sendStop() {
-	serial->println(
-		"{\"stop\":\"now\"}"
-	);
-}
+void Device::processDeviceInfo() {
+	try {
+		deviceId = newData["id"].get<int>();
+		deviceSoftwareVersion = newData["v"].get<int>();
+		deviceFlashDate = QDate(
+			YEAR_OFFSET + newData["y"].get<int>(),
+			newData["m"].get<int>(),
+			newData["d"].get<int>()
+		);
 
-void DischargerDevice::sendDrivingData(unsigned int id, double current, double temperatureLimit, double voltageLimit) {
-	nlohmann::json data;
-	data["id"] = id;
-	data["I"] = int(current * 100 + 0.5);
-	if (temperatureLimit != DBL_MAX)
-		data["TL"] = int(temperatureLimit * 100 + 0.5);
-	if (voltageLimit != DBL_MAX)
-		data["VL"] = int(voltageLimit * 1000 + 0.5);
-	
-	serial->println(data.dump());
+		if (!gotDeviceInfo)
+			emit connected();
+		gotDeviceInfo = true;
+	}
+	catch (const std::exception & ex) {
+		qDebug() << ex.what();
+	}
 }

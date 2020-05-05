@@ -18,7 +18,7 @@ class SafetyGuard
 	ExecuteDelay runDelay;
 	Button safetyBtn;
 	
-	static Device::Error error;
+	static dischargerDevice::Error error;
 	
 	enum SafetyEvents {
 		NONE,
@@ -29,7 +29,7 @@ class SafetyGuard
 	} _safetyEvent = NONE;
 	uint32_t _safetyEventStart = 0;
 		
-	uint8_t safetyCheckEvent(SafetyEvents event, Device::Warning warn, Device::Error error, uint32_t timeout, uint8_t logicState);
+	uint8_t safetyCheckEvent(SafetyEvents event, dischargerDevice::Warning warn, dischargerDevice::Error error, uint32_t timeout, uint8_t logicState);
 	void safetyEventStart(SafetyEvents event);
 	void safetyEventStop();
 	void safetyEventTimeout();
@@ -40,7 +40,7 @@ public:
 	~SafetyGuard() {};
 	
 	static void reset() { while(1); };
-	static void stopDevice(Device::Error err) { error = err; }
+	static void stopDevice(dischargerDevice::Error err) { error = err; }
 	
 protected:
 	void init();

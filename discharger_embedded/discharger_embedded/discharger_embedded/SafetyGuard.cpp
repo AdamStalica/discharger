@@ -11,7 +11,7 @@
 #include "Led.h"
 #include "DeviceDriver.h"
 
-Device::Error SafetyGuard::error = Device::Error::NO_DEV_ERROR;
+dischargerDevice::Error SafetyGuard::error = dischargerDevice::Error::NO_DEV_ERROR;
 
 void SafetyGuard::init()
 {
@@ -23,10 +23,10 @@ void SafetyGuard::init()
 
 void SafetyGuard::run() {
 	
-	if(error != Device::Error::NO_DEV_ERROR) {
+	if(error != dischargerDevice::Error::NO_DEV_ERROR) {
 		deviceDriver.sendError(error);
 		safetyEventTimeout();
-		error = Device::Error::NO_DEV_ERROR;
+		error = dischargerDevice::Error::NO_DEV_ERROR;
 		return;
 	}
 	
@@ -37,7 +37,7 @@ void SafetyGuard::run() {
 			reset();
 		}
 		
-		deviceDriver.sendWarning(Device::Warning::SAFETY_BTN_PRESSED);
+		deviceDriver.sendWarning(dischargerDevice::Warning::SAFETY_BTN_PRESSED);
 		safetyEventStart(SafetyEvents::SAFETY_BTN);
 		
 		safetyBtn.setHandled();
@@ -49,7 +49,7 @@ void SafetyGuard::run() {
 	
 	if(_safetyEvent == SafetyEvents::SAFETY_BTN) {
 		if(hasTimeoutOccured(SAFETY_BTN_PRESS_TIMEOUT)) {
-			deviceDriver.sendError(Device::Error::STOPPED_BY_SAFETY_BTN);
+			deviceDriver.sendError(dischargerDevice::Error::STOPPED_BY_SAFETY_BTN);
 			safetyEventTimeout();
 		}
 		else if(safetyBtn.isRelesed()) {
@@ -60,8 +60,8 @@ void SafetyGuard::run() {
 	
 	if(safetyCheckEvent(
 			OVER_TEMP, 
-			Device::Warning::HEAT_SINK_TEMP_TOO_HIGH, 
-			Device::Error::STOPPED_HEAT_SINK_TEMP_TOO_HIGH, 
+			dischargerDevice::Warning::HEAT_SINK_TEMP_TOO_HIGH, 
+			dischargerDevice::Error::STOPPED_HEAT_SINK_TEMP_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
 			(simData.getMeasuredHST() > simData.getHeatSinkTempLimit())
 		)
@@ -69,8 +69,8 @@ void SafetyGuard::run() {
 
 	if(safetyCheckEvent(
 			OVER_CURR, 
-			Device::Warning::CURRENT_TOO_HIGH, 
-			Device::Error::STOPPED_CURRENT_TOO_HIGH, 
+			dischargerDevice::Warning::CURRENT_TOO_HIGH, 
+			dischargerDevice::Error::STOPPED_CURRENT_TOO_HIGH, 
 			SAFETY_TIMEOUT, 
 			(abs(simData.getMeasuredCurrent()) > SAFETY_MAX_CURRENT)
 		)
@@ -78,8 +78,8 @@ void SafetyGuard::run() {
 
 	if(safetyCheckEvent(
 			UNDER_VOLT, 
-			Device::Warning::VOLTAGE_TOO_LOW, 
-			Device::Error::STOPPED_VOLTAGE_TOO_LOW, 
+			dischargerDevice::Warning::VOLTAGE_TOO_LOW, 
+			dischargerDevice::Error::STOPPED_VOLTAGE_TOO_LOW, 
 			SAFETY_TIMEOUT, 
 			(
 				simData.getMeasuredBLV() < simData.getVoltageLimit() ||
@@ -91,8 +91,8 @@ void SafetyGuard::run() {
 
 uint8_t SafetyGuard::safetyCheckEvent(
 	SafetyEvents event, 
-	Device::Warning warn, 
-	Device::Error error,
+	dischargerDevice::Warning warn, 
+	dischargerDevice::Error error,
 	uint32_t timeout,
 	uint8_t logicState) 
 {

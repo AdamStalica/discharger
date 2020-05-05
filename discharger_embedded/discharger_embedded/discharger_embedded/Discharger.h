@@ -62,6 +62,7 @@ class Discharger : public SafetyGuard, DeviceDriverCallbacks
 	void handleChticDetermStart() override;
 	void handleChticRead() override;
 	void handleSimNewData(const DrivingData & data) override;
+	void handleSetDACVolt(uint16_t volt) override;
 	
 	
 	void detemineCharacteristic();

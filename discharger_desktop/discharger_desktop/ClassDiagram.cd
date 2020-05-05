@@ -56,11 +56,11 @@
       <FileName>DeviceInterface.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DischargerDevice" Collapsed="true">
+  <Class Name="DischargerDevice1" Collapsed="true">
     <Position X="0.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>DischargerDevice.h</FileName>
+      <FileName>DischargerDevice1.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ChartPropertiesDialog" Collapsed="true">

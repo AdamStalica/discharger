@@ -12,9 +12,9 @@ TestConfigData::~TestConfigData() {
 
 void TestConfigData::perpareData() {
 	auto api = ObjectFactory::getInstance<WebApi>();
-	api->GET(API_FILE, [this](bool success, std::string && data) {
-		jsonData = nlohmann::json::parse(data);
-		if (success) {
+	api->GET(API_FILE, [this](WebApi::StatsEnum status, nlohmann::json && resp) {
+		jsonData = std::move(resp);
+		if (status == WebApi::API_OK) {
 			proccessResponse();
 		}
 		else {
@@ -160,10 +160,10 @@ QList<QTreeWidgetItem*> TestConfigData::getLogsTreeItems() {
 						QString::number(log["id_log_info"].get<int>()),
 						log["log_type"].get<std::string>().c_str(),
 						log["car_name"].get<std::string>().c_str(),
-						log["time_begin"].get<std::string>().c_str(),
+						log["begin_time"].get<std::string>().c_str(),
 						log["duration"].get<std::string>().c_str(),
-						QString::number(log["avg_main_curr"].get<float>()),
-						QString::number(log["avg_motor_curr"].get<float>())
+						QString::number(log["main_curr_avg"].get<float>()),
+						QString::number(log["motor_curr_avg"].get<float>())
 					}
 				};
 				logItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);

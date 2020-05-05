@@ -1,7 +1,7 @@
 #ifndef DEVICE_DEF
 #define DEVICE_DEF
 
-namespace Device {
+namespace dischargerDevice {
     enum Error {
         DEVICE_STARTED = 0,
         STOPPED_BY_SAFETY_BTN,

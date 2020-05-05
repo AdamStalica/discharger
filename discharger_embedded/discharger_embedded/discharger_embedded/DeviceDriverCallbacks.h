@@ -19,6 +19,7 @@ public:
 	virtual void handleChticDetermStart() = 0;
 	virtual void handleChticRead() = 0;
 	virtual void handleSimNewData(const DrivingData & data) = 0;
+	virtual void handleSetDACVolt(uint16_t mV) = 0;
 
 }; //DeviceDriverCallbacks
 

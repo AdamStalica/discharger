@@ -100,6 +100,7 @@
     <ClCompile Include="ChartPropertiesDialog.cpp" />
     <ClCompile Include="DbTestData.cpp" />
     <ClCompile Include="DischargerDevice.cpp" />
+    <ClCompile Include="DischargerDevice1.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
@@ -129,11 +130,14 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="DeviceInterface.h" />
-    <QtMoc Include="DischargerDevice.h" />
+    <QtMoc Include="DischargerDevice1.h" />
     <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="Calculations.h" />
     <ClInclude Include="DbSimData.h" />
     <QtMoc Include="DbTestData.h" />
+    <QtMoc Include="DischargerDevice.h" />
+    <ClInclude Include="DischargerDeviceConverter.h" />
+    <ClInclude Include="DischargerDeviceData.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />
     <ClInclude Include="Param.h" />

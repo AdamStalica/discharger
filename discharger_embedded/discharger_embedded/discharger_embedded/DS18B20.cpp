@@ -58,12 +58,12 @@ void DS18B20::run() {
 		}
 		else {
 			if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_ERR) {
-				if(_errorCrc != Device::Error::NO_DEV_ERROR)
+				if(_errorCrc != dischargerDevice::Error::NO_DEV_ERROR)
 					SafetyGuard::stopDevice(_errorCrc);
 				_crcNoMatchCounter = 0;
 			}
 			else if(_crcNoMatchCounter == THERM_CRC_NO_MATCH_MAX_WARN) { 
-				if(_warnCrc != Device::Warning::NO_WARNING) 
+				if(_warnCrc != dischargerDevice::Warning::NO_WARNING) 
 					deviceDriver.sendWarning(_warnCrc);
 			}
 			++_crcNoMatchCounter;
@@ -71,7 +71,7 @@ void DS18B20::run() {
 		
 		startConversion();
 	}	
-	else if(_errorNotAvaliable != Device::Error::NO_DEV_ERROR) {
+	else if(_errorNotAvaliable != dischargerDevice::Error::NO_DEV_ERROR) {
 		SafetyGuard::stopDevice(_errorNotAvaliable);
 	}
 }

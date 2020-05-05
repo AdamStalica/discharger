@@ -48,7 +48,7 @@ class ChticData
 	void loadFromEEPROM() {
 		uint8_t id = getChticId();
 		if(id == 0xFF) {
-			deviceDriver.sendWarning(Device::Warning::NO_CHTIC_IN_EEPROM_MEMORY);
+			deviceDriver.sendWarning(dischargerDevice::Warning::NO_CHTIC_IN_EEPROM_MEMORY);
 			return;
 		}
 		eeprom_read_block(

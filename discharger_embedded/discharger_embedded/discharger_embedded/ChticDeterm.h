@@ -60,6 +60,7 @@ public:
 		id = 0;
 		mv = 0;
 		progress = 0;
+		step = CHTIC_ZERO_STEP;
 	}
 
 };

@@ -1,5 +1,6 @@
 #include "MainWin.h"
 #include "ObjectFactory.h"
+#include "DischargerDevice1.h"
 #include "DischargerDevice.h"
 #include "SerialPort.h"
 #include "User.h"
@@ -30,6 +31,7 @@ MainWin::MainWin(QWidget *parent)
 	ObjectFactory::createInstance(new TestDriver(this));
 	ObjectFactory::createInstance(new SerialPort(this));
 	ObjectFactory::createInstance(new db::TestData(this));
+	//ObjectFactory::createInstance(new dischargerDevice::Device(this));
 	
 	auto serial_ = ObjectFactory::getInstance<SerialPort>();	
 
@@ -115,6 +117,17 @@ MainWin::MainWin(QWidget *parent)
 	serial_->setBaudrate(57600);
 	serial_->open();
 	serial_->println(QString("{\"handshake\":\"PC\"}"));
+	*/
+
+	/*
+	
+	auto ds = ObjectFactory::getInstance<dischargerDevice::Device>();
+	ds->connectToDevice("COM9");
+
+	QMessageBox::information(this, "", "Device id " + QString::number(ds->getDeviceId()) + ", software version " + QString::number(ds->getDeviceSoftwareVersion()) + " flash date %3.");
+
+	ds->sendStop();
+	ds->disconnectDevice();
 	*/
 }
 
@@ -306,7 +319,7 @@ bool MainWin::setupDeviceInterface() {
 	switch (ui.CTToolBoxTestType->currentIndex()) {
 		case db::TestType::SIMULATION: {
 			/*
-				Data to DischargerDevice:
+				Data to DischargerDevice1:
 					com, voltLim, tempLim, currSource, idLogInfo
 			*/
 			auto selected = ui.CTSimTreeRaces->selectedItems();
@@ -320,7 +333,7 @@ bool MainWin::setupDeviceInterface() {
 				db::CurrentSource::MOTOR :
 				db::CurrentSource::MAIN
 			) };
-			auto dev = new DischargerDevice{ testDriver, com, db::TestType::SIMULATION, currSource };
+			auto dev = new DischargerDevice1{ testDriver, com, db::TestType::SIMULATION, currSource };
 			dev->setVoltageLimit(voltageLimit.toFloat());
 			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
 			testDriver->setDevice(dev);
@@ -340,12 +353,12 @@ bool MainWin::setupDeviceInterface() {
 		}
 		case db::TestType::BASIC_TEST: {
 			/*
-				Data to DischargerDevice:
+				Data to DischargerDevice1:
 					com, voltLim, tempLim, currSource, testCurr
 			*/
 			auto testCurrStr{ ui.CTBasicEdtTestCurr->text() };
 			if (ifEmptyShowWarning(testCurrStr, "Test current")) return false;
-			auto dev = new DischargerDevice{ testDriver, com, db::TestType::BASIC_TEST, db::CurrentSource::NO_CURR_SOURCE };
+			auto dev = new DischargerDevice1{ testDriver, com, db::TestType::BASIC_TEST, db::CurrentSource::NO_CURR_SOURCE };
 			dev->setTestCurrent(testCurrStr.toFloat());
 			dev->setVoltageLimit(voltageLimit.toFloat());
 			dev->setHeatSinkTempLimit(heatSinkTempLimit.toFloat());
@@ -360,7 +373,7 @@ bool MainWin::setupDeviceInterface() {
 		case db::TestType::DEV_TERM: {
 			// TODO: Other devices
 			/*
-				Data to DischargerDevice:
+				Data to DischargerDevice1:
 					com, voltLim, tempLim, buadrate, parity, data bits, stop bits, mask, currentRatio
 			*/
 			break;

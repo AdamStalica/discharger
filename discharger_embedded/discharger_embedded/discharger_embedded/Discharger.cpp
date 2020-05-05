@@ -43,11 +43,11 @@ Discharger::Discharger()
 	
 	led.green().blink();
 	
-	therm1.setOnCrcNoMatchWarning(Device::Warning::HEAT_SINK_THERM_CRC);
-	therm2.setOnCrcNoMatchWarning(Device::Warning::BATT_LEFT_THERM_CRC);
-	therm3.setOnCrcNoMatchWarning(Device::Warning::BATT_RIGHT_THERM_CRC);
-	therm1.setOnCrcNoMatchError(Device::Error::STOPPED_HEAT_SINK_THERM_CRC);
-	therm1.setOnNotAvaliableError(Device::Error::STOPPED_HEAT_SINK_THERM_NOT_AVALIABLE);
+	therm1.setOnCrcNoMatchWarning(dischargerDevice::Warning::HEAT_SINK_THERM_CRC);
+	therm2.setOnCrcNoMatchWarning(dischargerDevice::Warning::BATT_LEFT_THERM_CRC);
+	therm3.setOnCrcNoMatchWarning(dischargerDevice::Warning::BATT_RIGHT_THERM_CRC);
+	therm1.setOnCrcNoMatchError(dischargerDevice::Error::STOPPED_HEAT_SINK_THERM_CRC);
+	therm1.setOnNotAvaliableError(dischargerDevice::Error::STOPPED_HEAT_SINK_THERM_NOT_AVALIABLE);
 	
 	chDeterm.loadFromEEPROM();
 	deviceDriver.setCallbacks(static_cast<DeviceDriverCallbacks*>(this));
@@ -121,6 +121,12 @@ void Discharger::handleSimNewData(const DrivingData & data) {
 	simData.setDrivingData(data);
 }
 
+void Discharger::handleSetDACVolt(uint16_t mV) {
+	if(chDeterm.isInProgress() || simData.isSimulationInProgress())
+		return;
+	dac.writeMillivolts(mV);
+}
+
 void Discharger::deviceStopRequest() {
 	dac.writeDACValue(0);
 	simData.clear();
@@ -151,34 +157,6 @@ void Discharger::detemineCharacteristic() {
 }
 
 void Discharger::simulationDriver() {
-	/*
-	static uint16_t i = 0;
-	dac.writeMillivolts(i);
-	i += 50;
-	i %= 5000;
-	debugLog("I ", i);
-	return;
-	*/
-	
-	
-	//dac.writeMillivolts(1000);
-	/*
-	uint16_t newCurrent1 = getCurrentCurrent();
-	dac.writeMillivolts(newCurrent1);
-	
-	
-	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
-		adc.countAverages();
-		uint16_t currAdc = adc.getAvgADC(AnalogMeasurement::LEM);
-		
-		debugLog(
-			"I =", 
-			driver.getCurrentFormADC(currAdc)
-		);
-	}
-	return;
-	*/
-	
 	if(adc.isNewValueAvailable(AnalogMeasurement::LEM)) {
 				
 		adc.countAverages();
@@ -187,7 +165,6 @@ void Discharger::simulationDriver() {
 		driver.setMeasuredCurrent(currentlySimulatedCurrent);
 			
 		simData.setMeasuredCurrent(currentlySimulatedCurrent);	
-		//SimulationData::setMeauredCurrent(currentlySimulatedCurrent);
 	}						
 	if(adc.isNewValueAvailable(AnalogMeasurement::BRV)) {
 		simData.setMeasuredBLV(
@@ -215,17 +192,11 @@ void Discharger::simulationDriver() {
 			
 	uint16_t newCurrent = simData.getDrivingCurrent();
 	uint16_t millivoltsToSet = driver.getEstimatedMillivolts(newCurrent);
-	//debugLog("mV=", millivoltsToSet);
 	
-//#define DIRECT
-#ifdef DIRECT
-	dac.writeMillivolts(newCurrent/10);
-#else
 	dac.writeMillivolts(millivoltsToSet);
-#endif
 }
 
 void Discharger::isrWDT() {
-	deviceDriver.sendWarning(Device::Warning::WDT_RESET);
+	deviceDriver.sendWarning(dischargerDevice::Warning::WDT_RESET);
 	_delay_ms(10);
 }

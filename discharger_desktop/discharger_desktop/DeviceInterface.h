@@ -75,8 +75,8 @@ public:
 	}
 
 signals:
-	void signalError(Device::Error);
-	void signalWarning(Device::Warning);
+	void signalError(dischargerDevice::Error);
+	void signalWarning(dischargerDevice::Warning);
 	void signalDebugMsg(const QString & msg);
 	void signalNewData(db::SimData simData);
 	void signalFinished();

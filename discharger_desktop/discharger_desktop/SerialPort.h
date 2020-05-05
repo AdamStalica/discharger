@@ -1,19 +1,23 @@
 #pragma once
 
 #include <QObject>
-#include <queue>
 #include <serial/serial.h>
-#include <QThread>
-#include <QDebug>
 #include <QTimer>
 
+//Q_DECLARE_METATYPE(serial::Serial);
+
+
+
+
+
 namespace serialPort {
+
 
 	typedef serial::bytesize_t datasize_t;
 	typedef serial::stopbits_t stopbits_t;
 	typedef serial::parity_t parity_t;
 
-
+	/*
 	namespace worker {
 		class SerialPortWorker : public QObject{
 			Q_OBJECT
@@ -73,14 +77,21 @@ namespace serialPort {
 			void serialOpened();
 		};
 	}
+	*/
 
 	class SerialPort : public QObject
 	{
 		Q_OBJECT
 
 	private:
-		QThread serialThread;
-		bool _opened = false;
+		//QThread serialThread;
+		//bool _opened = false;
+
+		serial::Serial serial;
+
+		QTimer timer;
+		const unsigned int SCAN_INTERVAL = 2;
+
 		std::string _port;
 		uint32_t _baudrate	{ 9600 };
 		datasize_t _datasize{ datasize_t::eightbits };
@@ -120,20 +131,24 @@ namespace serialPort {
 		void setStopBits(stopbits_t stopbits);
 		void setParity(parity_t parity);
 
+		bool isOpen();
+
 		//void setOnPortOpenedCallback(std::function<void(void)> callback);
 		//void setOnPortClosedCallback(std::function<void(void)> callback);
 		//void setOnNewLineCallback(std::function<void(const std::string &)> callback);
 
 	private slots:
-		void handleNewLine(const QString & line);
-		void handleSerialClosed();
-		void handleSerialOpened();
+		void handleTimerTimeout();
+		//void handleNewLine(const QString & line);
+		//void handleSerialClosed();
+		//void handleSerialOpened();
 
 	signals:
-		void emitOpen(serial::Serial * serial_);
-		void emitPrint(const QString & line);
-		void emitClose();
+		//void emitOpen(serial::Serial * serial_);
+		//void emitPrint(const QString & line);
+		//void emitClose();
 		void opened();
+		void unableToOpen();
 		void closed();
 		void receivedLine(const QString & line);
 		void transmitedLine(const QString & line);

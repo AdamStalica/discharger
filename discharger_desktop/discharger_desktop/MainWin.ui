@@ -307,7 +307,7 @@
              <x>0</x>
              <y>0</y>
              <width>638</width>
-             <height>920</height>
+             <height>851</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -557,8 +557,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>600</width>
-                    <height>383</height>
+                    <width>381</width>
+                    <height>167</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -786,7 +786,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>600</width>
+                    <width>381</width>
                     <height>58</height>
                    </rect>
                   </property>
@@ -890,8 +890,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>600</width>
-                    <height>383</height>
+                    <width>381</width>
+                    <height>330</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -1451,7 +1451,15 @@
     </property>
     <addaction name="actionClose"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionDevice_characteristic"/>
+    <addaction name="actionDevice_information"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -2997,6 +3005,16 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Esc</string>
+   </property>
+  </action>
+  <action name="actionDevice_characteristic">
+   <property name="text">
+    <string>Device characteristic</string>
+   </property>
+  </action>
+  <action name="actionDevice_information">
+   <property name="text">
+    <string>Device information</string>
    </property>
   </action>
  </widget>

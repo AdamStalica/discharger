@@ -159,18 +159,18 @@ void TestDriver::deviceNewData(db::SimData dbSimData) {
 	//dbSimDataVec.push_back(std::move(dbSimData));
 }
 
-void TestDriver::deviceErrorOccured(Device::Error error) {
+void TestDriver::deviceErrorOccured(dischargerDevice::Error error) {
 	//ObjectFactory::getInstance<db::TestData>()->setTestError(error);
 	setTestState(TestStates::DEV_ERROR);
 	updateUI();
-	QString errorStr = QString::fromStdString(Device::getErrorDescription(error));
+	QString errorStr = QString::fromStdString(dischargerDevice::getErrorDescription(error));
 	ui.appendEventsLine("<div style=\"color: red\">" + errorStr + "</div>");
 	ui.showDeviceError(errorStr);
 }
 
-void TestDriver::deviceWarningOccured(Device::Warning warning) {
+void TestDriver::deviceWarningOccured(dischargerDevice::Warning warning) {
 	ui.appendEventsLine("<div style=\"color: orange\">" + 
-		QString::fromStdString(Device::getWarningDescription(warning)) + 
+		QString::fromStdString(dischargerDevice::getWarningDescription(warning)) + 
 		"</div>"
 	);
 }
@@ -214,6 +214,7 @@ TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd)
 							data.setBattLeftId(idBattLeft);
 	if (sd.battLeftVolt)	data.setBattLeftVolt(sd.battLeftVolt.val());
 	if (sd.battLeftTemp)	data.setBattLeftTemp(sd.battLeftTemp.val());
+
 	if (!isSingleBattery()) {
 		data.setSingleBatteryMode(false);
 		data.setBattRightId(idBattRight);

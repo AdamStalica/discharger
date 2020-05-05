@@ -48,11 +48,10 @@ void db::TestData::setupTestInDb(
 
 	ObjectFactory::getInstance<WebApi>()->POST(
 		API_TEST_SETUP_FILE, setupData,
-		[this](bool success, std::string && resp) {
+		[this](WebApi::StatsEnum status, nlohmann::json && resp) {
 
-			nlohmann::json response = nlohmann::json::parse(resp);
-			if (success) {
-				this->idSimInfo = response["id_sim_info"].get<unsigned int>();
+			if (status == WebApi::API_OK) {
+				this->idSimInfo = resp.at("id_sim_info").get<unsigned int>();
 				cb(true, "Ok");
 			}
 			else cb(false, "WebApi faliure");
@@ -80,7 +79,7 @@ void db::TestData::setTestState(TestStates testState) {
 	insertSimDataToDb();
 }
 
-void db::TestData::setTestError(Device::Error error) {
+void db::TestData::setTestError(dischargerDevice::Error error) {
 	testError = error;
 }
 
@@ -136,8 +135,8 @@ void db::TestData::insertSimDataToDb() {
 
 	ObjectFactory::getInstance<WebApi>()->POST(
 		API_TEST_SYNCH_FILE, data,
-		[this](bool success, std::string && resp) {
-			qDebug() << resp.c_str();
+		[this](WebApi::StatsEnum status, nlohmann::json && resp) {
+			qDebug() << resp.dump().c_str();
 		}
 	);
 }

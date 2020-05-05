@@ -1,106 +1,87 @@
 #pragma once
+
+#include <QObject>
+#include <QDate>
 #include <QTimer>
-#include <queue>
-#include <set>
-#include "DeviceInterface.h"
-#include "WebApi.h"
+#include "SerialPort.h"
+#include "DischargerDeviceData.h"
+#include <DeviceEventsDef.h>
+#include <nlohmann/json.h>
 
-auto constexpr DISCHARGER_CONN_TIMEOUT = 2000;
-auto constexpr DISCHARGER_BOUDRATE = 230400;
-auto constexpr DISCHARGER_DATA_SIZE = serialPort::datasize_t::eightbits;
-auto constexpr DISCHARGER_STOP_BITS = serialPort::stopbits_t::stopbits_two;
-auto constexpr DISCHARGER_PARITY = serialPort::parity_t::parity_none;
+namespace dischargerDevice {
+	class Device : public QObject
+	{
+		Q_OBJECT
+	private:
+		const unsigned int HANDSHAKE_MAX_ATTMEPT_NUM = 2;
+		const unsigned int RESPONSE_MAX_TIME = 1000;
+		const unsigned int BOUDRATE = 230400;
+		const serialPort::datasize_t DATA_SIZE = serialPort::datasize_t::eightbits;
+		const serialPort::stopbits_t STOP_BITS = serialPort::stopbits_t::stopbits_two;
+		const serialPort::parity_t PARITY = serialPort::parity_t::parity_none;
+		const unsigned int YEAR_OFFSET = 2000;
 
+		serialPort::SerialPort * serial;
+		QTimer handshakeTimer;
+		bool gotHandshake = false,
+			gotDeviceInfo = false,
+			gotStop = false;
+		unsigned int handshakeTimerTimeoutCounter = 0;
+		nlohmann::json newData = "";
 
-/**
-1. construction of an object	
-2. initialization 
-*/
+		unsigned int deviceId = 0;
+		unsigned int deviceSoftwareVersion = 0;
+		QDate deviceFlashDate = QDate();
 
+	public:
+		Device(QObject *parent);
+		~Device() {};
 
-/*
-set current,
-id log data,
+		void clear();
 
-current,
-volt left,
-volt right,
-temp left,
-temp right,
-temp heat sink
+		void connectToDevice(const QString & comPort);
+		void disconnectDevice();
 
-*/
+		void sendSimDrivingData(const SimDrivingData & data);
+		void sendStop();
+		void sendStartOfChracteristicDetermination();
+		void sendReadCharacteristic();
 
-class DischargerDevice :
-	public DeviceInterface
-{
-	Q_OBJECT
+		unsigned int getDeviceId();
+		unsigned int getDeviceSoftwareVersion();
+		QDate getDeviceFlashDate();
 
-private:
-	struct LogData {
-		unsigned int idLogData = 0;
-		double current = 0.0;
-		LogData() {}
-		LogData(unsigned int idLogData_, double curr_) :
-			idLogData(idLogData_), current(curr_)
-		{}
-		bool operator<(const LogData & oth) const {
-			return idLogData < oth.idLogData;
-		}
+	private slots:
+		void handlePortOpened();
+		void handleUnableToOpen();
+		void handleHandshakeTimerTimeout();
+		void handleReceivedLine(const QString & line);
+
+	private:
+		void sendHandshake();
+		void processHandshake();
+		void processSimData();
+		void processStop();
+		void processError();
+		void processWarning();
+		void processDebug();
+		void processCharacteristicPoint();
+		void processCharacteristicDone();
+		void sendDeviceInfoRequest();
+		void processDeviceInfo();
+
+	signals:
+		void connected();
+		void connectionFailure();
+		void gotSimulationData(SimData simData);
+		void deviceHasStopped();
+		void errorDeviceStopTimeout();
+		void error(dischargerDevice::Error errorNo);
+		void error(const QString & error);
+		void warning(dischargerDevice::Warning warningNo);
+		void warning(const QString & warning);
+		void debug(const QString & debugMsg);
+		void gotCharacteristicPoint(const CharacteristicPoint & point);
+		void characteristicDone();
 	};
-
-	const int BATT_NUM = 2;
-
-	const std::string API_GET_CURR = "get_test_current.php";
-	const std::string DB_MOTOR_CURR = "motor_curr";
-	const std::string DB_MAIN_CURR = "main_curr";
-	std::string currSourceName = DB_MAIN_CURR;
-
-	bool gotHandshake = false;
-	QTimer timer, connectionTimer;
-
-	QString comPortName;
-	unsigned int sendingNewDataPeriod = 1000;
-
-	std::vector<LogData> logDataVec;
-	std::vector<LogData>::iterator logDataVecIte;
-	//std::queue<std::pair<unsigned int, float>> queueOfLogData;
-	//unsigned int dataSize;
-
-public:
-
-	DischargerDevice(QObject * parent, const QString & com, db::TestType testType, db::CurrentSource currSource);
-	~DischargerDevice();
-
-	void fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback);
-
-	bool isStopable() override;
-	//DeviceInterface
-	void connectToDevice() override;
-	void start() override;
-	void stop() override;
-	
-	bool checkBatteryNumber(int numebrOfBatteries) override;
-
-private slots:
-	void timerTimeout();
-	void connectionTimerTimeout();
-	void serialRecivedNewData(const QString & line);
-	//void handleHandshake(const QString & devId);
-
-private:
-	void handleWarning(Device::Warning warn);
-	void handleError(Device::Error err);
-	void handleNewMesures(const nlohmann::json & data);
-	void testFinished();
-	unsigned int countProgress();
-
-	void sendHandshake();
-	void sendStop();
-	void sendDrivingData(
-		unsigned int id, 
-		double current, 
-		double temperatureLimit = DBL_MAX, 
-		double voltageLimit = DBL_MAX
-	);
-};
+}

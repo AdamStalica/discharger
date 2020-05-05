@@ -1,9 +1,11 @@
 #ifndef DEVICE_DEF
 #include "DeviceEventsDef.h"
 #endif // !DEVICE_DEF
+#ifndef DEVICE_EVENTS_DESCRIPTION
+#define DEVICE_EVENTS_DESCRIPTION
 #include <string>
 
-namespace Device {
+namespace dischargerDevice {
 	
 	std::string getErrorDescription(Error error);
 	std::string getWarningDescription(Warning warn);
@@ -39,13 +41,14 @@ namespace Device {
 		friend std::string getWarningDescription(Warning warn);
 	};
 
-	std::string getErrorDescription(Error error) {
+	inline std::string getErrorDescription(Error error) {
 		Descriptions d;
 		return "Error no. " + std::to_string(error) + " " + d.ERROR_DESCRIPTION[error];
 	}
 
-	std::string getWarningDescription(Warning warn) {
+	inline std::string getWarningDescription(Warning warn) {
 		Descriptions d;
 		return "Warning no. " + std::to_string(warn) + " " + d.WARNING_DESCRIPTION[warn];
 	}
 }
+#endif

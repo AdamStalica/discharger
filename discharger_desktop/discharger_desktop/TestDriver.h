@@ -96,8 +96,8 @@ private:
 
 	void deviceFinished();
 	void deviceNewData(db::SimData dbSimData);
-	void deviceErrorOccured(Device::Error error);
-	void deviceWarningOccured(Device::Warning warning);
+	void deviceErrorOccured(dischargerDevice::Error error);
+	void deviceWarningOccured(dischargerDevice::Warning warning);
 	void deviceDebug(const QString & msg);
 
 	void updateUI(const db::SimData & sd = db::SimData());
