@@ -47,7 +47,13 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.dockWgtCommFlow, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
 	connect(ui.dockWgtParams, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
 
-	connect(ui.authBtnLogIn, &QPushButton::clicked, this, &MainWin::login);
+
+	connect(ui.authPage, &LoginWgt::loggedOut, this, &MainWin::userLoggedOut);
+	connect(ui.authPage, &LoginWgt::loggedIn, this, &MainWin::userLoggedIn);
+	connect(ui.authPage, &LoginWgt::authorizing, this, &MainWin::loader);
+
+
+	//connect(ui.authBtnLogIn, &QPushButton::clicked, this, &MainWin::login);
 	connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
 	connect(ui.CTBtnRefreshSerialPort, &QPushButton::clicked, this, &MainWin::refreshComPortsList);
 	connect(ui.testBtnConfChart, &QPushButton::clicked, testDriver, &TestDriver::confChart);
@@ -65,7 +71,9 @@ MainWin::MainWin(QWidget *parent)
 	
 	connect(ui.actionLogout, &QAction::triggered, this, &MainWin::logout);
 
+	//ui.page.
 
+	//ui.stackedWidget->setCurrentIndex(1);
 
 	/*
 
@@ -132,6 +140,7 @@ MainWin::MainWin(QWidget *parent)
 }
 
 void MainWin::closeEvent(QCloseEvent * event) {
+	// TODO: Is test in progress
 	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
 		showWarning("Test in progress you can not close the program");
 		event->ignore();
@@ -175,15 +184,22 @@ void MainWin::setTestToolBarVisibility(bool visible) {
 }
 
 void MainWin::logout() {
+	//TODO: Is test in progess?
 	if (testDriver->getTestState() == db::TestStates::PROGRESS) {
 		showWarning("Test in progress you can not log out"); 
 		return;
 	}
+	//TODO: Has test finished?
 	if (testDriver->getTestState() == db::TestStates::READY) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
+
+	ui.authPage->logOut();
+}
+
+void MainWin::userLoggedOut() {
 	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
-	ObjectFactory::getInstance<User>()->logOut();
+	// Todo: clear
 	setTestToolBarVisibility(false);
 	setDockedWidgetsVisibility(false);
 	clearTestConfPage();
@@ -191,31 +207,11 @@ void MainWin::logout() {
 	testDriver->clear();
 }
 
-void MainWin::login() {
-	QString email = ui.authEdtMail->text();
-	QString pass = ui.authEdtPass->text();
-	
-	if (email.isEmpty() || pass.isEmpty()) {
-		QMessageBox::warning(this, "Warning", "Both email and password fields must be filled up!");
-		return;
-	}
-
-	auto user = ObjectFactory::getInstance<User>();
-	user->setOnLoggedInCallback(
-		[this](bool success, const QString & msg){
-			if (success) {
-				loader(msg);
-				setupTestConfPage();
-			}
-			else {
-				ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
-				showError(msg);
-				loaderStop();
-			}
-		}
-	);
-	loader("Logging");
-	user->logIn(email, pass);
+void MainWin::userLoggedIn() {
+	//showPage(PagesEnum::CONF_TEST);
+	//setupTestConfPage();
+	ui.menuPage->setup();
+	showPage(PagesEnum::MENU);
 }
 
 
@@ -282,6 +278,7 @@ void MainWin::showTestConfPage() {
 	ui.CTComboBattRight->addItems(confData->getBatteriesRightList());
 	ui.CTSimTreeRaces->setAnimated(true);
 	ui.CTSimTreeRaces->addTopLevelItems(confData->getLogsTreeItems());
+
 	ui.stackedWidget->setCurrentIndex(PagesEnum::CONF_TEST);
 }
 

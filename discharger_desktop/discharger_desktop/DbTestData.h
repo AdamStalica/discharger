@@ -23,8 +23,8 @@ namespace db {
 
 	enum TestType {
 		SIMULATION,
-		BASIC_TEST,
-		DEV_TERM
+		BASIC_TEST
+		//DEV_TERM
 	};
 
 	enum CurrentSource {

@@ -89,6 +89,15 @@
     <ClCompile Include="SerialPort.cpp">
       <Filter>Source Files\Refactorized</Filter>
     </ClCompile>
+    <ClCompile Include="LoginWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestConfigWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -130,6 +139,15 @@
     <QtMoc Include="SerialPort.h">
       <Filter>Header Files\Refactorized</Filter>
     </QtMoc>
+    <QtMoc Include="LoginWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MenuWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TestConfigWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWin.qrc">
@@ -146,25 +164,43 @@
     <QtUic Include="ChartPropertiesDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="LoginWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="MenuWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="TestConfigWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Param.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DbSimData.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="Calculations.h">
       <Filter>Header Files\Refactorized</Filter>
     </ClInclude>
     <ClInclude Include="ObjectFactory.h">
       <Filter>Header Files\Refactorized</Filter>
     </ClInclude>
-    <ClInclude Include="DischargerDeviceData.h">
-      <Filter>Generated Files</Filter>
+    <ClInclude Include="DbSimData.h">
+      <Filter>Header Files\Refactorized</Filter>
     </ClInclude>
     <ClInclude Include="DischargerDeviceConverter.h">
-      <Filter>Generated Files</Filter>
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="DischargerDeviceData.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="Cleaner.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="IClearable.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="ISetupable.h">
+      <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="Param.h">
+      <Filter>Header Files\Refactorized</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

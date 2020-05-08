@@ -11,14 +11,6 @@ class DeviceInterface :
 {
 	Q_OBJECT
 
-public:
-	/*
-	enum CurrentSource {
-		MAIN,
-		MOTOR,
-		NO_CURR_SOURCE
-	};
-	*/
 protected:
 	const db::TestType TEST_TYPE;
 	const db::CurrentSource CURRENT_SOURCE;
@@ -30,18 +22,15 @@ protected:
 	Param<QTime> estimetedTestTime;
 	Param<unsigned int> idLogInfo;
 
-	serialPort::SerialPort * serial;
-
 public:
 
 	DeviceInterface(QObject * parent, db::TestType testType, db::CurrentSource currSource) : 
 		QObject(parent),
 		TEST_TYPE(testType),
 		CURRENT_SOURCE(currSource)
-	{
-		serial = ObjectFactory::getInstance<serialPort::SerialPort>();
-	};
+	{};
 	virtual ~DeviceInterface() {};
+	
 	virtual void connectToDevice() = 0;
 	virtual void start() = 0;
 	virtual void stop() = 0;
@@ -61,18 +50,9 @@ public:
 	db::TestType getTestType() const { return TEST_TYPE; }
 	db::CurrentSource getCurrentSource() const { return CURRENT_SOURCE; };
 
-	void setTestCurrent(float current) {
-		if (CURRENT_SOURCE != db::CurrentSource::NO_CURR_SOURCE) {
-			throw std::exception("This current source not support such a functionality");
-		}
-		testCurrent = current;
-	}
-	void setVoltageLimit(float volt) {
-		voltageLimit = volt;
-	}
-	void setHeatSinkTempLimit(float tempLimit) {
-		heatSinkTempLimit = tempLimit;
-	}
+	inline void setTestCurrent(float current);
+	inline void setVoltageLimit(float volt);
+	inline void setHeatSinkTempLimit(float tempLimit);
 
 signals:
 	void signalError(dischargerDevice::Error);
@@ -83,3 +63,16 @@ signals:
 	void signalConnectionEstablished();
 	void signalCanNotEstablishConnection();
 };
+
+void DeviceInterface::setTestCurrent(float current) {
+	if (CURRENT_SOURCE == db::CurrentSource::NO_CURR_SOURCE) {
+		throw std::exception("This current source not supports such a functionality");
+	}
+	testCurrent = current;
+}
+void DeviceInterface::setVoltageLimit(float volt) {
+	voltageLimit = volt;
+}
+void DeviceInterface::setHeatSinkTempLimit(float tempLimit) {
+	heatSinkTempLimit = tempLimit;
+}

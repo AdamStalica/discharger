@@ -28,7 +28,8 @@ private:
 		LOG_IN,
 		LOADER,
 		CONF_TEST,
-		TEST
+		TEST,
+		MENU
 	};
 	/*
 	enum TestType {
@@ -115,6 +116,9 @@ private slots:
 	void handleVoltLimitEdited();
 	void handleHeatSinkTempLimitEdited();
 	void selectFile();
+
+	void userLoggedIn();
+	void userLoggedOut();
 };
 
 template<class T>

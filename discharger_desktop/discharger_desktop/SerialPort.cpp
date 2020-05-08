@@ -1,4 +1,5 @@
 #include "SerialPort.h"
+#include <QSerialPortInfo>
 
 using namespace serialPort;
 //using namespace serialPort::worker;
@@ -144,3 +145,16 @@ void SerialPort::handleSerialOpened() {
 	emit opened();
 }
 */
+
+QStringList SerialPort::getPortsNames() {
+	auto ports = QSerialPortInfo::availablePorts();
+	QStringList portsNames;
+	std::transform(
+		ports.begin(), 
+		ports.end(), 
+		std::back_inserter(portsNames), 
+		[](const QSerialPortInfo & info)->QString {
+		return info.portName();
+	});
+	return portsNames;
+}

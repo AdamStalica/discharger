@@ -14,17 +14,17 @@
    <string>MainWin</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="MainWin.qrc">
+   <iconset>
     <normaloff>:/icons/media/icons/discharger.ico</normaloff>:/icons/media/icons/discharger.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_11">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
-      <widget class="QWidget" name="authPage">
+      <widget class="LoginWgt" name="authPage">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
          <number>0</number>
@@ -41,158 +41,6 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <item>
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>438</width>
-             <height>937</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-             <widget class="QGroupBox" name="groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Authorization</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>E-mail:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>Password:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QLineEdit" name="authEdtMail">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>200</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>200</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="baseSize">
-                  <size>
-                   <width>0</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="inputMethodHints">
-                  <set>Qt::ImhEmailCharactersOnly</set>
-                 </property>
-                 <property name="text">
-                  <string>dominikkala@gmail.com</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QLineEdit" name="authEdtPass">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>200</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>200</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="inputMethodHints">
-                  <set>Qt::ImhNone</set>
-                 </property>
-                 <property name="text">
-                  <string>test1234</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <spacer name="horizontalSpacer">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="authBtnLogIn">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>100</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Log in</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="loaderPage">
@@ -307,7 +155,7 @@
              <x>0</x>
              <y>0</y>
              <width>638</width>
-             <height>851</height>
+             <height>920</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -557,8 +405,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>381</width>
-                    <height>167</height>
+                    <width>600</width>
+                    <height>383</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -786,7 +634,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>381</width>
+                    <width>600</width>
                     <height>58</height>
                    </rect>
                   </property>
@@ -890,8 +738,8 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>381</width>
-                    <height>330</height>
+                    <width>600</width>
+                    <height>383</height>
                    </rect>
                   </property>
                   <property name="sizePolicy">
@@ -1410,7 +1258,7 @@
                     <string/>
                    </property>
                    <property name="icon">
-                    <iconset resource="MainWin.qrc">
+                    <iconset>
                      <normaloff>:/icons/media/icons/chart.ico</normaloff>:/icons/media/icons/chart.ico</iconset>
                    </property>
                    <property name="iconSize">
@@ -1431,6 +1279,9 @@
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="MenuWgt" name="menuPage">
+       <layout class="QVBoxLayout" name="verticalLayout_5"/>
       </widget>
      </widget>
     </item>
@@ -1480,7 +1331,7 @@
     </sizepolicy>
    </property>
    <property name="windowIcon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/parameters.ico</normaloff>:/icons/media/icons/parameters.ico</iconset>
    </property>
    <property name="features">
@@ -2073,7 +1924,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="MainWin.qrc">:/schems/media/schems/double_battery.png</pixmap>
+                 <pixmap>:/schems/media/schems/double_battery.png</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -2432,7 +2283,7 @@ temperature:</string>
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="MainWin.qrc">:/schems/media/schems/single_battery.png</pixmap>
+                 <pixmap>:/schems/media/schems/single_battery.png</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -2629,7 +2480,7 @@ temperature:</string>
   </widget>
   <widget class="QDockWidget" name="dockWgtCommFlow">
    <property name="windowIcon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/comm_flow.ico</normaloff>:/icons/media/icons/comm_flow.ico</iconset>
    </property>
    <property name="windowTitle">
@@ -2881,7 +2732,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="actionHelp">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/help.ico</normaloff>:/icons/media/icons/help.ico</iconset>
    </property>
    <property name="text">
@@ -2893,7 +2744,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionStart">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/start.ico</normaloff>:/icons/media/icons/start.ico</iconset>
    </property>
    <property name="text">
@@ -2905,7 +2756,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/stop.ico</normaloff>:/icons/media/icons/stop.ico</iconset>
    </property>
    <property name="text">
@@ -2917,7 +2768,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionConfNewTest">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/new_test.ico</normaloff>:/icons/media/icons/new_test.ico</iconset>
    </property>
    <property name="text">
@@ -2929,7 +2780,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionLogout">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/logout.ico</normaloff>:/icons/media/icons/logout.ico</iconset>
    </property>
    <property name="text">
@@ -2941,7 +2792,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionShowCommFlow">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/comm_flow.ico</normaloff>:/icons/media/icons/comm_flow.ico</iconset>
    </property>
    <property name="text">
@@ -2953,7 +2804,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionConfChart">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/chart.ico</normaloff>:/icons/media/icons/chart.ico</iconset>
    </property>
    <property name="text">
@@ -2965,7 +2816,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionShowTestParams">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/parameters.ico</normaloff>:/icons/media/icons/parameters.ico</iconset>
    </property>
    <property name="text">
@@ -2977,7 +2828,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionResultsOnline">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/web.ico</normaloff>:/icons/media/icons/web.ico</iconset>
    </property>
    <property name="text">
@@ -2989,7 +2840,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionQrCode">
    <property name="icon">
-    <iconset resource="MainWin.qrc">
+    <iconset>
      <normaloff>:/icons/media/icons/qr_code.ico</normaloff>:/icons/media/icons/qr_code.ico</iconset>
    </property>
    <property name="text">
@@ -3019,202 +2870,25 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>LoginWgt</class>
+   <extends>QWidget</extends>
+   <header>loginwgt.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MenuWgt</class>
+   <extends>QWidget</extends>
+   <header>MenuWgt.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="MainWin.qrc"/>
+  <include location="C:/Users/domin/.designer/backup/MainWin.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>CTTermRadioJSON</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermJSONEdtCurr</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>825</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>825</x>
-     <y>698</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioJSON</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermJSONEdtBLVolt</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>825</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>825</x>
-     <y>727</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioJSON</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermJSONEdtBRVolt</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>825</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>825</x>
-     <y>759</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioJSON</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermJSONEdtCapa</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>825</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>825</x>
-     <y>791</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioJSON</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermJSONEdtEnergy</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>825</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>825</x>
-     <y>823</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioCSV</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermCSVEdtCurr</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>698</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioCSV</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermCSVEdtBLVolt</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>727</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioCSV</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermCSVEdtBRVolt</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>759</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioCSV</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermCSVEdtCapa</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>791</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTTermRadioCSV</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>CTTermCSVEdtEnergy</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>686</x>
-     <y>823</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTSimRadioExpand</sender>
-   <signal>clicked()</signal>
-   <receiver>CTSimTreeRaces</receiver>
-   <slot>expandAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>866</x>
-     <y>294</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>694</x>
-     <y>480</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CTSimRadioCollapse</sender>
-   <signal>clicked()</signal>
-   <receiver>CTSimTreeRaces</receiver>
-   <slot>collapseAll()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>946</x>
-     <y>294</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>694</x>
-     <y>480</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>commFlowTabRawDataBtnClr</sender>
    <signal>clicked()</signal>
@@ -3222,12 +2896,12 @@ p, li { white-space: pre-wrap; }
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>524</x>
-     <y>767</y>
+     <x>1211</x>
+     <y>136</y>
     </hint>
     <hint type="destinationlabel">
-     <x>524</x>
-     <y>904</y>
+     <x>1212</x>
+     <y>991</y>
     </hint>
    </hints>
   </connection>
@@ -3238,12 +2912,12 @@ p, li { white-space: pre-wrap; }
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>994</x>
-     <y>780</y>
+     <x>1211</x>
+     <y>136</y>
     </hint>
     <hint type="destinationlabel">
-     <x>524</x>
-     <y>895</y>
+     <x>1212</x>
+     <y>991</y>
     </hint>
    </hints>
   </connection>
@@ -3254,12 +2928,12 @@ p, li { white-space: pre-wrap; }
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>994</x>
-     <y>780</y>
+     <x>1211</x>
+     <y>136</y>
     </hint>
     <hint type="destinationlabel">
-     <x>524</x>
-     <y>895</y>
+     <x>1212</x>
+     <y>991</y>
     </hint>
    </hints>
   </connection>
@@ -3276,6 +2950,198 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>525</x>
      <y>514</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTSimRadioExpand</sender>
+   <signal>clicked()</signal>
+   <receiver>CTSimTreeRaces</receiver>
+   <slot>expandAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>888</x>
+     <y>491</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>972</x>
+     <y>787</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioJSON</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermJSONEdtBLVolt</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>699</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTSimRadioCollapse</sender>
+   <signal>clicked()</signal>
+   <receiver>CTSimTreeRaces</receiver>
+   <slot>collapseAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>970</x>
+     <y>491</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>972</x>
+     <y>787</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioJSON</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermJSONEdtBRVolt</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>731</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioJSON</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermJSONEdtCapa</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>763</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioCSV</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermCSVEdtBLVolt</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>699</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioCSV</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermCSVEdtCapa</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>763</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioCSV</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermCSVEdtCurr</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>670</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioCSV</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermCSVEdtBRVolt</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>731</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioJSON</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermJSONEdtEnergy</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>795</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioCSV</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermCSVEdtEnergy</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>603</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>795</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CTTermRadioJSON</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CTTermJSONEdtCurr</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>625</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>670</y>
     </hint>
    </hints>
   </connection>

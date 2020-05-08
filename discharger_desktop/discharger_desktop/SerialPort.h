@@ -133,6 +133,8 @@ namespace serialPort {
 
 		bool isOpen();
 
+		QStringList getPortsNames();
+
 		//void setOnPortOpenedCallback(std::function<void(void)> callback);
 		//void setOnPortClosedCallback(std::function<void(void)> callback);
 		//void setOnNewLineCallback(std::function<void(const std::string &)> callback);

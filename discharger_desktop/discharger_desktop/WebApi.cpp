@@ -66,8 +66,16 @@ void WebApi::processNetworkReply(QNetworkReply * repl) {
 	nlohmann::json resp;
 	try {
 		QByteArray response = repl->readAll();
-		resp = nlohmann::json::parse(response.toStdString());		
-		apiKey = resp.at(API_KEY_NAME).get<std::string>();
+		resp = nlohmann::json::parse(response.toStdString());	
+		if(!resp[API_KEY_NAME].is_null())
+			apiKey = resp.at(API_KEY_NAME).get<std::string>();
+		else {
+			apiCallback(
+				STATS_MAP.at(resp.at(STATUS_NAME).get<std::string>()), 
+				std::move(resp)
+			);
+			return;
+		}
 	}
 	catch (const std::exception & ex) {
 		qDebug() << ex.what();
