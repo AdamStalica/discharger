@@ -2,6 +2,7 @@
 #include <nlohmann/json.h>
 #include <QTextStream>
 #include "Param.h"
+#include "DischargerDeviceData.h"
 
 auto constexpr DB_DATETIME_FORMAT = "yyyy-MM-dd hh:mm:ss.zzz";
 auto constexpr DB_TIME_FORMAT = "hh:mm:ss.zzz";
@@ -25,6 +26,8 @@ namespace db {
 			battRightTemp("batt_right_temp"),
 			heatSinkTemp("heat_sink_temp")
 		{}
+
+		inline static SimData fromDeviceSimData(const dischargerDevice::SimData & data);
 
 		Param<QDateTime> currTimestamp;
 		Param<QTime> timeSinceBeg;
@@ -78,6 +81,18 @@ namespace db {
 			return vals;
 		}
 	};
+
+	SimData SimData::fromDeviceSimData(const dischargerDevice::SimData & devData) {
+		SimData dbData;
+		dbData.idCurrSim = devData.getId();
+		dbData.current = devData.getCurrent();
+		dbData.battLeftVolt = devData.getBatteryLeftVolt();
+		dbData.battRightVolt = devData.getBatteryRightVolt();
+		dbData.battLeftTemp = devData.getBatteryLeftTemp();
+		dbData.battRightTemp = devData.getBatteryRightTemp();
+		dbData.heatSinkTemp = devData.getHeatSinkTemp();
+		return dbData;
+	}
 
 	inline void to_json(nlohmann::json &j, const SimData & sd) {
 		j = nlohmann::json::object();

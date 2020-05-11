@@ -106,6 +106,7 @@ private:
 	void appendLineToTextBrowser(QTextBrowser * brow, const QString & line, bool scrollDown = false);
 
 private slots:
+	void showMenu();
 	void refreshComPortsList();
 	void showTestPage();
 	void serialOpened();

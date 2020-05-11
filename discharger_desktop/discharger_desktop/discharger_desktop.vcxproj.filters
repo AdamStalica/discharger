@@ -98,6 +98,24 @@
     <ClCompile Include="TestConfigWgt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DischargerTest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSimulationData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamsWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommFlowWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DevChticWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -148,6 +166,21 @@
     <QtMoc Include="TestConfigWgt.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="LogSimulationData.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ChartWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ParamsWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CommFlowWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DevChticWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWin.qrc">
@@ -171,6 +204,18 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="TestConfigWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ChartWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ParamsWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="CommFlowWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DevChticWgt.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -201,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="Param.h">
       <Filter>Header Files\Refactorized</Filter>
+    </ClInclude>
+    <ClInclude Include="DischargerTest.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

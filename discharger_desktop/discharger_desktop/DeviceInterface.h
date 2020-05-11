@@ -6,14 +6,14 @@
 #include "SerialPort.h"
 
 class DeviceInterface : 
-	public QObject,
-	protected db::SimData
+	public QObject
 {
 	Q_OBJECT
 
 protected:
 	const db::TestType TEST_TYPE;
 	const db::CurrentSource CURRENT_SOURCE;
+	const int idBattLeft, idBattRight;
 
 	Param<unsigned int> progress;
 	Param<float> testCurrent;
@@ -24,10 +24,17 @@ protected:
 
 public:
 
-	DeviceInterface(QObject * parent, db::TestType testType, db::CurrentSource currSource) : 
-		QObject(parent),
-		TEST_TYPE(testType),
-		CURRENT_SOURCE(currSource)
+	DeviceInterface(
+		QObject * parent, 
+		db::TestType testType, 
+		db::CurrentSource currSource, 
+		int idBattLeft, 
+		int idBattRight
+	) 	:	QObject(parent), 
+			TEST_TYPE(testType),
+			CURRENT_SOURCE(currSource), 
+			idBattLeft(idBattLeft), 
+			idBattRight(idBattRight)
 	{};
 	virtual ~DeviceInterface() {};
 	
@@ -36,9 +43,10 @@ public:
 	virtual void stop() = 0;
 
 	virtual bool checkBatteryNumber(int numebrOfBatteries) = 0;
-	virtual bool isTestCurrentEditable() { return false; };
-	virtual bool isStartable() { return true; };
-	virtual bool isStopable() { return true; };
+	virtual bool isTestCurrentEditable() = 0;
+	virtual bool isStartable() = 0;
+	virtual bool isStopable() = 0;
+	inline bool isSingleBatteryTest();
 	
 	const Param<unsigned int> & getLogInfoId() const { return idLogInfo; };
 	const Param<unsigned int> & getProgress() const { return progress; };
@@ -46,7 +54,6 @@ public:
 	const Param<float> & getVoltageLimit() const { return voltageLimit; };
 	const Param<float> & getHeatSinkTempLimit() const { return heatSinkTempLimit; };
 	const Param<QTime> & getEstimetedTestTime() const { return estimetedTestTime; };
-	db::SimData getDbSimData() const { return static_cast<db::SimData>(*this); }
 	db::TestType getTestType() const { return TEST_TYPE; }
 	db::CurrentSource getCurrentSource() const { return CURRENT_SOURCE; };
 
@@ -55,14 +62,16 @@ public:
 	inline void setHeatSinkTempLimit(float tempLimit);
 
 signals:
-	void signalError(dischargerDevice::Error);
-	void signalWarning(dischargerDevice::Warning);
-	void signalDebugMsg(const QString & msg);
+	void signalError(const QString & error);
 	void signalNewData(db::SimData simData);
 	void signalFinished();
 	void signalConnectionEstablished();
 	void signalCanNotEstablishConnection();
 };
+
+bool DeviceInterface::isSingleBatteryTest() {
+	return idBattRight == -1;
+}
 
 void DeviceInterface::setTestCurrent(float current) {
 	if (CURRENT_SOURCE == db::CurrentSource::NO_CURR_SOURCE) {

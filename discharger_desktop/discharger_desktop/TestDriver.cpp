@@ -26,9 +26,9 @@ void TestDriver::setDevice(DeviceInterface * dev) {
 	devicePtr = QSharedPointer<DeviceInterface>(dev);
 	
 	connect(dev, &DeviceInterface::signalFinished, this, &TestDriver::deviceFinished);
-	connect(dev, &DeviceInterface::signalError, this, &TestDriver::deviceErrorOccured);
-	connect(dev, &DeviceInterface::signalWarning, this, &TestDriver::deviceWarningOccured);
-	connect(dev, &DeviceInterface::signalDebugMsg, this, &TestDriver::deviceDebug);
+	//connect(dev, &DeviceInterface::signalError, this, &TestDriver::deviceErrorOccured);
+	//connect(dev, &DeviceInterface::signalWarning, this, &TestDriver::deviceWarningOccured);
+	//connect(dev, &DeviceInterface::signalDebugMsg, this, &TestDriver::deviceDebug);
 	connect(dev, &DeviceInterface::signalNewData, this, &TestDriver::deviceNewData);	
 }
 

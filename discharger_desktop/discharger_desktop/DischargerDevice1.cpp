@@ -1,14 +1,16 @@
 #include "DischargerDevice1.h"
 
 DischargerDevice1::DischargerDevice1(QObject * parent, const QString & com, db::TestType testType, db::CurrentSource currSource) :
-	DeviceInterface(parent, testType, currSource)
+	DeviceInterface(parent, testType, currSource, 1, 1)
 {
+	/*
 	comPortName = com;
 	connect(&timer, &QTimer::timeout, this, &DischargerDevice1::timerTimeout);
 	connect(&connectionTimer, &QTimer::timeout, this, &DischargerDevice1::connectionTimerTimeout);
 	connectionTimer.setInterval(DISCHARGER_CONN_TIMEOUT);
 	connectionTimer.setSingleShot(true);
 	connect(serial, &serialPort::SerialPort::receivedLine, this, &DischargerDevice1::serialRecivedNewData);
+	*/
 }
 
 DischargerDevice1::~DischargerDevice1() {
@@ -17,6 +19,7 @@ DischargerDevice1::~DischargerDevice1() {
 
 // TODO: log time
 void DischargerDevice1::fetchCurrentToTest(int idLogInfo, std::function<void(bool, const QString & comment)> callback) {
+	/*
 	if (TEST_TYPE != db::TestType::SIMULATION) {
 		throw std::exception("This current source not support such a functionality");
 	}
@@ -49,6 +52,7 @@ void DischargerDevice1::fetchCurrentToTest(int idLogInfo, std::function<void(boo
 		}
 		cb(status == WebApi::API_OK, resp.at("comment").get<std::string>().c_str());
 	});
+	*/
 }
 
 bool DischargerDevice1::isStopable() { 
@@ -56,6 +60,7 @@ bool DischargerDevice1::isStopable() {
 }
 
 void DischargerDevice1::connectToDevice() {
+	/*
 	serial->setPortQ(comPortName);
 	serial->setBaudrate(DISCHARGER_BOUDRATE);
 	serial->setDataSize(DISCHARGER_DATA_SIZE);
@@ -67,26 +72,33 @@ void DischargerDevice1::connectToDevice() {
 	connect(serial, &serialPort::SerialPort::opened, [this] {
 		this->sendHandshake();
 	});
+	*/
 }
 
 void DischargerDevice1::start() {
+	/*
 	if(TEST_TYPE == db::TestType::SIMULATION)
 		estimetedTestTime = QTime::fromMSecsSinceStartOfDay(sendingNewDataPeriod * logDataVec.size());
 	timer.setInterval(sendingNewDataPeriod);
 	timer.start();
 	timerTimeout();
+	*/
 }
 
 void DischargerDevice1::stop() {
+	/*
 	timer.stop();
 	sendStop();
+	*/
 }
 
 bool DischargerDevice1::checkBatteryNumber(int numebrOfBatteries) {
-	return (numebrOfBatteries == BATT_NUM);
+	//return (numebrOfBatteries == BATT_NUM);
+	return 0;
 }
 
 void DischargerDevice1::timerTimeout() {
+	/*
 	float newCurrent = testCurrent.val();
 	if (TEST_TYPE == db::TestType::SIMULATION) {
 		static bool isFirst = true;
@@ -100,16 +112,20 @@ void DischargerDevice1::timerTimeout() {
 		}
 		isFirst = false;
 	}
-	sendDrivingData(idCurrSim, newCurrent, heatSinkTempLimit.val(), voltageLimit.val());
+	sendDrivingData(idCurrSim.val(), newCurrent, heatSinkTempLimit.val(), voltageLimit.val());
+	*/
 }
 
 void DischargerDevice1::connectionTimerTimeout() {
+	/*
 	if (gotHandshake) return;
 	serial->close();
 	emit signalCanNotEstablishConnection();
+	*/
 }
 
 void DischargerDevice1::serialRecivedNewData(const QString & line) {
+	/*
 	nlohmann::json data;
 	try {
 		data = nlohmann::json::parse(line.toStdString());
@@ -145,19 +161,23 @@ void DischargerDevice1::serialRecivedNewData(const QString & line) {
 		// process debug
 		emit signalDebugMsg(data["debug"].get<std::string>().c_str());
 	}
+	*/
 }
 
 void DischargerDevice1::handleWarning(dischargerDevice::Warning warn) {
-	emit signalWarning(warn);
+	//emit signalWarning(warn);
 }
 
 void DischargerDevice1::handleError(dischargerDevice::Error err) {
+	/*
 	timer.stop();
 	serial->close();
 	emit signalError(err);
+	*/
 }
 
 void DischargerDevice1::handleNewMesures(const nlohmann::json & data) {
+	/*
 	current = data["I"].get<float>() / 100.0;
 	battLeftVolt = data["bLV"].get<float>() / 1000.0;
 	battRightVolt = data["bRV"].get<float>() / 1000.0;
@@ -177,14 +197,18 @@ void DischargerDevice1::handleNewMesures(const nlohmann::json & data) {
 	idCurrSim = idCurrSim.val() + 1;
 
 	emit signalNewData(getDbSimData());
+	*/
 }
 
 void DischargerDevice1::testFinished() {
+	/*
 	sendStop();
 	timer.stop();
+	*/
 }
 
 unsigned int DischargerDevice1::countProgress() {
+	/*
 	if (TEST_TYPE == db::TestType::SIMULATION) {
 		static float battLeft1stVolt = -1,
 			battRight1stVolt = -1;
@@ -199,21 +223,28 @@ unsigned int DischargerDevice1::countProgress() {
 	else {
 		return (idCurrSim.val() * 100.0) / logDataVec.size() + 0.5;
 	}
+	*/
+	return 1;
 }
 
 void DischargerDevice1::sendHandshake() {
+	/*
 	serial->println(
 		"{\"handshake\":\"PC\"}"
 	);
+	*/
 }
 
 void DischargerDevice1::sendStop() {
+	/*
 	serial->println(
 		"{\"stop\":\"now\"}"
 	);
+	*/
 }
 
 void DischargerDevice1::sendDrivingData(unsigned int id, double current, double temperatureLimit, double voltageLimit) {
+	/*
 	nlohmann::json data;
 	data["sim"] = "drive";
 	data["id"] = id;
@@ -224,4 +255,5 @@ void DischargerDevice1::sendDrivingData(unsigned int id, double current, double 
 		data["VL"] = int(voltageLimit * 1000 + 0.5);
 	
 	serial->println(data.dump());
+	*/
 }

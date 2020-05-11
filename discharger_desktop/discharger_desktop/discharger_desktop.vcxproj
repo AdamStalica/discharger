@@ -98,14 +98,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChartPropertiesDialog.cpp" />
+    <ClCompile Include="ChartWgt.cpp" />
+    <ClCompile Include="CommFlowWgt.cpp" />
     <ClCompile Include="DbTestData.cpp" />
+    <ClCompile Include="DevChticWgt.cpp" />
     <ClCompile Include="DischargerDevice.cpp" />
     <ClCompile Include="DischargerDevice1.cpp" />
+    <ClCompile Include="DischargerTest.cpp" />
     <ClCompile Include="LoginWgt.cpp" />
+    <ClCompile Include="LogSimulationData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWin.cpp" />
     <ClCompile Include="MenuWgt.cpp" />
     <ClCompile Include="ObjectFactory.cpp" />
+    <ClCompile Include="ParamsWgt.cpp" />
     <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="TestConfigData.cpp" />
     <ClCompile Include="TestConfigWgt.cpp" />
@@ -118,11 +124,15 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="ChartPropertiesDialog.ui" />
+    <QtUic Include="ChartWgt.ui" />
+    <QtUic Include="CommFlowWgt.ui" />
+    <QtUic Include="DevChticWgt.ui" />
     <QtUic Include="LoginWgt.ui" />
     <QtUic Include="MainWin.ui">
       <SubType>Designer</SubType>
     </QtUic>
     <QtUic Include="MenuWgt.ui" />
+    <QtUic Include="ParamsWgt.ui" />
     <QtUic Include="TestConfigWgt.ui" />
   </ItemGroup>
   <ItemGroup>
@@ -139,20 +149,26 @@
     <QtMoc Include="DischargerDevice1.h" />
     <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="Calculations.h" />
+    <QtMoc Include="ChartWgt.h" />
     <ClInclude Include="Cleaner.h" />
+    <QtMoc Include="CommFlowWgt.h" />
     <ClInclude Include="DbSimData.h" />
     <QtMoc Include="DbTestData.h" />
     <QtMoc Include="DischargerDevice.h" />
+    <QtMoc Include="DevChticWgt.h" />
     <ClInclude Include="DischargerDeviceConverter.h" />
     <ClInclude Include="DischargerDeviceData.h" />
     <QtMoc Include="LoginWgt.h" />
+    <ClInclude Include="DischargerTest.h" />
     <ClInclude Include="IClearable.h" />
     <QtMoc Include="MenuWgt.h" />
     <ClInclude Include="ISetupable.h" />
+    <QtMoc Include="LogSimulationData.h" />
     <ClInclude Include="ObjectFactory.h" />
     <QtMoc Include="SerialPort.h" />
     <ClInclude Include="Param.h" />
     <QtMoc Include="TestConfigWgt.h" />
+    <QtMoc Include="ParamsWgt.h" />
     <ClInclude Include="TestGUI.h" />
     <ClInclude Include="TestParametersData.h" />
     <QtMoc Include="TestDriver.h" />

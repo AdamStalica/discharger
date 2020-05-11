@@ -5,6 +5,8 @@
 #include "IClearable.h"
 #include "ISetupable.h"
 #include "TestConfigData.h"
+#include "DischargerTest.h"
+
 
 class TestConfigWgt : public QWidget, IClearable, ISetupable
 {
@@ -13,6 +15,10 @@ class TestConfigWgt : public QWidget, IClearable, ISetupable
 public:
 	TestConfigWgt(QWidget *parent = Q_NULLPTR);
 	~TestConfigWgt() {};
+
+	QString getTestName();
+	QString getLogFileName();
+	QSharedPointer<DeviceInterface> getDevice();
 
 public slots:
 	void clear() override;
@@ -33,10 +39,35 @@ signals:
 	void testConfigurationDone();
 
 private:
+	const unsigned int TREE_ID_LOG_INFO_COL_NUM = 2;
+
 	Ui::TestConfigWgt ui;
 	TestConfigData testConfData;
+
+	QSharedPointer<DeviceInterface> dev;
+	QString testName{ "" }, 
+		comPort		{ "" }, 
+		logFileName	{ "" };
+	double voltLimit		{ 0.0 }, 
+		heatSinkTempLimit	{ 0.0 },
+		testCurrent		{ 0.0 };
+	int idLeftBatt		{ 0 }, 
+		idRightBatt		{ 0 },
+		idLogInfo		{ 0 };
+	db::CurrentSource currSource{ db::CurrentSource::NO_CURR_SOURCE };
+	db::TestType testType{ db::TestType::BASIC_TEST };
+
+	enum DevSetupType {
+		DISCH_SIM, DISCH_TEST, ANOTHER_DEV
+	};
 	
 	void loadPageData();
+	bool validateBasicData();
+	bool validateSimData();
+	bool validateBasicTestData();
+	bool validateDevTermData();
+
+	void createDischargerTestDevice();
 
 	// TODO: Move it to log class
 	enum LogFilesFormats {
