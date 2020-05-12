@@ -71,9 +71,6 @@
     <ClCompile Include="DbTestData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DischargerDevice1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WebApi.cpp">
       <Filter>Source Files\Refactorized</Filter>
     </ClCompile>
@@ -116,6 +113,9 @@
     <ClCompile Include="DevChticWgt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -140,9 +140,6 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="DbTestData.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="DischargerDevice1.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WebApi.h">
@@ -179,6 +176,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="DevChticWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FileLogger.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

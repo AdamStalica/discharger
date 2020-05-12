@@ -7,40 +7,256 @@ using namespace db;
 
 TestDriver::TestDriver(QObject *parent)
 	: QObject(parent),
-	ui(*dynamic_cast<TestGUI*>(parent))
-{
-	plot = new QCustomPlot(qobject_cast<QWidget *>(this->parent()));
-	plot->hide();
-
-	connect(&chartPorps, &ChartPropertiesDialog::accepted, this, &TestDriver::chartPortpertiesAccepted);
-}
+		testData(this)
+{}
 
 TestDriver::~TestDriver() {
+
 }
 
-
-void TestDriver::setDevice(DeviceInterface * dev) {
-	if (!devicePtr.isNull()) {
+void TestDriver::setDevice(QSharedPointer<DeviceInterface> dev) {
+	if (!this->dev.isNull()) {
 		throw std::exception("Another device is already set!");
 	}
-	devicePtr = QSharedPointer<DeviceInterface>(dev);
-	
-	connect(dev, &DeviceInterface::signalFinished, this, &TestDriver::deviceFinished);
-	//connect(dev, &DeviceInterface::signalError, this, &TestDriver::deviceErrorOccured);
-	//connect(dev, &DeviceInterface::signalWarning, this, &TestDriver::deviceWarningOccured);
-	//connect(dev, &DeviceInterface::signalDebugMsg, this, &TestDriver::deviceDebug);
-	connect(dev, &DeviceInterface::signalNewData, this, &TestDriver::deviceNewData);	
+	this->dev = dev;
+	connect(this->dev.get(), &DeviceInterface::signalCanNotEstablishConnection, this, &TestDriver::handleDevConnFailure);
+	connect(this->dev.get(), &DeviceInterface::signalError, this, &TestDriver::handleDevError);
+	connect(this->dev.get(), &DeviceInterface::signalConnectionEstablished, this, &TestDriver::handleDevConnOk);
+	connect(this->dev.get(), &DeviceInterface::signalFinished, this, &TestDriver::handleDevFinished);
+	connect(this->dev.get(), &DeviceInterface::signalNewData, this, &TestDriver::handleDevNewData);
 }
 
+void TestDriver::setFileLogger(QSharedPointer<FileLogger> fileLogger) {
+	this->fileLogger = fileLogger;
+}
+
+bool TestDriver::isTestBeforeStart() const {
+	return testState == TestStates::READY;
+}
+
+bool TestDriver::isTestInProgress() const {
+	return testState == TestStates::PROGRESS;
+}
+
+
+void TestDriver::setup() {
+	if (!fileLogger.isNull()) {
+		emit setupStatus(tr("Creating log file..."));
+		// TODO: create file
+		// if(fileLogger->createFile())
+	}
+	emit setupStatus(tr("Estabilishing connection to the device..."));
+	dev->connectToDevice();
+}
+
+void TestDriver::handleDevConnFailure() {
+	clear();
+	emit setupFailure();
+}
+
+void TestDriver::handleDevError(const QString & err) {
+	setTestState(TestStates::DEV_ERROR);
+	updateTestParams();
+}
+
+void TestDriver::handleDevConnOk() {
+	// TODO: Setup db
+	setTestState(db::TestStates::READY);
+	updateTestParams();
+	emit setupDone();
+}
+
+void TestDriver::handleDevFinished() {
+	setTestState(TestStates::COMPLETED);
+	updateTestParams();
+	// TODO: Confirm test
+}
+
+void TestDriver::handleDevNewData(db::SimData simData) {
+	if (testState == TestStates::READY) {
+		setTestState(TestStates::PROGRESS);
+		testStartTime.start();
+		if (dev->getEstimetedTestTime().isSet()) {
+			testEstimEndTime = testStartTime.addMSecs(
+				dev->getEstimetedTestTime().get().msecsSinceStartOfDay()
+			);
+		}
+	}
+	processNewDbSimData(simData);
+	updateTestParams(simData);
+	emit dbSimData(simData);
+}
+
+void TestDriver::clear() {
+	if (!dev.isNull())
+		dev->disconnectFromDevice();
+	calcs.clear();
+	testData.clear();
+	dev.reset();
+	fileLogger->save();
+	fileLogger.reset();
+	testStartTime = QTime();
+	testEstimEndTime = QTime();
+	testName = QString();
+	testState = db::TestStates::NONE;
+	/*
+	devicePtr->disconnect();
+	removeDevice();
+	//testState = TestStates::NONE;
+	setTestState(TestStates::NONE);
+	testStartTime = QTime();
+	testEstimEndTime = QTime();
+	testName.clear();
+	//filepath.clear();
+	idBattLeft = int();
+	idBattRight = int();
+	graphsUsage.clear();
+	chartPorps.clear();
+	//dbSimDataVec.clear();
+	plot->clearGraphs();
+	plot->hide();
+	ui.removeChart(plot);
+	calcs.clear();
+	ObjectFactory::getInstance<db::TestData>()->clear();
+	*/
+}
+
+void TestDriver::handleTestStart() {
+	dev->start();
+}
+
+void TestDriver::handleTestStop() {
+	if (dev->isStopable()) {
+		dev->stop();
+	}
+	else {
+		// TODO: Ask for confirmation
+	}
+}
+
+void TestDriver::setTestCurrent(double current) {
+	dev->setTestCurrent(current);
+}
+
+void TestDriver::setVoltageLimit(double voltLim) {
+	dev->setVoltageLimit(voltLim);
+}
+
+void TestDriver::setHeatSinkTempLimit(double tempLim) {
+	dev->setHeatSinkTempLimit(tempLim);
+}
+
+void TestDriver::processNewDbSimData(db::SimData & simData) {
+	simData.currTimestamp = QDateTime::currentDateTime();
+	simData.timeSinceBeg = QTime::fromMSecsSinceStartOfDay(testStartTime.elapsed());
+
+	// TODO: calcs of capacity, used energy, etc. - DONE
+	calcs.addValues(
+		testStartTime.elapsed(),
+		simData.current.get(),
+		simData.battLeftVolt.get(),
+		simData.battRightVolt.get()
+	);
+	if (!simData.capacity.isSet())
+		simData.capacity = calcs.computeCapacity();
+	if (!simData.usedEnergy.isSet())
+		simData.usedEnergy = calcs.computeUsedEnergy();
+	simData.idSimInfo = testData.getIdSimInfo();
+}
+
+void TestDriver::updateTestParams(const db::SimData & sd) {
+	auto paramsData = prepareTestParametersData(sd);
+	emit testParametersData(paramsData);
+}
+
+TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd) {
+	TestParametersData data;
+
+	data.setTestName(testName);
+	data.setTestStatus(TEST_STATES.at(testState));
+	if (dev->getProgress().isSet()) data.setProgress(dev->getProgress());
+	bool noCurrSource = (dev->getCurrentSource() == db::CurrentSource::NO_CURR_SOURCE);
+	if (!noCurrSource) {
+		if (dev->getTestCurrent().isSet()) data.setTestCurrent(dev->getTestCurrent());
+	}
+	data.setTestCurrentLineEnabled(noCurrSource);
+
+	if (testStartTime.isValid())	data.setTestBeganAt(testStartTime.toString(TIME_FORMAT));
+	if (testEstimEndTime.isValid())	data.setTestEstimatedEnd(testEstimEndTime.toString(TIME_FORMAT));
+	if (dev->getEstimetedTestTime().isSet())	data.setEstimatedTime(dev->getEstimetedTestTime().get().toString(TIME_FORMAT));
+	if (sd.timeSinceBeg.isSet())			data.setTestTime(sd.timeSinceBeg.get().toString(TIME_FORMAT));
+
+	if (sd.capacity.isSet())		data.setCapacity(sd.capacity);
+	if (sd.usedEnergy.isSet())		data.setConsumedEnergy(sd.usedEnergy);
+	if (sd.heatSinkTemp.isSet())	data.setHeatSinkTemp(sd.heatSinkTemp);
+	if (sd.current.isSet())			data.setCurrent(sd.current);
+	data.setBattLeftId(dev->getIdBattLeft());
+	if (sd.battLeftVolt.isSet())	data.setBattLeftVolt(sd.battLeftVolt);
+	if (sd.battLeftTemp.isSet())	data.setBattLeftTemp(sd.battLeftTemp);
+
+	data.setSingleBatteryMode(dev->isSingleBatteryTest());
+	if (!dev->isSingleBatteryTest()) {
+		data.setBattRightId(dev->getIdBattRight());
+		if (sd.battRightVolt.isSet())	data.setBattRightVolt(sd.battRightVolt);
+		if (sd.battRightTemp.isSet())	data.setBattRightTemp(sd.battRightTemp);
+	}
+	return data;
+}
+
+void TestDriver::setTestState(db::TestStates testState) {
+	this->testState = testState;
+	//ObjectFactory::getInstance<db::TestData>()->setTestState(testState);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 void TestDriver::removeDevice() {
 	ObjectFactory::getInstance<serialPort::SerialPort>()->close();
-	devicePtr.reset();
+	dev.reset();
 }
 
 void TestDriver::setFilepathToLog(const QString & filepath, bool jsonFile) {
-	this->filepath = filepath;
-	jsonLogFile = jsonFile;
+	//this->filepath = filepath;
+	//jsonLogFile = jsonFile;
 }
+
 
 void TestDriver::setupTestInDb(std::function<void(bool, const QString&)> callback) {
 	ObjectFactory::getInstance<db::TestData>()->setupTestInDb(
@@ -49,6 +265,7 @@ void TestDriver::setupTestInDb(std::function<void(bool, const QString&)> callbac
 		devicePtr->getLogInfoId() ? devicePtr->getLogInfoId().val() : -1
 	);
 }
+
 
 void TestDriver::loadPageData() {
 	//testState = TestStates::READY;
@@ -62,12 +279,12 @@ void TestDriver::loadPageData() {
 }
 
 void TestDriver::startTest() {
-	devicePtr->start();
+	dev->start();
 }
 
 void TestDriver::stopTest() {
-	devicePtr->stop();
-	if (devicePtr->isStopable()) {
+	dev->stop();
+	if (dev->isStopable()) {
 		deviceFinished();
 		return;
 	}
@@ -76,28 +293,9 @@ void TestDriver::stopTest() {
 	updateUI();
 }
 
-void TestDriver::clear() {
-	devicePtr->disconnect();
-	removeDevice();
-	//testState = TestStates::NONE;
-	setTestState(TestStates::NONE);
-	testStartTime = QTime();
-	testEstimEndTime = QTime();
-	testName.clear();
-	filepath.clear();
-	idBattLeft = int();
-	idBattRight = int();
-	graphsUsage.clear();
-	chartPorps.clear();
-	//dbSimDataVec.clear();
-	plot->clearGraphs();
-	plot->hide();
-	ui.removeChart(plot);
-	calcs.clear();
-	ObjectFactory::getInstance<db::TestData>()->clear();
-}
 
 void TestDriver::deviceFinished() {
+
 	if (testState >= TestStates::COMPLETED) return;
 	//testState = TestStates::COMPLETED;
 	setTestState(TestStates::COMPLETED);
@@ -122,7 +320,6 @@ void TestDriver::deviceFinished() {
 }
 
 void TestDriver::deviceNewData(db::SimData dbSimData) {
-
 	dbSimData.currTimestamp = QDateTime::currentDateTime();
 
 	// TODO: calcs of capacity, used energy, etc. - DONE
@@ -184,14 +381,12 @@ void TestDriver::deviceDebug(const QString & msg) {
 void TestDriver::updateUI(const db::SimData & sd) {
 	ui.setTestPatametersData(prepareTestParametersData(sd));
 }
+*/
 
-void TestDriver::setTestState(db::TestStates testState) {
-	this->testState = testState;
-	ObjectFactory::getInstance<db::TestData>()->setTestState(testState);
-}
-
+/*
 TestParametersData TestDriver::prepareTestParametersData(const db::SimData & sd) {
 	TestParametersData data;
+
 	auto d = devicePtr;
 	data.setTestName(testName);
 	data.setTestStatus(TEST_STATES.at(testState));
@@ -361,3 +556,4 @@ void TestDriver::chartPortpertiesAccepted() {
 	}
 	chartRescaleAxes();
 }
+*/

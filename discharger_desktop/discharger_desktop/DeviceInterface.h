@@ -39,6 +39,7 @@ public:
 	virtual ~DeviceInterface() {};
 	
 	virtual void connectToDevice() = 0;
+	virtual void disconnectFromDevice() = 0;
 	virtual void start() = 0;
 	virtual void stop() = 0;
 
@@ -61,6 +62,9 @@ public:
 	inline void setVoltageLimit(float volt);
 	inline void setHeatSinkTempLimit(float tempLimit);
 
+	inline int getIdBattLeft() const { return idBattLeft; }
+	inline int getIdBattRight() const { return idBattRight; }
+
 signals:
 	void signalError(const QString & error);
 	void signalNewData(db::SimData simData);
@@ -70,11 +74,11 @@ signals:
 };
 
 bool DeviceInterface::isSingleBatteryTest() {
-	return idBattRight == -1;
+	return (idBattRight == -1);
 }
 
 void DeviceInterface::setTestCurrent(float current) {
-	if (CURRENT_SOURCE == db::CurrentSource::NO_CURR_SOURCE) {
+	if (CURRENT_SOURCE != db::CurrentSource::NO_CURR_SOURCE) {
 		throw std::exception("This current source not supports such a functionality");
 	}
 	testCurrent = current;

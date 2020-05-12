@@ -103,8 +103,8 @@
     <ClCompile Include="DbTestData.cpp" />
     <ClCompile Include="DevChticWgt.cpp" />
     <ClCompile Include="DischargerDevice.cpp" />
-    <ClCompile Include="DischargerDevice1.cpp" />
     <ClCompile Include="DischargerTest.cpp" />
+    <ClCompile Include="FileLogger.cpp" />
     <ClCompile Include="LoginWgt.cpp" />
     <ClCompile Include="LogSimulationData.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="DeviceInterface.h" />
-    <QtMoc Include="DischargerDevice1.h" />
     <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="Calculations.h" />
     <QtMoc Include="ChartWgt.h" />
@@ -160,6 +159,7 @@
     <ClInclude Include="DischargerDeviceData.h" />
     <QtMoc Include="LoginWgt.h" />
     <ClInclude Include="DischargerTest.h" />
+    <QtMoc Include="FileLogger.h" />
     <ClInclude Include="IClearable.h" />
     <QtMoc Include="MenuWgt.h" />
     <ClInclude Include="ISetupable.h" />

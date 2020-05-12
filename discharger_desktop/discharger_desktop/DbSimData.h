@@ -4,6 +4,7 @@
 #include "Param.h"
 #include "DischargerDeviceData.h"
 
+//TODO: Move it into one header
 auto constexpr DB_DATETIME_FORMAT = "yyyy-MM-dd hh:mm:ss.zzz";
 auto constexpr DB_TIME_FORMAT = "hh:mm:ss.zzz";
 
@@ -65,19 +66,19 @@ namespace db {
 		QString toCSV() const {
 			QString vals;
 			QTextStream(&vals)
-				<< idCurrSim.val() << ";"
-				<< idSimInfo.val() << ";"
-				<< idLogData.val() << ";"
-				<< currTimestamp.val().toString(DB_DATETIME_FORMAT) << ";"
-				<< timeSinceBeg.val().toString(DB_TIME_FORMAT) << ";"
-				<< current.val() << ";"
-				<< usedEnergy.val() << ";"
-				<< capacity.val() << ";"
-				<< battLeftVolt.val() << ";"
-				<< battRightVolt.val() << ";"
-				<< battLeftTemp.val() << ";"
-				<< battRightTemp.val() << ";"
-				<< heatSinkTemp.val(); ;
+				<< idCurrSim.get() << ";"
+				<< idSimInfo.get() << ";"
+				<< idLogData.get() << ";"
+				<< currTimestamp.get().toString(DB_DATETIME_FORMAT) << ";"
+				<< timeSinceBeg.get().toString(DB_TIME_FORMAT) << ";"
+				<< current.get() << ";"
+				<< usedEnergy.get() << ";"
+				<< capacity.get() << ";"
+				<< battLeftVolt.get() << ";"
+				<< battRightVolt.get() << ";"
+				<< battLeftTemp.get() << ";"
+				<< battRightTemp.get() << ";"
+				<< heatSinkTemp.get(); ;
 			return vals;
 		}
 	};
@@ -96,20 +97,20 @@ namespace db {
 
 	inline void to_json(nlohmann::json &j, const SimData & sd) {
 		j = nlohmann::json::object();
-		if (sd.idSimInfo) j[sd.idSimInfo.name()] = sd.idSimInfo.val();
-		if (sd.idLogData) j[sd.idLogData.name()] = sd.idLogData.val();
-		if (sd.idCurrSim) j[sd.idCurrSim.name()] = sd.idCurrSim.val();
-		if (sd.currTimestamp)
-			j[sd.currTimestamp.name()] = sd.currTimestamp.val().toString(DB_DATETIME_FORMAT).toStdString();
-		if (sd.timeSinceBeg)	j[sd.timeSinceBeg.name()] = sd.timeSinceBeg.val().toString(DB_TIME_FORMAT).toStdString();
-		if (sd.current)			j[sd.current.name()] = sd.current.val();
-		if (sd.usedEnergy)		j[sd.usedEnergy.name()] = sd.usedEnergy.val();
-		if (sd.capacity)		j[sd.capacity.name()] = sd.capacity.val();
-		if (sd.battLeftVolt)	j[sd.battLeftVolt.name()] = sd.battLeftVolt.val();
-		if (sd.battRightVolt)	j[sd.battRightVolt.name()] = sd.battRightVolt.val();
-		if (sd.battLeftTemp)	j[sd.battLeftTemp.name()] = sd.battLeftTemp.val();
-		if (sd.battRightTemp)	j[sd.battRightTemp.name()] = sd.battRightTemp.val();
-		if (sd.heatSinkTemp)	j[sd.heatSinkTemp.name()] = sd.heatSinkTemp.val();
+		if (sd.idSimInfo.isSet()) j[sd.idSimInfo.name()] = sd.idSimInfo.get();
+		if (sd.idLogData.isSet()) j[sd.idLogData.name()] = sd.idLogData.get();
+		if (sd.idCurrSim.isSet()) j[sd.idCurrSim.name()] = sd.idCurrSim.get();
+		if (sd.currTimestamp.isSet())
+			j[sd.currTimestamp.name()] = sd.currTimestamp.get().toString(DB_DATETIME_FORMAT).toStdString();
+		if (sd.timeSinceBeg.isSet())	j[sd.timeSinceBeg.name()] = sd.timeSinceBeg.get().toString(DB_TIME_FORMAT).toStdString();
+		if (sd.current.isSet())			j[sd.current.name()] = sd.current.get();
+		if (sd.usedEnergy.isSet())		j[sd.usedEnergy.name()] = sd.usedEnergy.get();
+		if (sd.capacity.isSet())		j[sd.capacity.name()] = sd.capacity.get();
+		if (sd.battLeftVolt.isSet())	j[sd.battLeftVolt.name()] = sd.battLeftVolt.get();
+		if (sd.battRightVolt.isSet())	j[sd.battRightVolt.name()] = sd.battRightVolt.get();
+		if (sd.battLeftTemp.isSet())	j[sd.battLeftTemp.name()] = sd.battLeftTemp.get();
+		if (sd.battRightTemp.isSet())	j[sd.battRightTemp.name()] = sd.battRightTemp.get();
+		if (sd.heatSinkTemp.isSet())	j[sd.heatSinkTemp.name()] = sd.heatSinkTemp.get();
 	}
 }
 

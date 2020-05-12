@@ -45,6 +45,10 @@ void DischargerTest::connectToDevice() {
 	dev->connectToDevice(comPort);
 }
 
+void DischargerTest::disconnectFromDevice() {
+	dev->disconnectDevice();
+}
+
 void DischargerTest::start() {
 	unsigned int period;
 	if (TEST_TYPE == db::TestType::SIMULATION) {
@@ -56,6 +60,7 @@ void DischargerTest::start() {
 		sendTestDrivingData();
 	}
 	drivingDataTimer.setInterval(period);
+	drivingDataTimer.start();
 }
 
 void DischargerTest::stop() {
@@ -81,9 +86,9 @@ void DischargerTest::sendSimDrivingData() {
 void DischargerTest::sendTestDrivingData() {
 	dev->sendSimDrivingData({
 		idTestData++,
-		testCurrent.val(),
-		heatSinkTempLimit.val(),
-		voltageLimit.val()
+		testCurrent.get(),
+		heatSinkTempLimit.get(),
+		voltageLimit.get()
 	});
 }
 
@@ -126,13 +131,13 @@ unsigned int DischargerTest::computeTestProgress(const db::SimData & dbData) {
 	static float battLeftBeginVolt = -1,
 		battRightBeginVolt = -1;
 	if (battLeftBeginVolt == -1 && battRightBeginVolt == -1) {
-		battLeftBeginVolt = dbData.battLeftVolt.val();
-		battRightBeginVolt = dbData.battRightVolt.val();
+		battLeftBeginVolt = dbData.battLeftVolt.get();
+		battRightBeginVolt = dbData.battRightVolt.get();
 	}
 	float p1, p2 = 0.0;
-	p1 = (battLeftBeginVolt - dbData.battLeftVolt.val()) / (battLeftBeginVolt - voltageLimit.val()) * 100.0 + 0.5;
+	p1 = (battLeftBeginVolt - dbData.battLeftVolt.get()) / (battLeftBeginVolt - voltageLimit.get()) * 100.0 + 0.5;
 	if (!isSingleBatteryTest()) {
-		p1 = (battRightBeginVolt - dbData.battRightVolt.val()) / (battRightBeginVolt - voltageLimit.val()) * 100.0 + 0.5;
+		p1 = (battRightBeginVolt - dbData.battRightVolt.get()) / (battRightBeginVolt - voltageLimit.get()) * 100.0 + 0.5;
 	}
 	return std::max(p1, p2);
 }

@@ -67,10 +67,10 @@ void db::TestData::setTestState(TestStates testState) {
 		insertingDataTimer.stop();
 	}
 	if (testState > TestStates::PROGRESS && this->testState == TestStates::PROGRESS) {
-		if (!endTime && !simDataVec.empty()) {
+		if (!endTime.isSet() && !simDataVec.empty()) {
 			endTime = simDataVec.back()
 				.currTimestamp
-				.val()
+				.get()
 				.toString(DB_DATETIME_FORMAT)
 				.toStdString();
 		}
@@ -83,11 +83,15 @@ void db::TestData::setTestError(dischargerDevice::Error error) {
 	testError = error;
 }
 
+unsigned int db::TestData::getIdSimInfo() {
+	return idSimInfo;
+}
+
 void db::TestData::addSimData(SimData && data) {
 	data.idSimInfo = idSimInfo;
-	if (!beginTime) {
+	if (!beginTime.isSet()) {
 		beginTime = data.currTimestamp
-			.val()
+			.get()
 			.toString(DB_DATETIME_FORMAT)
 			.toStdString();
 	}
@@ -116,11 +120,11 @@ void db::TestData::insertSimDataToDb() {
 	data["id_sim_info"] = idSimInfo;
 	data["info"]["id_sim_stat"] = testState;
 	if (testError)
-		data["info"]["id_sim_error"] = testError.val();
-	if (beginTime)
-		data["info"]["begin_time"] = beginTime.val();
-	if (endTime)
-		data["info"]["end_time"] = endTime.val();
+		data["info"]["id_sim_error"] = (int)testError;
+	if (beginTime.isSet())
+		data["info"]["begin_time"] = beginTime;
+	if (endTime.isSet())
+		data["info"]["end_time"] = endTime;
 
 	int dataCount = simDataVec.size() - 1 - lastInsertedId;
 	if (dataCount > 0) {

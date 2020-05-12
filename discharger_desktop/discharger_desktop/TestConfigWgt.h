@@ -6,6 +6,7 @@
 #include "ISetupable.h"
 #include "TestConfigData.h"
 #include "DischargerTest.h"
+#include "FileLogger.h"
 
 
 class TestConfigWgt : public QWidget, IClearable, ISetupable
@@ -17,8 +18,10 @@ public:
 	~TestConfigWgt() {};
 
 	QString getTestName();
-	QString getLogFileName();
+	bool hasFileLogger();
+	QSharedPointer<FileLogger> getFileLogger();
 	QSharedPointer<DeviceInterface> getDevice();
+	void reloadPage();
 
 public slots:
 	void clear() override;
@@ -54,6 +57,7 @@ private:
 	int idLeftBatt		{ 0 }, 
 		idRightBatt		{ 0 },
 		idLogInfo		{ 0 };
+	FileLogger::FilesFormats logFileFormat = FileLogger::NONE;
 	db::CurrentSource currSource{ db::CurrentSource::NO_CURR_SOURCE };
 	db::TestType testType{ db::TestType::BASIC_TEST };
 
@@ -68,26 +72,4 @@ private:
 	bool validateDevTermData();
 
 	void createDischargerTestDevice();
-
-	// TODO: Move it to log class
-	enum LogFilesFormats {
-		CSV, JSON, XLSX
-	};
-
-	const std::map<QString, LogFilesFormats> LOG_FILES_FORMATS_MAP = {
-		{ tr("Comma separated values (*.csv)"), LogFilesFormats::CSV },
-		{ tr("JSON file (*.json)"), LogFilesFormats::JSON },
-		{ tr("Excel file (*.xlsx)"), LogFilesFormats::XLSX }
-	};
-
-	QString getLogFilesFormatsFilter() {
-		QString filter = "";
-		for (auto & fileFormat : LOG_FILES_FORMATS_MAP)
-			filter += fileFormat.first;
-		return filter;
-	}
-
-	LogFilesFormats getLogFileFormatId(const QString & name) {
-		return LOG_FILES_FORMATS_MAP.at(name);
-	}
 };

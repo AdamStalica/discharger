@@ -17,10 +17,13 @@ public:
 		isUsed = true;
 		return (val_ = _val);
 	}
-	operator bool() const {
+	bool isSet() const {
 		return isUsed;
 	}
-	T val() const {
+	operator T() const {
+		return val_;
+	}
+	T get() const {
 		return val_;
 	}
 	std::string name() const {

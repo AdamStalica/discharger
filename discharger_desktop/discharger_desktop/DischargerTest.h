@@ -22,7 +22,7 @@ public:
 		db::TestType testType, 
 		db::CurrentSource currSource, 
 		int idBattLeft, 
-		int idBattRight
+		int idBattRight = -1
 	);
 
 	bool checkBatteryNumber(int numebrOfBatteries) override;
@@ -31,6 +31,7 @@ public:
 	bool isStopable() override;
 
 	void connectToDevice() override;
+	void disconnectFromDevice() override;
 	void start() override;
 	void stop() override;
 	void setIdLogInfo(unsigned int idLogInfo);

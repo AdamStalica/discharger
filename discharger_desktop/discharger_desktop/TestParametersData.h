@@ -21,7 +21,8 @@ class TestParametersData
 		battRightId = "-",
 		battRightVolt = "-",
 		battRightTemp = "-";
-	bool singleBattMode = true;
+	bool singleBattMode = true,
+		testCurrLnEnb = false;
 	unsigned int progress = 0;
 
 public:
@@ -48,6 +49,7 @@ public:
 
 	void setProgress(unsigned int prog) { progress = prog; };
 	void setSingleBatteryMode(bool singleBattery) { singleBattMode = singleBattery; };
+	void setTestCurrentLineEnabled(bool enabled) { testCurrLnEnb = enabled; };
 
 	QString getTestName() const { return name; };
 	QString getTestStatus() const { return status; };
@@ -69,4 +71,5 @@ public:
 
 	unsigned int getProgress() const { return progress; };
 	bool isSingleBatteryMode() const { return singleBattMode; };
+	bool isTestCurrentLineEnabled() const { return testCurrLnEnb; };
 };

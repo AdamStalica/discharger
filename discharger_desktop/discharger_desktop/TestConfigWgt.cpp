@@ -35,6 +35,7 @@ void TestConfigWgt::clear() {
 	idLeftBatt = idRightBatt = idLogInfo = 0;
 	currSource = db::CurrentSource::NO_CURR_SOURCE;
 	testType = db::TestType::BASIC_TEST;
+	logFileFormat = FileLogger::NONE;
 	dev.reset();
 }
 
@@ -42,12 +43,23 @@ QString TestConfigWgt::getTestName() {
 	return testName;
 }
 
-QString TestConfigWgt::getLogFileName() {
-	return logFileName;
+bool TestConfigWgt::hasFileLogger() {
+	return logFileFormat != FileLogger::NONE;
+}
+
+QSharedPointer<FileLogger> TestConfigWgt::getFileLogger() {
+	return QSharedPointer<FileLogger>(
+		new FileLogger(this, logFileName, logFileFormat)
+	);
 }
 
 QSharedPointer<DeviceInterface> TestConfigWgt::getDevice() {
 	return dev;
+}
+
+void TestConfigWgt::reloadPage() {
+	clear();
+	loadPageData();
 }
 
 void TestConfigWgt::setup() {
@@ -63,14 +75,15 @@ void TestConfigWgt::handleRefreshPortsList() {
 
 void TestConfigWgt::handleSelectFile() {
 	QString selectedFilter;
-	QString filter = getLogFilesFormatsFilter();
+	QString filter = FileLogger::getLogFilesFormatsFilter();
 	QString fileName = QFileDialog::getSaveFileName(this, tr("Log to file"),
 		QStandardPaths::writableLocation(QStandardPaths::DesktopLocation),
 		filter, &selectedFilter);
 
-	LogFilesFormats fileFormat = getLogFileFormatId(selectedFilter);
+	logFileFormat = FileLogger::getLogFileFormatId(selectedFilter);
+	logFileName = fileName;
+	// TODO: change to not allowed to edit
 	ui.edtFileName->setText(fileName);
-	ui.edtFileName->setProperty("FILE_FORMAT", fileFormat);
 }
 
 void TestConfigWgt::handleCancel() {
@@ -111,8 +124,7 @@ bool TestConfigWgt::validateBasicData() {
 	voltLimit = ui.edtVoltLim->text().toDouble();
 	heatSinkTempLimit = ui.edtTempLim->text().toDouble();
 	idLeftBatt = ui.comboBattLeft->currentText().toInt();
-	idLeftBatt = ui.comboBattRight->currentText().toInt();
-	logFileName = ui.edtFileName->text();
+	idRightBatt = ui.comboBattRight->currentText().toInt();
 	return true;
 }
 
@@ -177,5 +189,7 @@ void TestConfigWgt::handlePrepareTest() {
 		break;
 	}
 
+	dev->setVoltageLimit(voltLimit);
+	dev->setHeatSinkTempLimit(heatSinkTempLimit);
 	emit testConfigurationDone();
 }

@@ -74,6 +74,8 @@ namespace db {
 		void setTestState(TestStates testState);
 		void setTestError(dischargerDevice::Error error);
 
+		unsigned int getIdSimInfo();
+
 		TestStates getTestState() { return testState; }
 
 		void addSimData(SimData && data);
