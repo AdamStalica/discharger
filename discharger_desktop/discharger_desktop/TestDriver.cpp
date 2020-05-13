@@ -135,14 +135,17 @@ void TestDriver::handleTestStop() {
 }
 
 void TestDriver::setTestCurrent(double current) {
+	if (!isTestBeforeStart() && !isTestInProgress()) return;
 	dev->setTestCurrent(current);
 }
 
 void TestDriver::setVoltageLimit(double voltLim) {
+	if (!isTestBeforeStart() && !isTestInProgress()) return;
 	dev->setVoltageLimit(voltLim);
 }
 
 void TestDriver::setHeatSinkTempLimit(double tempLim) {
+	if (!isTestBeforeStart() && !isTestInProgress()) return;
 	dev->setHeatSinkTempLimit(tempLim);
 }
 
@@ -447,6 +450,32 @@ void TestDriver::logToFile(const db::SimData & sd) {
 		f.close();
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void TestDriver::setUsageGraphsFlags(const db::SimData & sd) {
 	graphsUsage.resize(plot->graphCount());

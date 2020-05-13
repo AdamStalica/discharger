@@ -54,6 +54,8 @@ void Device::connectToDevice(const QString & comPort) {
 }
 
 void Device::disconnectDevice() {
+	gotDeviceInfo = false;
+	gotHandshake = false;
 	serial->close();
 }
 
@@ -96,6 +98,10 @@ unsigned int Device::getDeviceSoftwareVersion() {
 
 QDate Device::getDeviceFlashDate() {
 	return deviceFlashDate;
+}
+
+bool dischargerDevice::Device::isConnected() {
+	return serial->isOpen() && gotHandshake;
 }
 
 void Device::handlePortOpened() {

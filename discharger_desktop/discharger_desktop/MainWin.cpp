@@ -13,33 +13,27 @@
 #include <QCloseEvent>
 #include "TestConfigWgt.h"
 
-
-using namespace serialPort;
-
 // TODO: about to close, check if test is in progress
 
 MainWin::MainWin(QWidget *parent)
-	: QMainWindow(parent),
-		testDriver(this)
+	: QMainWindow(parent)
 {
+
+	ObjectFactory::createInstance(new WebApi(this));
+	ObjectFactory::createInstance(new User(this));
+	ObjectFactory::createInstance(new TestDriver(this));
+	ObjectFactory::createInstance(new serialPort::SerialPort(this));
+	ObjectFactory::createInstance(new dischargerDevice::Device(this));
+	//ObjectFactory::createInstance(new TestConfigData(this));
+	//ObjectFactory::createInstance(new db::TestData(this));
+	//auto serial_ = ObjectFactory::getInstance<SerialPort>();	
+
+	testDriver = ObjectFactory::getInstance<TestDriver>();
+
 	ui.setupUi(this);
 
 	setDockedWidgetsVisibility(false);
 	this->showMaximized();
-
-	ObjectFactory::createInstance(new WebApi(this));
-	ObjectFactory::createInstance(new User(this));
-	//ObjectFactory::createInstance(new TestConfigData(this));
-	//ObjectFactory::createInstance(new TestDriver(this));
-	ObjectFactory::createInstance(new SerialPort(this));
-	//ObjectFactory::createInstance(new db::TestData(this));
-	ObjectFactory::createInstance(new dischargerDevice::Device(this));
-	
-	auto serial_ = ObjectFactory::getInstance<SerialPort>();	
-
-
-
-	//testDriver = new TestDriver(this);// ObjectFactory::getInstance<TestDriver>();
 
 	ui.stackedWidget->setCurrentIndex(PagesEnum::LOG_IN);
 
@@ -49,12 +43,17 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.dockWgtCommFlow, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
 	connect(ui.dockWgtParams, &QDockWidget::topLevelChanged, this, &MainWin::dockedWgtTopLevelChanged);
 
+	connect(ui.actionLogout, &QAction::triggered, this, &MainWin::logout);
 
 	connect(ui.authPage, &LoginWgt::loggedOut, this, &MainWin::userLoggedOut);
 	connect(ui.authPage, &LoginWgt::loggedIn, this, &MainWin::userLoggedIn);
 	connect(ui.authPage, &LoginWgt::authorizing, this, &MainWin::loader);
 
 	connect(ui.menuPage, &MenuWgt::newTest, ui.confTestPage, &TestConfigWgt::setup);
+	connect(ui.menuPage, &MenuWgt::deviceChtic, ui.devChticPage, &DevChticWgt::setup);
+
+	connect(ui.devChticPage, &DevChticWgt::setupDone, this, &MainWin::showDevChticPage);
+	connect(ui.devChticPage, &DevChticWgt::showMenu, this, &MainWin::showMenu);
 	
 	connect(ui.confTestPage, &TestConfigWgt::setupState, this, &MainWin::loader);
 	connect(ui.confTestPage, &TestConfigWgt::setupDone, this, &MainWin::showTestConfPage);
@@ -62,16 +61,14 @@ MainWin::MainWin(QWidget *parent)
 	connect(ui.confTestPage, &TestConfigWgt::setupFailure, this, &MainWin::showMenu);
 	connect(ui.confTestPage, &TestConfigWgt::testConfigurationDone, this, &MainWin::testConfigDone);
 
-	connect(&testDriver, &TestDriver::setupStatus, this, &MainWin::loader);
-	connect(&testDriver, &TestDriver::setupFailure, this, &MainWin::showTestPage);
-	connect(&testDriver, &TestDriver::setupDone, this, &MainWin::testSetupDone);
-	connect(&testDriver, &TestDriver::testParametersData, ui.paramsWgt, &ParamsWgt::setTestParamsData);
+	connect(testDriver, &TestDriver::setupStatus, this, &MainWin::loader);
+	connect(testDriver, &TestDriver::setupFailure, this, &MainWin::showTestPage);
+	connect(testDriver, &TestDriver::setupDone, this, &MainWin::testSetupDone);
+	connect(testDriver, &TestDriver::testParametersData, ui.paramsWgt, &ParamsWgt::setTestParamsData);
 
-	connect(ui.paramsWgt, &ParamsWgt::testCurrentHasChanged, &testDriver, &TestDriver::setTestCurrent);
-	connect(ui.paramsWgt, &ParamsWgt::voltageLimitHasChanged, &testDriver, &TestDriver::setVoltageLimit);
-	connect(ui.paramsWgt, &ParamsWgt::heatSinkTempLimitHasChanged, &testDriver, &TestDriver::setHeatSinkTempLimit);
-
-
+	connect(ui.paramsWgt, &ParamsWgt::testCurrentHasChanged, testDriver, &TestDriver::setTestCurrent);
+	connect(ui.paramsWgt, &ParamsWgt::voltageLimitHasChanged, testDriver, &TestDriver::setVoltageLimit);
+	connect(ui.paramsWgt, &ParamsWgt::heatSinkTempLimitHasChanged, testDriver, &TestDriver::setHeatSinkTempLimit);
 
 	//connect(ui.authBtnLogIn, &QPushButton::clicked, this, &MainWin::login);
 	//connect(ui.CTBtnConn, &QPushButton::clicked, this, &MainWin::prepareNewTest);
@@ -90,7 +87,6 @@ MainWin::MainWin(QWidget *parent)
 	connect(serial_, &SerialPort::receivedLine, this, &MainWin::serialReceivedLine);
 	connect(serial_, &SerialPort::transmitedLine, this, &MainWin::serialTransmitedLine);
 	*/
-	connect(ui.actionLogout, &QAction::triggered, this, &MainWin::logout);
 
 	//ui.page.
 
@@ -161,12 +157,12 @@ MainWin::MainWin(QWidget *parent)
 }
 
 void MainWin::closeEvent(QCloseEvent * event) {
-	if (testDriver.isTestInProgress()) {
+	if (testDriver->isTestInProgress()) {
 		showWarning(tr("Test in progress you can not close the program"));
 		event->ignore();
 		return;
 	}
-	if (testDriver.isTestBeforeStart()) {
+	if (testDriver->isTestBeforeStart()) {
 		if (showQuestionBox(tr("Do you really want to discard this configuration?")) == false) {
 			event->ignore();
 			return;
@@ -204,11 +200,11 @@ void MainWin::setTestToolBarVisibility(bool visible) {
 }
 
 void MainWin::logout() {
-	if (testDriver.isTestInProgress()) {
+	if (testDriver->isTestInProgress()) {
 		showWarning(tr("Test is in progress you can not log out")); 
 		return;
 	}
-	if (testDriver.isTestBeforeStart()) {
+	if (testDriver->isTestBeforeStart()) {
 		if (showQuestionBox(tr("Do you really want to discard this configuration?")) == false) return;
 	}
 
@@ -224,7 +220,7 @@ void MainWin::userLoggedOut() {
 	// ....
 	//clearTestConfPage();
 	//clearTestPage();
-	testDriver.clear();
+	testDriver->clear();
 }
 
 void MainWin::userLoggedIn() {
@@ -233,6 +229,8 @@ void MainWin::userLoggedIn() {
 }
 
 void MainWin::showMenu() {
+	setDockedWidgetsVisibility(false);
+	setTestToolBarVisibility(false);
 	showPage(PagesEnum::MENU);
 }
 
@@ -243,7 +241,7 @@ void MainWin::setupTestToolBar() {
 
 	connect(ui.actionShowTestParams, &QAction::triggered, ui.dockWgtParams, &QDockWidget::show);
 	connect(ui.actionShowCommFlow, &QAction::triggered, ui.dockWgtCommFlow, &QDockWidget::show);
-	//connect(ui.actionConfChart, &QAction::triggered, &testDriver, &TestDriver::confChart);
+	connect(ui.actionConfChart, &QAction::triggered, ui.testPage, &ChartWgt::configChart);
 
 	connect(ui.actionResultsOnline, &QAction::triggered, [] {});
 	connect(ui.actionQrCode, &QAction::triggered, [] {});
@@ -307,13 +305,13 @@ void MainWin::showTestConfPage() {
 }
 
 void MainWin::testConfigDone() {
-	testDriver.clear();
+	testDriver->clear();
 	auto dev = ui.confTestPage->getDevice();
-	testDriver.setDevice(dev);
+	testDriver->setDevice(dev);
 	if (ui.confTestPage->hasFileLogger())
-		testDriver.setFileLogger(ui.confTestPage->getFileLogger());
-	testDriver.setTestName(ui.confTestPage->getTestName());
-	testDriver.setup();
+		testDriver->setFileLogger(ui.confTestPage->getFileLogger());
+	testDriver->setTestName(ui.confTestPage->getTestName());
+	testDriver->setup();
 	ui.paramsWgt->setTestCurrent(dev->getTestCurrent());
 	ui.paramsWgt->setVoltageLimit(dev->getVoltageLimit());
 	ui.paramsWgt->setHeatSinkTempLimit(dev->getHeatSinkTempLimit());
@@ -323,6 +321,7 @@ void MainWin::testSetupDone() {
 	testToolBarAboutToStart();
 	setTestToolBarVisibility(true);
 	setDockedWidgetsVisibility(true);
+	showTestPage();
 }
 /*
 void MainWin::refreshComPortsList() {
@@ -492,11 +491,16 @@ void MainWin::showTestPage() {
 		testToolBarAboutToStop();
 	}
 	*/
+	showPage(PagesEnum::TEST);
+}
+
+void MainWin::showDevChticPage() {
+	showPage(PagesEnum::DEV_CHTIC);
 }
 
 void MainWin::clearTestPage() {
 	clearParameters();
-	testDriver.clear();
+	testDriver->clear();
 }
 
 void MainWin::loader(const QString & msg) {
@@ -520,24 +524,24 @@ void MainWin::loaderStop() {
 
 void MainWin::testStart() {
 	testToolBarAboutToStop();
-	testDriver.handleTestStart();
+	testDriver->handleTestStart();
 }
 
 void MainWin::testStop() {
-	if (testDriver.isTestInProgress()) {
+	if (testDriver->isTestInProgress()) {
 		if (showQuestionBox("Do you really want to stop test?") == false) return;
 	}
 	testToolBarAboutToNewTest();
-	testDriver.handleTestStop();
+	testDriver->handleTestStop();
 }
 
 void MainWin::configureNewTest() {
-	if (testDriver.isTestBeforeStart()) {
+	if (testDriver->isTestBeforeStart()) {
 		if (showQuestionBox("Do you really want to discard this configuration?") == false) return;
 	}
 
 	ui.confTestPage->reloadPage();
-	testDriver.clear();
+	testDriver->clear();
 	setTestToolBarVisibility(false);
 	setDockedWidgetsVisibility(false);
 	showTestConfPage();
@@ -670,7 +674,7 @@ void MainWin::appendLineToTextBrowser(QTextBrowser * brow, const QString & line,
 void MainWin::serialOpened() {
 	appendLineToTextBrowser(
 		ui.commFlowTabRawDataTxtBrow,
-		"<div style=\"text-align: center;\">Port opened<div>",
+		"<div style=\"text-align: center;\">Port opened</div>",
 		ui.commFlowTabRawDataChckScroll->isChecked()
 	);
 }
@@ -678,7 +682,7 @@ void MainWin::serialOpened() {
 void MainWin::serialClosed() {
 	appendLineToTextBrowser(
 		ui.commFlowTabRawDataTxtBrow,
-		"<div style=\"text-align: center;\">Port closed<div>",
+		"<div style=\"text-align: center;\">Port closed</div>",
 		ui.commFlowTabRawDataChckScroll->isChecked()
 	);
 }
@@ -686,7 +690,7 @@ void MainWin::serialClosed() {
 void MainWin::serialReceivedLine(const QString & line) {
 	appendLineToTextBrowser(
 		ui.commFlowTabRawDataTxtBrow,
-		"<div style=\"text-align: left;\">" + line +"<div>",
+		"<div style=\"text-align: left;\">" + line +"</div>",
 		ui.commFlowTabRawDataChckScroll->isChecked()
 	);
 }
@@ -694,7 +698,7 @@ void MainWin::serialReceivedLine(const QString & line) {
 void MainWin::serialTransmitedLine(const QString & line) {
 	appendLineToTextBrowser(
 		ui.commFlowTabRawDataTxtBrow,
-		"<div style=\"text-align: right;\">" + line + "<div>",
+		"<div style=\"text-align: right;\">" + line + "</div>",
 		ui.commFlowTabRawDataChckScroll->isChecked()
 	);
 }

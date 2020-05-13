@@ -149,6 +149,7 @@
     <QtMoc Include="ChartPropertiesDialog.h" />
     <ClInclude Include="Calculations.h" />
     <QtMoc Include="ChartWgt.h" />
+    <ClInclude Include="ChartGraphItem.h" />
     <ClInclude Include="Cleaner.h" />
     <QtMoc Include="CommFlowWgt.h" />
     <ClInclude Include="DbSimData.h" />
@@ -169,7 +170,6 @@
     <ClInclude Include="Param.h" />
     <QtMoc Include="TestConfigWgt.h" />
     <QtMoc Include="ParamsWgt.h" />
-    <ClInclude Include="TestGUI.h" />
     <ClInclude Include="TestParametersData.h" />
     <QtMoc Include="TestDriver.h" />
     <QtMoc Include="TestConfigData.h" />

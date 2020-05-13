@@ -12,15 +12,15 @@ namespace dischargerDevice {
 		}
 
 		static double deviceVoltToVolt(int deviceVolt) {
-			return deviceVolt / VOLT_RATIO;
+			return (double)deviceVolt / VOLT_RATIO;
 		}
 
 		static int currentToDeviceCurrent(double current) {
-			return current * VOLT_RATIO + 0.5;
+			return current * CURRENT_RATIO + 0.5;
 		}
 
 		static double deviceCurrentToCurrent(int deviceCurrent) {
-			return deviceCurrent / CURRENT_RATIO;
+			return (double)deviceCurrent / CURRENT_RATIO;
 		}
 
 		static int tempToDeviceTemp(double temp) {
@@ -28,7 +28,7 @@ namespace dischargerDevice {
 		}
 
 		static double deviceTempToTemp(int deviceTemp) {
-			return deviceTemp / TEMP_RATIO;
+			return (double)deviceTemp / TEMP_RATIO;
 		}
 	};
 }	

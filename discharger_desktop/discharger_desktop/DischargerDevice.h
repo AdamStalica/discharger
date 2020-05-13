@@ -51,6 +51,8 @@ namespace dischargerDevice {
 		unsigned int getDeviceSoftwareVersion();
 		QDate getDeviceFlashDate();
 
+		bool isConnected();
+
 	private slots:
 		void handlePortOpened();
 		void handleUnableToOpen();

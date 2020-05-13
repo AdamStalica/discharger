@@ -33,7 +33,7 @@ public:
 	};
 
 	void setSeries(const std::vector<SerieItem> & series);
-	std::vector<SerieItem> getSeries();
+	//std::vector<SerieItem> getSeries();
 	int getSecsInRange();
 	void clear();
 
@@ -62,4 +62,8 @@ private slots:
 	void colorBtnClicked(int id);
 	void colorPicked();
 	void dialogAccepted();
+
+signals:
+	void periodHasChanged(int period);
+	void graphPropsHasChanged(int chartPropsId);
 };

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "TestGUI.h"
 #include "TestDriver.h"
 #include "ui_MainWin.h"
 #include "WebApi.h"
@@ -20,7 +19,7 @@ public:
 
 private:
 	Ui::MainWinClass ui;
-	TestDriver testDriver;
+	TestDriver * testDriver;
 
 	void closeEvent(QCloseEvent *event) override;
 
@@ -29,7 +28,8 @@ private:
 		LOADER,
 		CONF_TEST,
 		TEST,
-		MENU
+		MENU,
+		DEV_CHTIC
 	};
 	/*
 	enum TestType {
@@ -37,12 +37,12 @@ private:
 		BASIC_TEST,
 		DEV_TERMINAL
 	};
-	*/
+	
 	enum MeasureSchem {
 		DOUBLE_BATT,
 		SINGLE_BATT
 	};
-
+	*/
 	void setDockedWidgetsVisibility(bool visible);
 	void dockedWgtTopLevelChanged(bool);
 	void setTestToolBarVisibility(bool visible);
@@ -106,6 +106,7 @@ private slots:
 	void testSetupDone();
 	//void refreshComPortsList();
 	void showTestPage();
+	void showDevChticPage();
 	//void serialOpened();
 	//void serialClosed();
 	//void serialReceivedLine(const QString & line);

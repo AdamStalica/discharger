@@ -3,10 +3,10 @@
 #include <QObject>
 #include <QLabel>
 #include <QCustomPlot.h>
-#include "TestGUI.h"
 #include "DeviceInterface.h"
 #include "DbSimData.h"
 #include "ChartPropertiesDialog.h"
+#include "TestParametersData.h"
 #include "Calculations.h"
 #include "DbTestData.h"
 

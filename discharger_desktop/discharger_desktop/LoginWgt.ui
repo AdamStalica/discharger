@@ -98,7 +98,7 @@
          <set>Qt::ImhNone</set>
         </property>
         <property name="text">
-         <string>test12345</string>
+         <string>test1234</string>
         </property>
        </widget>
       </item>

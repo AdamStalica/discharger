@@ -49,6 +49,7 @@ void ChartPropertiesDialog::setSeries(const std::vector<SerieItem>& series) {
 	}
 }
 
+/*
 std::vector<ChartPropertiesDialog::SerieItem> ChartPropertiesDialog::getSeries() {
 	for (auto & item : seriesItems) {
 		item.visible = item.visibleChckBox->isChecked();
@@ -58,9 +59,10 @@ std::vector<ChartPropertiesDialog::SerieItem> ChartPropertiesDialog::getSeries()
 	std::copy(seriesItems.begin(), seriesItems.end(), items.begin());
 	return items;
 }
+*/
 
 int ChartPropertiesDialog::getSecsInRange() {
-	return currentPeriod;
+	return PLOT_PERIOD.at(ui.periodBox->currentIndex());
 }
 
 void ChartPropertiesDialog::clear() {

@@ -164,7 +164,7 @@ namespace dischargerDevice {
 	inline void from_json(const nlohmann::json & j, CharacteristicPoint & point) {
 		j.at("id").get_to(point.id);
 		point.current = Converter::deviceCurrentToCurrent(j.at("I").get<int>());
-		point.voltage = Converter::deviceVoltToVolt(j.at("bLV").get<int>());
+		point.voltage = Converter::deviceVoltToVolt(j.at("mV").get<int>());
 	}
 
 }

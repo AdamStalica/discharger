@@ -127,9 +127,6 @@
     <QtMoc Include="TestDriver.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="TestGUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TestParametersData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -248,6 +245,9 @@
       <Filter>Header Files\Refactorized</Filter>
     </ClInclude>
     <ClInclude Include="DischargerTest.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChartGraphItem.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
