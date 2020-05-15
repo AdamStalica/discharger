@@ -65,6 +65,8 @@ MainWin::MainWin(QWidget *parent)
 	connect(testDriver, &TestDriver::setupFailure, this, &MainWin::showTestPage);
 	connect(testDriver, &TestDriver::setupDone, this, &MainWin::testSetupDone);
 	connect(testDriver, &TestDriver::testParametersData, ui.paramsWgt, &ParamsWgt::setTestParamsData);
+	connect(testDriver, &TestDriver::dbSimData, ui.testPage, &ChartWgt::handleNewDbSimData);
+	// TODO: Clear chart afetr test is done.
 
 	connect(ui.paramsWgt, &ParamsWgt::testCurrentHasChanged, testDriver, &TestDriver::setTestCurrent);
 	connect(ui.paramsWgt, &ParamsWgt::voltageLimitHasChanged, testDriver, &TestDriver::setVoltageLimit);

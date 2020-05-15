@@ -3,14 +3,18 @@
 #include "QColor"
 
 class ChartGraphProps {
-	const QString name, unit;
-	QColor color;
+	int id, width;
+	const QString name{ "" }, 
+		unit{ "" };
+	QColor color = QColor();
+	Qt::PenStyle penStyle = Qt::PenStyle::SolidLine;
 	bool visible = false,
 		used = false;
 
 public:
-	ChartGraphProps(const QString & name, const QString & unit, const QColor & color) 
-		: name(name), unit(unit), color(color)
+
+	ChartGraphProps(int id, const QString & name, const QString & unit, const QColor & color, Qt::PenStyle penStyle = Qt::SolidLine, int width = 1) 
+		: id(id), name(name), unit(unit), color(color), penStyle(penStyle), width(width)
 	{}
 
 	void setColor(const QColor & color) {
@@ -25,6 +29,10 @@ public:
 		this->used = used;
 	}
 
+	int getId() const {
+		return id;
+	}
+
 	QString getName() const {
 		return name;
 	}
@@ -37,6 +45,14 @@ public:
 		return color;
 	}
 
+	Qt::PenStyle getPenStyle() const {
+		return penStyle;
+	}
+
+	int getWidth() const {
+		return width;
+	}
+
 	bool isVisible() const {
 		return visible;
 	}
@@ -45,4 +61,3 @@ public:
 		return used;
 	}
 };
-

@@ -116,6 +116,9 @@
     <ClCompile Include="FileLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChartGraphPropsWgt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWin.h">
@@ -178,6 +181,9 @@
     <QtMoc Include="FileLogger.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ChartGraphPropsWgt.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="MainWin.qrc">
@@ -215,6 +221,9 @@
     <QtUic Include="DevChticWgt.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="ChartGraphPropsWgt.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculations.h">
@@ -247,7 +256,7 @@
     <ClInclude Include="DischargerTest.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChartGraphItem.h">
+    <ClInclude Include="ChartGraphProps.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
