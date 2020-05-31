@@ -170,10 +170,12 @@ void TestConfigWgt::handlePrepareTest() {
 	switch (ui.toolBoxTestType->currentIndex())	{
 	case DISCH_SIM:
 		if (!validateSimData()) return;
+		testType = db::TestType::SIMULATION;
 		createDischargerTestDevice();
 		break;
 	case DISCH_TEST:
 		if (!validateBasicTestData()) return;
+		testType = db::TestType::BASIC_TEST;
 		createDischargerTestDevice();
 		break;
 	case ANOTHER_DEV:

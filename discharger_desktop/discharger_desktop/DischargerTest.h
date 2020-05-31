@@ -30,6 +30,7 @@ public:
 	bool isStartable() override;
 	bool isStopable() override;
 
+	void setupTestData() override;
 	void connectToDevice() override;
 	void disconnectFromDevice() override;
 	void start() override;

@@ -323,6 +323,7 @@ void MainWin::testSetupDone() {
 	testToolBarAboutToStart();
 	setTestToolBarVisibility(true);
 	setDockedWidgetsVisibility(true);
+	ui.testPage->clear();
 	showTestPage();
 }
 /*
@@ -503,6 +504,7 @@ void MainWin::showDevChticPage() {
 void MainWin::clearTestPage() {
 	clearParameters();
 	testDriver->clear();
+	ui.testPage->clear();
 }
 
 void MainWin::loader(const QString & msg) {

@@ -19,6 +19,10 @@ void TestDriver::setDevice(QSharedPointer<DeviceInterface> dev) {
 		throw std::exception("Another device is already set!");
 	}
 	this->dev = dev;
+
+	connect(this->dev.get(), &DeviceInterface::signalTestDataFailure, this, &TestDriver::handleTestDataFailure);
+	connect(this->dev.get(), &DeviceInterface::singalTestDataOk, this, &TestDriver::handleTestDataOk);
+	connect(this->dev.get(), &DeviceInterface::signalCanNotEstablishConnection, this, &TestDriver::handleDevConnFailure);
 	connect(this->dev.get(), &DeviceInterface::signalCanNotEstablishConnection, this, &TestDriver::handleDevConnFailure);
 	connect(this->dev.get(), &DeviceInterface::signalError, this, &TestDriver::handleDevError);
 	connect(this->dev.get(), &DeviceInterface::signalConnectionEstablished, this, &TestDriver::handleDevConnOk);
@@ -45,6 +49,16 @@ void TestDriver::setup() {
 		// TODO: create file
 		// if(fileLogger->createFile())
 	}
+	emit setupStatus("Preparing test data...");
+	dev->setupTestData();
+}
+
+void TestDriver::handleTestDataFailure() {
+	clear();
+	emit setupFailure();
+}
+
+void TestDriver::handleTestDataOk() {
 	emit setupStatus(tr("Estabilishing connection to the device..."));
 	dev->connectToDevice();
 }
@@ -63,6 +77,7 @@ void TestDriver::handleDevConnOk() {
 	// TODO: Setup db
 	setTestState(db::TestStates::READY);
 	updateTestParams();
+
 	emit setupDone();
 }
 

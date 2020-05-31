@@ -23,6 +23,14 @@ DischargerTest::DischargerTest(
 		testType == db::TestType::SIMULATION ? 
 			&DischargerTest::sendSimDrivingData : &DischargerTest::sendTestDrivingData
 	);
+	connect(&logData, &LogSimulationData::logSimDataFetchSuccess, [this] {
+		if(TEST_TYPE == db::TestType::SIMULATION)
+			emit singalTestDataOk();
+	});
+	connect(&logData, &LogSimulationData::logSimDataFetchFailure, [this] {
+		if (TEST_TYPE == db::TestType::SIMULATION)
+			emit signalTestDataFailure();
+	});	
 }
 
 bool DischargerTest::checkBatteryNumber(int numebrOfBatteries) {
@@ -39,6 +47,13 @@ inline bool DischargerTest::isStartable() {
 
 inline bool DischargerTest::isStopable() {
 	return TEST_TYPE != db::TestType::SIMULATION;
+}
+
+void DischargerTest::setupTestData() {
+	if (TEST_TYPE == db::TestType::SIMULATION)
+		logData.fetchLogSimData(idLogInfo, CURRENT_SOURCE);
+	else
+		emit singalTestDataOk();
 }
 
 void DischargerTest::connectToDevice() {
@@ -102,6 +117,8 @@ void DischargerTest::handleConnectionFailure() {
 
 void DischargerTest::handleSimulationData(dischargerDevice::SimData simData) {
 	auto dbData = db::SimData::fromDeviceSimData(simData);
+	// TODO: Remove mult 10
+	dbData.current = dbData.current.get() * 10;
 	if (TEST_TYPE == db::TestType::SIMULATION) {
 		logData.previous();
 		dbData.idLogData = logData.getIdLogData();

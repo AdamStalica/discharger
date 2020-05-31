@@ -7,12 +7,9 @@ ChartWgt::ChartWgt(QWidget *parent)
 	chartPorps(graphsProps, this)
 {
 	ui.setupUi(this);
-	//auto testDriver = ObjectFactory::getInstance<TestDriver>();
-	//connect(testDriver, &TestDriver::dbSimData, this, &ChartWgt::handleNewDbSimData);
 	connect(ui.btnConfChart, &QPushButton::clicked, this, &ChartWgt::configChart);
 	connect(&chartPorps, &ChartPropertiesDialog::graphVisibilityHasChanged, this, &ChartWgt::handleGraphVisibilityChanged);
 	connect(&chartPorps, &ChartPropertiesDialog::graphColorHasChanged, this, &ChartWgt::handleGraphColorChanged);
-	//chartPorps.show();
 	showConfPage();
 	setupChart();
 }

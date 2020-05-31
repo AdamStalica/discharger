@@ -37,7 +37,8 @@ public:
 			idBattRight(idBattRight)
 	{};
 	virtual ~DeviceInterface() {};
-	
+
+	virtual void setupTestData() = 0;
 	virtual void connectToDevice() = 0;
 	virtual void disconnectFromDevice() = 0;
 	virtual void start() = 0;
@@ -71,6 +72,8 @@ signals:
 	void signalFinished();
 	void signalConnectionEstablished();
 	void signalCanNotEstablishConnection();
+	void singalTestDataOk();
+	void signalTestDataFailure();
 };
 
 bool DeviceInterface::isSingleBatteryTest() {

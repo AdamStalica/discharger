@@ -133,6 +133,8 @@ private:
 
 private slots:
 	//void chartPortpertiesAccepted();
+	void handleTestDataFailure();
+	void handleTestDataOk();
 	void handleDevConnFailure();
 	void handleDevError(const QString & err);
 	void handleDevConnOk();

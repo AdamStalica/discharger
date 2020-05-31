@@ -1,161 +1,280 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Calculations" Collapsed="true">
-    <Position X="6" Y="0.5" Width="1.5" />
+  <Class Name="ChartGraphProps" Collapsed="true">
+    <Position X="25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEIAAAAAQAAAAAAABAAAAAFAAAAIAIACEAAAAAAQAAA=</HashCode>
-      <FileName>Calculations.h</FileName>
+      <HashCode>QgCAAAgAAAAgAAAAQBAAAgIAAAAEAACAAAAEyESIAgA=</HashCode>
+      <FileName>ChartGraphProps.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Param&lt;T&gt;" Collapsed="true">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+  <Class Name="DischargerTest" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAAIIAAAAAAACEAAAAAAAAAAAEAAAAAQAgAAQAAEA=</HashCode>
-      <FileName>Param.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="ObjectFactory" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAIAABAAAAQAAAAQAAAAAAAAAAAA=</HashCode>
-      <FileName>ObjectFactory.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TestGUI" Collapsed="true">
-    <Position X="3.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>IAAAAgBgAAAAAgAAAAAAGECAABwAAAAgAkAAAABgAAA=</HashCode>
-      <FileName>TestGUI.h</FileName>
+      <HashCode>AAgAQAAgAEYgAAIggQiAgBAAACAoIAAAAAEAIBIAAAA=</HashCode>
+      <FileName>DischargerTest.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TestParametersData" Collapsed="true">
-    <Position X="7.75" Y="2.5" Width="1.5" />
+    <Position X="21.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BDRBAQQCIAYAQjIAIAoIgAoQygAkgAASYIAkoAJEgAo=</HashCode>
+      <HashCode>FDRBAQQCIAYAQjKAIAoIgAoQygEkgAASYIAkoAJEgAo=</HashCode>
       <FileName>TestParametersData.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MainWin" Collapsed="true">
-    <Position X="3.5" Y="1.75" Width="1.5" />
+    <Position X="23.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>JIABCIBghDAAE4lREAAAGUGEYBwCQAAhAkSBQABgkIY=</HashCode>
+      <HashCode>JIABCAhABCAAEQERAIAAEEEEIBgCQAABAgCAAAAEgII=</HashCode>
       <FileName>MainWin.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WebApi" Collapsed="true">
-    <Position X="11.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAIAAAAAACEAAQAAAIAAAAAAgAAAAAAAAACAAgAAAA=</HashCode>
-      <FileName>WebApi.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="DeviceInterface" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAVAAAAAAEAEAAIgIwAKMACYBIAgAAkAoIAgIAZAAAA=</HashCode>
+      <HashCode>BIVAAAAAAEAEAAIgoQAKIACYBIgiAAkAoIAAIAZAACA=</HashCode>
       <FileName>DeviceInterface.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="DischargerDevice1" Collapsed="true">
-    <Position X="0.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAA=</HashCode>
-      <FileName>DischargerDevice1.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="ChartPropertiesDialog" Collapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Position X="28.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAgAAAAAAAAEAAgAAACCAAAAAAgUAABAQAACCAAAYA=</HashCode>
+      <HashCode>BAAgAAAAAAAAEAAAAAAACAAAAAAAQAAAAAAQAAAAAIA=</HashCode>
       <FileName>ChartPropertiesDialog.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="SerialPort" Collapsed="true">
-    <Position X="6" Y="1.5" Width="1.5" />
+  <Class Name="ChartWgt" Collapsed="true">
+    <Position X="19" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>UAICAAAAACAAAAgBBihAAQAAAAACABAAAIAEEAAACiI=</HashCode>
-      <FileName>SerialPort.h</FileName>
+      <HashCode>AEgAAAABAIAAEAAAQgAAAgAQAMAAAAEAAAAEAAAQAAA=</HashCode>
+      <FileName>ChartWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChartGraphPropsWgt" Collapsed="true">
+    <Position X="26.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAACIQAAAAAAQAGAAAAA=</HashCode>
+      <FileName>ChartGraphPropsWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CommFlowWgt" Collapsed="true">
+    <Position X="23.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAgAAAAAgBAAEAAAAAAACgAAAAIAAAAAAEQAAACkAAQ=</HashCode>
+      <FileName>CommFlowWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DevChticWgt" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEBAAAAAAAAEAiAAAAAABAAACABREAAAAAABwCiAJA=</HashCode>
+      <FileName>DevChticWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LoginWgt" Collapsed="true">
+    <Position X="14.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAEAAAgAAAAAAAAAAAAAQAAgAAAAgAAAA=</HashCode>
+      <FileName>LoginWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileLogger" Collapsed="true">
+    <Position X="28.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAECAAACAAABAEAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileLogger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuWgt" Collapsed="true">
+    <Position X="4.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAgAAAAAAAAEAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MenuWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LogSimulationData" Collapsed="true">
+    <Position X="21.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAAAAAAAEAAIMAIAAAAAAAAAAAAAAAAAIAggA=</HashCode>
+      <FileName>LogSimulationData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TestConfigWgt" Collapsed="true">
+    <Position X="7.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAYgAABMWiECoABBAIgrgACAAAAgAAAAABgAJMAIA=</HashCode>
+      <FileName>TestConfigWgt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParamsWgt" Collapsed="true">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAEAAAIAAUAwAAAAAAAAgAAAAAAAAAACA=</HashCode>
+      <FileName>ParamsWgt.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TestDriver" Collapsed="true">
-    <Position X="6" Y="2.5" Width="1.5" />
+    <Position X="10.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAACAQVAIjCUAAARCEQAsAYGI0SIAcAACgAIwKEAAA=</HashCode>
+      <HashCode>AFRAAAAFAMICAQAAIjEhhoAIQAEQIAgAAAAAoAJAAIA=</HashCode>
       <FileName>TestDriver.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TestConfigData" Collapsed="true">
-    <Position X="9.5" Y="1.5" Width="1.5" />
+    <Position X="26.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ABAAQAAAACAAAAAAAAAQAUBAAAKAAAABAICAAAAAAAI=</HashCode>
       <FileName>TestConfigData.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="User" Collapsed="true">
-    <Position X="9.5" Y="2.5" Width="1.5" />
+  <Class Name="Calculations" Collapsed="true">
+    <Position X="21.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgARAAAAAAAAAAglAAAEAAAIAAgECAAAAgAEAAQAAgA=</HashCode>
+      <HashCode>AEIAAAAAQAAAAAAABAAAAAFAAAAIAIACEAAAAAAQAAA=</HashCode>
+      <FileName>Calculations.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cleaner" Collapsed="true">
+    <Position X="21.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cleaner.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IClearable" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>IClearable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ISetupable" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISetupable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectFactory" Collapsed="true">
+    <Position X="25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAIAABAAAAQAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ObjectFactory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Param&lt;T&gt;" Collapsed="true">
+    <Position X="26.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAIAAAAAAACAAAAAQAAAAIAEIAAAAQAgAAQAAEA=</HashCode>
+      <FileName>Param.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApi" Collapsed="true">
+    <Position X="25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIgAAAAACkAATAAAIAAAAAAgAAAAAAAAEAAAgEAAA=</HashCode>
+      <FileName>WebApi.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="User" Collapsed="true">
+    <Position X="23.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgARAAAAAAAAABglAAAMAAAIAAgECAAAAgAEAgQAAgA=</HashCode>
       <FileName>User.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="db::SimData" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>CAAQAAAAEAAAAgAAEAoAIAAAwAAAICAAIAAAAABAAAg=</HashCode>
-      <FileName>DbSimData.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="db::TestData" Collapsed="true">
-    <Position X="11.25" Y="1.5" Width="1.5" />
+    <Position X="28.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AMBAAAECAEAGRAAAAAAAIiACAAACKAAAAAAAgBAAAAA=</HashCode>
+      <HashCode>AMBAAAECAEAGRIAAAAAAIiACAAACKAAAAAAAgBAAAAA=</HashCode>
       <FileName>DbTestData.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="serialPort::worker::SerialPortWorker" Collapsed="true">
-    <Position X="7.75" Y="1.5" Width="1.5" />
+  <Class Name="db::SimData" Collapsed="true">
+    <Position X="21.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAgAAAAAAA=</HashCode>
+      <HashCode>CAAQAAEAEAAAAgAAEAoAIAAAwAAAICAAIAAAAABAAAg=</HashCode>
+      <FileName>DbSimData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dischargerDevice::Device" Collapsed="true">
+    <Position X="26.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EHADAAZCGEQgIgEIEBGJUADEiAMQIyABADUEQAEAAAA=</HashCode>
+      <FileName>DischargerDevice.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dischargerDevice::Converter" Collapsed="true">
+    <Position X="25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAgAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DischargerDeviceConverter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dischargerDevice::SimDrivingData" Collapsed="true">
+    <Position X="25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAQAAAAAAAAIgAAgAAAAAAAAAAAIggA=</HashCode>
+      <FileName>DischargerDeviceData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dischargerDevice::SimData" Collapsed="true">
+    <Position X="23.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAQAAgAIAAAEACAAAAAIAAAiAAgAAAAADAAAAAAggg=</HashCode>
+      <FileName>DischargerDeviceData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="dischargerDevice::CharacteristicPoint" Collapsed="true">
+    <Position X="23.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggAAAAAAAAAAAAAAAAAAIAAgAAACAAAAAAAAAAAggA=</HashCode>
+      <FileName>DischargerDeviceData.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="serialPort::SerialPort" Collapsed="true">
+    <Position X="28.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>UAYAAAAAACAAAAgBBiDAAQAAAAACgAAAAICEECAACiI=</HashCode>
       <FileName>SerialPort.h</FileName>
     </TypeIdentifier>
   </Class>
   <Typedef Name="serialPort::datasize_t" Collapsed="true">
-    <Position X="6" Y="4.75" Width="1.5" />
+    <Position X="21.5" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SerialPort.h</FileName>
     </TypeIdentifier>
   </Typedef>
   <Typedef Name="serialPort::stopbits_t" Collapsed="true">
-    <Position X="9.5" Y="4.75" Width="1.5" />
+    <Position X="25" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SerialPort.h</FileName>
     </TypeIdentifier>
   </Typedef>
   <Typedef Name="serialPort::parity_t" Collapsed="true">
-    <Position X="7.75" Y="4.75" Width="1.5" />
+    <Position X="23.25" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>SerialPort.h</FileName>
     </TypeIdentifier>
   </Typedef>
   <Enum Name="db::TestStates" Collapsed="true">
-    <Position X="7.75" Y="3.75" Width="1.5" />
+    <Position X="23.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAEAAAQAgAAAAAQAAAAAABIAAAAAAAgA=</HashCode>
       <FileName>DbTestData.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="db::TestType" Collapsed="true">
-    <Position X="9.5" Y="3.75" Width="1.5" />
+    <Position X="25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAABAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAABAAA=</HashCode>
       <FileName>DbTestData.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="db::CurrentSource" Collapsed="true">
-    <Position X="6" Y="3.75" Width="1.5" />
+    <Position X="21.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DbTestData.h</FileName>

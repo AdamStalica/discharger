@@ -42,7 +42,7 @@ signals:
 	void apiKeyExpired();
 
 private:
-	const std::string API_URL			{ "http://192.168.1.41/api" }; // { "http://api.sgp.slavek.webd.pro" };
+	const std::string API_URL			{ "http://192.168.1.116/api" }; // { "http://api.sgp.slavek.webd.pro" };
 	const std::string STATUS_NAME		{ "status" };
 	const std::string API_KEY_INVALID	{ "invalid" };
 	const std::string API_KEY_NAME		{ "api_key" };
